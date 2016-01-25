@@ -1,0 +1,66 @@
+{
+    "name": "khensolomon/lethil",
+    "description": "PHP Application",
+    "type": "project",
+    "license": "MIT",
+    "homepage": "https://github.com/letid/lethil",
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/letid/lethil.git"
+        }
+    ],
+    "keywords": [
+        "developer",
+        "project",
+        "multiply"
+    ],
+    "authors": [
+        {
+            "name": "Khen Solomon Lethil",
+            "email": "khensolomon@gmail.com"
+        }
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.0-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.5.9",
+        "letid/framework": "dev-master"
+    },
+    "scripts": {
+    },
+    "config": {
+        "vendor-dir": "vendor",
+        "preferred-install": "dist"
+    },
+    "autoload": {
+        "psr-0": {
+            "App": "config/"
+        },
+        "psr-4": {
+            "Lethil\\": "src/"
+        },
+        "classmap": [],
+        "files": []
+    },
+    "autoload-dev": {
+        "classmap": []
+    },
+    "archive": {
+        "exclude": [
+            "/config",
+            "/public",
+            "/project",
+            "/.git",
+            "/index.php",
+            "/composer.lock",
+            "/composer.phar",
+            "/*.gitattributes",
+            "/*.gitignore",
+            "/*.test", "!/foo/bar/baz"]
+    }
+}
