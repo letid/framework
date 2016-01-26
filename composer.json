@@ -40,7 +40,7 @@
         "psr-0": {
         },
         "psr-4": {
-            "Lethil\\": "src/"
+            "Lethil\\": ["Config/","Init/","Utility/"]
         },
         "classmap": [],
         "files": []
