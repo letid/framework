@@ -17,15 +17,10 @@
 *.RTF	 diff=astextplain
 
 # Composer package excluded
-/config             export-ignore
-/project            export-ignore
-/public             export-ignore
 /.git               export-ignore
-/index.php          export-ignore
 /composer.lock      export-ignore
 /composer.phar      export-ignore
-/task               export-ignore
-/build              export-ignore
+/*.md               export-ignore
 /tests              export-ignore
 .editorconfig       export-ignore
 .gitattributes      export-ignore

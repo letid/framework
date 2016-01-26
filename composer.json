@@ -1,19 +1,20 @@
 {
-    "name": "khensolomon/lethil",
+    "name": "letid/framework",
     "description": "PHP Application",
-    "type": "project",
+    "type": "framework",
     "license": "MIT",
-    "homepage": "https://github.com/letid/lethil",
+    "homepage": "https://github.com/letid/framework",
     "repositories": [
         {
             "type": "git",
-            "url": "https://github.com/letid/lethil.git"
+            "url": "https://github.com/letid/framework.git"
         }
     ],
     "keywords": [
         "developer",
         "project",
-        "multiply"
+        "multiply",
+        "framework"
     ],
     "authors": [
         {
@@ -28,18 +29,15 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "php": ">=5.5.9",
-        "letid/framework": "dev-master"
+        "php": ">=5.5.9"
     },
     "scripts": {
     },
     "config": {
-        "vendor-dir": "vendor",
         "preferred-install": "dist"
     },
     "autoload": {
         "psr-0": {
-            "App": "config/"
         },
         "psr-4": {
             "Lethil\\": "src/"
@@ -52,15 +50,12 @@
     },
     "archive": {
         "exclude": [
-            "/config",
-            "/public",
-            "/project",
             "/.git",
-            "/index.php",
             "/composer.lock",
             "/composer.phar",
             "/*.gitattributes",
             "/*.gitignore",
-            "/*.test", "!/foo/bar/baz"]
+            "/*.md"
+        ]
     }
 }

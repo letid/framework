@@ -4,29 +4,3 @@ composer.phar
 # Commit your application's lock file http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file
 # You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
 # composer.lock
-
-# =========================
-#CUSTOM
-# =========================
-production/*/*
-node_modules/
-backup
-nbproject
-delete
-output
-*tmp*/
-*delete.*
-*tmp.*
-*Copy.*
-development/assets/*/*[0-9].*
-development/assets/*/*Delete*.*
-development/assets/*/*Working*.*
-development/assets/*/*Tmp*.*
-development/assets/*/job*
-#development/assets/*/*[job,Working,Tmp,Delete]*.*
-#development/*/*/[0-9]+.*
-#development/assets/js/[0-9]+.*
-/tests/
-/public/*.html
-ExampleTest.php
-TestCase.php

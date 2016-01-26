@@ -2,8 +2,8 @@
 namespace Lethil\Config;
 class Project extends Http
 {
-	protected $Application = array();
-    protected $Default = false;
+	protected $application = array();
+    protected $default = false;
 	public function Response()
     {
 		// echo __DIR__.'/../';
@@ -30,7 +30,7 @@ class Project extends Http
 		// print_r($GLOBALS[App]->host);
 		// print_r(get_defined_vars());
 		/*
-		RequestContent, RequestHeader, RequestContentType
+		Content, Header, ContentType
 		*/
     }
 }
