@@ -1,5 +1,5 @@
 <?php
-namespace Lethil\Config;
+namespace Letid\Config;
 class Message
 {
 	static $ETIO = 'Everything in order!';

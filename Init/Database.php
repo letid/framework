@@ -1,5 +1,5 @@
 <?php
-namespace Lethil\Init;
+namespace Letid\Init;
 class Database extends \mysqli
 {
 	static $db;

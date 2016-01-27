@@ -1,6 +1,6 @@
 <?php
-namespace Lethil\Config;
-use Lethil\Init\Database;
+namespace Letid\Config;
+use Letid\Init\Database;
 class Http
 {
 	const SLA = '/';

@@ -1,5 +1,5 @@
 <?php
-namespace Lethil\Config;
+namespace Letid\Config;
 class Project extends Http
 {
 	protected $application = array();

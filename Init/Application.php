@@ -1,7 +1,7 @@
 <?php
-namespace Lethil\Init;
-use Lethil;
-class Application extends Lethil\Config\Application
+namespace Letid\Init;
+use Letid;
+class Application extends Letid\Config\Application
 {
 	public function __construct()
 	{

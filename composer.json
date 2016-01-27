@@ -1,6 +1,6 @@
 {
     "name": "letid/framework",
-    "description": "PHP Application",
+    "description": "Letid PHP Framework",
     "type": "framework",
     "license": "MIT",
     "homepage": "https://github.com/letid/framework",
@@ -11,10 +11,7 @@
         }
     ],
     "keywords": [
-        "developer",
-        "project",
-        "multiply",
-        "framework"
+        "developer", "framework"
     ],
     "authors": [
         {
@@ -40,7 +37,7 @@
         "psr-0": {
         },
         "psr-4": {
-            "Lethil\\": ["Config/","Init/","Utility/"]
+            "Letid\\": ["Config/","Init/","Utility/"]
         },
         "classmap": [],
         "files": []
