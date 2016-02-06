@@ -4,16 +4,12 @@ class File
 {
 	static $Config = array(
 		'invalid'=>'configuration.invalid',
-		'valid'=>'configuration.valid',
-		'validS'=>'configuration.valid'
-	);
-	static $Invalid = array(
+		'valid'=>'configuration.valid'
+	),
+	$Invalid = array(
 		'configuration'=>'configuration.invalid',
 		'database'=>'configuration.invalid.database',
-	);
-	static $Invalids = array(
-		'configuration'=>'configuration.invalid',
-		'database'=>'configuration.invalid.database',
-	);
-	static $Extension = '.php';
+	),
+	$Response = __DIR__.'/../Response/',
+	$Extension = '.php';
 }

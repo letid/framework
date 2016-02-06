@@ -1,6 +1,6 @@
 <?php
 namespace Letid\Config;
-class Project extends Http
+class Application extends Http
 {
 	protected $application = array();
     protected $default = false;
@@ -10,7 +10,7 @@ class Project extends Http
 		// self::meset($this->getRoot());
 		// self::meset(__DIR__);
 		// print self::meget('<hr>');
-		print self::$Content;
+		echo self::$Content;
 		// if(self::$message){
 		// 	echo include(self::$setting['dir']."default.error.project.configuration.html");
 		// 	// echo file_get_contents(self::$setting['dir']."default.error.project.configuration.html");

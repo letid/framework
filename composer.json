@@ -37,7 +37,7 @@
         "psr-0": {
         },
         "psr-4": {
-            "Letid\\": ["Config/","Init/","Utility/"]
+            "Letid\\": ["Config/","Init/","Database/"]
         },
         "classmap": [],
         "files": []

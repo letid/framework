@@ -9,5 +9,6 @@ class Application extends Letid\Config\Application
 	}
 	public function Initiate()
     {
+		echo 'aaaa';
     }
 }
