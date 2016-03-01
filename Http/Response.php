@@ -1,8 +1,9 @@
 <?php
 namespace Letid\Http;
-abstract class Response
+use Letid\Meta;
+abstract class Response extends Meta\Application
 {
-	/*
+    /*
 		NOTE: Slashes
 	*/
 	const SlA = '/', SlB = '\\';
@@ -14,17 +15,6 @@ abstract class Response
 		NOTE: variables available through Framework!
 	*/
 	protected static $error, $warning, $message=array();
-	// protected static $error,$warning,$message=array(),$Header,$Content,$ContentType;
-	/*
-		NOTE: HTML
-	*/
-	protected static $Header, $Content, $ContentType;
-	// public static $ContentHeader, $Content, $ContentType;
-	// public static $PageHeader, $PageContent, $PageType;
-	/*
-		NOTE: Properties available through Application!
-	*/
-	protected static $int = array();
 	/*
 		NOTE: Sessions Identification!
 	*/

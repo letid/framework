@@ -1,5 +1,5 @@
 <?php
-namespace Letid\Config;
+namespace Letid\Id;
 class File
 {
 	static $Root = __DIR__;

@@ -1,17 +1,17 @@
 <?php
-namespace Letid\Config;
-trait Page
+namespace Letid\Id;
+trait Cluster
 {
-	private function Interjection()
+	private function clusterRequestive()
 	{
-		self::$int['page'] = $this->Initiation(func_get_args()[0]);
+		self::$scoreVar['MenuApp'] = $this->Initiation(func_get_args()[0]);
 	}
-	private function Integration()
+	private function clusterInitiative()
 	{
-		self::$int['menu'] = array_replace_recursive(self::$int['page'][static::AHM],$this->Arrange(self::$int['page'],self::$int['uri']));
-		self::$APC = self::$int['menu'][static::APC];
-		self::$APD = self::$int['menu'][static::APD];
-		return self::$int['menu'];
+		self::$scoreVar['MenuPage'] = array_replace_recursive(self::$scoreVar['MenuApp'][static::AHM],$this->Arrange(self::$scoreVar['MenuApp'],self::$scoreVar['uri']));
+		self::$APC = self::$scoreVar['MenuPage'][static::APC];
+		self::$APD = self::$scoreVar['MenuPage'][static::APD];
+		return self::$scoreVar['MenuPage'];
 	}
 	private function Arrange($page, $key)
 	{
@@ -82,9 +82,9 @@ trait Page
 		endforeach;
 		return $_is_auth;
 	}
-	public function Menu($pages,$type=NULL,$sub=NULL)
+	public function Menu($page,$type=NULL,$sub=NULL)
 	{
-		foreach($pages as $m => $page) {
+		foreach($page as $k => $v) {
 
 		}
 	}

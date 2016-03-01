@@ -1,6 +1,6 @@
 <?php
 namespace Letid\Http;
-abstract class Request extends Response
+abstract class Request extends Initiate
 {
 	/*
 		Everything down here can be modified in:
@@ -12,7 +12,7 @@ abstract class Request extends Response
 	/*
 		AIN: Initiation Classname
 	*/
-	const AIN = 'Initiate';
+	const AIN = 'Application';
 	/*
 		APE: Page Classname and Foldername
 	*/
@@ -62,14 +62,11 @@ abstract class Request extends Response
 	*/
 	const APD = 'Method';
 	/*
-		ATR: Template structure -> Regex
+		ATR: Template format -> Regex
 	*/
 	const ATR = '/[{](.*?)[}]/';
 	/*
-		NOTE: variables available through Application Namespace!
-		$map, $directory...
+		NOTE: Application Configuration!
 	*/
-	protected $map = array();
-	protected $page = array();
-	protected $directory = array();
+	protected $map = array(), $dir = array(), $page = array(), $database = array();
 }
