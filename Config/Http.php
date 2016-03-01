@@ -14,23 +14,53 @@ trait Http
 	}
 	public function Initiate()
     {
-		if ($this->validateRoot($this->validateHost())) {
+		if ($this->initiateRoot($this->initiateHost())) {
 			$this->initiateAutoload();
-			if ($AppInit=$this->classExists(self::ANC()) and $app=$this->classInit($AppInit) or $app=$this->classInit(self::AIN())) {
-				$this->validateDirectory($app->directory);
+			if ($AppInit=$this->initiateExists(self::ANC()) and $app=$this->initiateClass($AppInit) or $app=$this->initiateClass(self::AIN())) {
+				$this->initiateDirectory($app->directory);
 				if ($app->database) {
 					$app->database=Database\Connection::Connectivity($app->database);
 					if ($app->database->connect_errno) {
 						// TODO: invalidResponse
-						return $this->invalidResponse(File::$Notification['database'],array_merge(Message::$DatabaseConnection,array('Message'=>$app->database->connect_error,'Code'=>$app->database->connect_errno)));
+						return $this->initiateResponsive(File::$Notification['database'],array_merge(Info::$DatabaseConnection,array('Message'=>$app->database->connect_error,'Code'=>$app->database->connect_errno)));
 					}
 				}
-				$this->Interjection($app->page);
-				$this->Integration();
-				$this->Termination();
+				/*
+				static $Delete = array();
+				public $PublicDelete = array();
+				protected $ProtectedDelete = array();
+				private $PrivateDelete = array();
+				*/
+				$this->PublicInfo['public'] ='Okey';
+				$this->ProtectedInfo['protected'] ='Okey';
+				$this->PrivateInfo['private'] ='Okey';
+
+				self::$PublicStaticInfo['static'] ='Okey';
+				self::$ProtectedStaticInfo['static'] ='Okey';
+				// self::$PrivateStaticInfo['static'] ='Okey';
+
+				Info::$PublicStaticInfo['public-static'] ='Okey';
+				// Info::$ProtectedStaticInfo['protected-static'] ='Okey';
+				// Info::$PrivateStaticInfo['private-static'] ='Okey';
+
+				// self::$PublicStaticInfo['abc'] ='abc';
+				// self::$uri['test'] ='info test changed';
+				// // Test::$asdfasdf ='info test ok';
+				// // Test::$Love = 'love';
+				// $this->TestPublic['xyx'] = 'love';
+				//
+				// $this->TestPublic['abc'] = 'changed';
+				// // print_r($this->TestPublic);
+				// // Test::$TestPublic['abc'] = 'love';
+				// // $this->testSet('love','Ok');
+				// $this->Love = 'love';
+				// print_r($this);
+				$this->clusterRequestive($app->page);
+				$this->clusterInitiative();
+				$this->initiateEngine();
 			}
 		} else {
-            $this->invalidResponse(File::$Notification['error'],Message::$NoApplicationExists);
+            $this->initiateResponsive(File::$Notification['error'],Info::$NoApplicationExists);
         }
     }
 	public function Response()
