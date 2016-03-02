@@ -5,9 +5,7 @@ abstract class Application
 	use Score;
 	public function __construct()
     {
-        /*
-        constructor!
-        */
+        // constructor!
     }
 	public function setScore($name, $value)
 	{
