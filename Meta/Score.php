@@ -14,28 +14,6 @@ trait Score
 	private static $ETIO = 'Everything in order!';
 	private static $COIV = 'Configuration Invalid!';
 	private static $COVL = 'Configuration Valid!';
-	protected static $NoApplicationExists = array(
-		'Title'=>'Invalid configuration',
-		'Description'=>'Oops, Invalid configuration, no configuration file found!',
-		'Message'=>'No Application exists!'
-	);
-	protected static $NoApplicationInitiation = array(
-		'Title'=>'No Initiate Class found',
-		'Description'=>'Oops, Invalid configuration, no Initiate class found!',
-		'Message'=>'Invalid Initiate Class!'
-	);
-	protected static $DatabaseConnection = array(
-		'Title'=>'Invalid Database configuration',
-		'Description'=>'Oops, Invalid configuration!',
-		'Message'=> 0,
-		'Code'=> 0
-	);
-	private $letid = array(
-		'Build' => '29.03.16.22.59',
-		'Version' => '1.0.1',
-		'Name' => 'Letid',
-		'Description' => 'Letid PHP Framework'
-	);
 
 	// public $PublicInfo = array();
 	// protected $ProtectedInfo = array();
@@ -56,8 +34,8 @@ trait Score
 	// private static $infoScore = array();
 	// private static $infoStatement = array();
 	/*
-	NOTE: Rrefixs for...
-		 ...traits
+	NOTE: Prefixes and Suffixes for...
+		 ...traits and Classes methods
 		Requestive
 		Initiative
 		Responsive
@@ -82,6 +60,24 @@ trait Score
 		$this->Interjection($app->page);
 		$this->Integration();
 		$this->Termination();
+
+	NOTE: Prefixes and Suffixes for...
+		...namespaces
+		Configuration
+		- framework/(entire app): shell, core
+		- application: app, case, suit
+		- page: page
+
+	NOTE: Prefixes and Suffixes for...
+		...namespaces
+		Map
+		- Appmap: ...
+		- Pagemap: ...
+		- Currentmap: Usemap, Nowmap, Modmap, PagemapCurrent, PagemapChild
+
+		App\Appmap\Page;
+		App\Pagemap\Page;
+		App\Currentmap\Page;
 	*/
 	/*
 	No Application directory!
@@ -105,5 +101,6 @@ trait Score
 	abstract class Response extends Application {
 
 	}
+
 	*/
 }
