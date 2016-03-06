@@ -2,26 +2,15 @@
 namespace Letid\Id;
 class Config
 {
-	static $Root = __DIR__;
-	// $Config = array(
-	// 	'invalid'=>'configuration.invalid',
-	// 	'valid'=>'configuration.valid'
-	// ),
-	// $Invalid = array(
-	// 	'configuration'=>'configuration.invalid',
-	// 	'database'=>'configuration.invalid.database',
-	// ),
-	// $Default = array(
-	// 	'configuration'=>'configuration.invalid',
-	// 	'database'=>'configuration.invalid.database',
-	// ),
-	// $Directory = '/../Notification/',
-	// $Error = array(
-	// 	'root'=>'/../Notification/',
-	// 	'error'=>'error',
-	// 	'maintaining'=>'maintaining'
-	// 	'extension'=>'.html'
-	// ),
+	/*
+		NOTE: Slashes
+	*/
+	const SlA = '/', SlB = '\\';
+	/*
+		NOTE: Root Directory
+	*/
+	protected static $Root = __DIR__;
+	static $list = array();
 	static $Notification = array(
 		'root'=>'/../Notification/',
 		'error'=>'error',
@@ -52,7 +41,7 @@ class Config
 		'Message'=> 0,
 		'Code'=> 0
 	);
-	private $letid = array(
+	static $letid = array(
 		'Build' => '29.03.16.22.59',
 		'Version' => '1.0.1',
 		'Name' => 'Letid',
