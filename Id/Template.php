@@ -2,40 +2,48 @@
 namespace Letid\Id;
 trait Template
 {
-	private function delete_config()
+	public function template($cluster)
     {
-		// print_r($this);
-		return 'delete_config';
-	}
-	public function template()
-    {
-		$this->templateResponsive(func_get_args()[0]);
-	}
-	private function templateRequestive()
-    {
-		// TODO: check file_exists if necessary!
-	}
-	private function templateResponsive($Content)
-    {
-		if (is_array($Content)) {
-			foreach ($Content as $k => $v) print_r($this->templateEngine($k,$v));
-		} else {
-			print_r($Content);
+		if (is_array($cluster)) {
+			return $this->TemplateRequest($cluster);
 		}
 	}
-	private function templateEngine($tpl, $v)
+	private function TemplateRequest($cluster)
     {
-		if ($template=$this->templateExists($tpl)) {
-			return preg_replace_callback(static::ATR,
+		return implode(
+			array_map(
+				function ($v, $k) {
+					return $this->TemplateEngine($k, $v);
+				}, $cluster, array_keys($cluster)
+			)
+		);
+	}
+	private function TemplateResponse($cluster)
+    {
+		if (is_array($cluster)) {
+			// array_walk($cluster,
+			// 	function ($v, $k) {
+			// 		print_r($this->TemplateEngine($k, $v));
+			// 	}
+			// );
+			foreach ($cluster as $k => $v) print_r($this->TemplateEngine($k,$v));
+		} else {
+			print_r($cluster);
+		}
+	}
+	private function TemplateEngine($cluster, $v)
+    {
+		if ($template=$this->TemplateExists($cluster)) {
+			return preg_replace_callback(Config::$ATR,
 				function ($k) use ($v){
 					if (is_array($v[$k[1]])) {
 						if(count(array_filter(array_keys($v[$k[1]]), 'is_string')) > 0) {
-							return $this->templateEngine($k[1], $v[$k[1]]);
+							return $this->TemplateEngine($k[1], $v[$k[1]]);
 						} else {
 							return implode(
 								array_map(
 									function ($child) use ($k) {
-										return $this->templateEngine($k[1], $child);
+										return $this->TemplateEngine($k[1], $child);
 									}, $v[$k[1]]
 								)
 							);
@@ -51,10 +59,16 @@ trait Template
 			);
 		}
 	}
-	private function templateExists($fileName)
+	private function TemplateExists($name)
     {
-		if (file_exists(self::$scoreVar['directory']['template'].$fileName.File::$Extension['template'])) {
-			return file_get_contents(self::$scoreVar['directory']['template'].$fileName.File::$Extension['template']);
+		if (file_exists($file = $this->TemplateFile($name))) {
+			return file_get_contents($file);
+		} else {
+			// TODO: when no template found
 		}
+	}
+	private function TemplateFile($fileName)
+    {
+		return self::$CoreVar['directory']['template'].$fileName.Config::$Extension['template'];
 	}
 }

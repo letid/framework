@@ -1,6 +1,6 @@
 <?php
-namespace Letid\Database;
-class Request extends Connection
+namespace Letid\Db;
+abstract class Request extends Connection
 {
 	// public $data, $list, $total;
 	/*
@@ -9,8 +9,8 @@ class Request extends Connection
 	*/
 	public function __construct()
 	{
-		if (!self::inquiry(func_get_args())) {
-			self::is_error();
+		if (!$this->inquiry(func_get_args())) {
+			$this->is_error();
 		}
 	}
 	public function __call($name, $arguments)

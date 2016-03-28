@@ -1,9 +1,8 @@
 <?php
-namespace Letid\Database;
-use \mysqli as letDb;
-class Connection
+namespace Letid\Db;
+abstract class Connection
 {
-	protected static $db='Unavailable';
+	public static $db='Unavailable';
 	const SP=' ';
 	const rowsName='rows';
 	const rowsId='rowsId';
@@ -18,22 +17,20 @@ class Connection
 		'update'=>array('d'),
 		'insert'=>array('ed')
 	);
-	// public $msg, $error;
 	/*
-	inquiry,config,queries
-	*/
 	static function Connectivity($d)
 	{
 		if (is_array($d)) {
 			if(strpos($d['host'],'/cloudsql/') !== false) {
-				self::$db = new letDb(NULL, $d['username'], $d['password'], $d['database'], NULL, $d['host']);
+				self::$db = new \mysqli(NULL, $d['username'], $d['password'], $d['database'], NULL, $d['host']);
 			} else {
-				self::$db = new letDb($d['host'], $d['username'], $d['password'], $d['database']);
+				self::$db = new \mysqli($d['host'], $d['username'], $d['password'], $d['database']);
 			}
 			// self::$db->set_charset("utf8");
 			return self::$db;
 		}
 	}
+	*/
 	protected function close()
 	{
 		// mysqli_close()

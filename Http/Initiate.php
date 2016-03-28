@@ -1,16 +1,7 @@
 <?php
 namespace Letid\Http;
 use Letid\Id;
-abstract class Initiate extends Response
+abstract class Initiate extends Id\Application
 {
-	use Id\Http, Id\Initiate, Id\Cluster, Id\Template;
-	// public function Request()
-	// {
-	// }
-	// public function Initiate()
-	// {
-	// }
-	// public function Response()
-	// {
-	// }
+	// public $isOk;
 }

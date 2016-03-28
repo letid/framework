@@ -1,72 +1,97 @@
 <?php
 namespace Letid\Http;
-abstract class Request extends Initiate
+use Letid\Id;
+abstract class Request extends Id\Application
 {
+    use Id\Session, Id\Http, Id\Database, Id\Module, Id\Initiate, Id\Verso, Id\Template, Id\Html;
+    /*
+		NOTE: Application Configuration!
+	*/
+	protected $page = array(), $dir = array(), $database = array(), $config = array();
 	/*
 		Everything down here can be modified in:
-			- App\Routine
-			- App\Initiate
+			- App\Core
+		To avoid errors/warnings we just sat default value.
+	*/
+    /*
+		NOTE: Route Configuration!
+	*/
+	protected $host = array();
+    /*
+        $ADA: the applications directory
+    */
+    protected $ADA = '../app/';
+    /*
+    	$ADE: Errors and Notification responsive directory
+    */
+    protected $ADE = '../app/errors/';
+    /*
+		$ADT: default application, if no Hostname matched!
+	*/
+	protected $ADT = 0;
+    /*
+		$ATR: Template format -> Regex
+	*/
+	protected $ATR = '/[{](.*?)[}]/';
+    /*
+        $AAI: Initiation's Classname
+    */
+    protected $AAI = 'Application';
+    /*
+		Everything down here can be modified in:
+			- App\Application
 			- App\Environment\Configuration
 		To avoid errors/warnings we just sat default value.
 	*/
 	/*
-		AIN: Initiation Classname
-	*/
-	const AIN = 'Application';
-	/*
-		APE: Page Classname and Foldername
-	*/
-	const APE = 'Pages';
-	/*
-		AHM: Homepage in $Page->Array
-	*/
-	const AHM = 'home';
-	/*
-		ANV: private Environment Path
-	*/
-	const ANV = 'Environment';
-	/*
-		ANC: private Environment->Configuration Classname and Foldername
-	*/
-	const ANC = 'Configuration';
-	/*
-		AMP: if no Hostname matched
-	*/
-	const AMP = null;
-	/*
-    	ARO: the application directory
+        $AIV: Environment's Folder and Namespace
     */
-    const ARO = '../app/';
+    protected $AIV = 'Environment';
+	/*
+        $AIA: Authorization's Class (not in use)
+    */
+    protected $AIA = 'Authorization';
     /*
-    	ARN: Errors and Notification responsive directory
+        $AVC: Environment's Classname
     */
-    const ARN = '../app/errors/';
+    protected $AVC = 'Configuration';
 	/*
-        ANS: the Application Namespace, this can not be modified!
-		const ANS = __NAMESPACE__;
-    */
+		APE: Page Namespace and Foldername -> Pages, Pagemap
+	*/
+	protected $APN = 'Pages';
+	/*
+		$APH: Page's home in $Page->Array
+	*/
+	protected $APH = 'home';
     /*
-        ADR: Application Directory, this can not be modified! Not in used (at the moment)!
-		const ADR = __DIR__;
+		$APM: Page's Authorization (Not in use)
+	*/
+	protected $APA = 'Auth';
+    /*
+		$APM: Page's Type (Not in use)
+	*/
+	protected $APT = 'Type';
+	/*
+		$APF: Page's Suffixes (Not in use)
+	*/
+	protected $APF = 'Page';
+	/*
+		$APE: Page's Menu
+	*/
+	protected $APE = 'Menu';
+	/*
+		$APC: Page's Class
+	*/
+	protected $APC = 'Class';
+	/*
+		$APM: Class's Method
+	*/
+	protected $APM = 'Method';
+    /*
+		Everything down here can't be modified;
+            - Application's Namespace
+		          const ANS = __NAMESPACE__;
+            - Appliations's Root Directory
+		          const ADR = __DIR__;
     */
-	/*
-		APEN: Page Menu
-	*/
-	const APM = 'menu';
-	/*
-		APCA: Page Class
-	*/
-	const APC = 'Class';
-	/*
-		APME: Page Method
-	*/
-	const APD = 'Method';
-	/*
-		ATR: Template format -> Regex
-	*/
-	const ATR = '/[{](.*?)[}]/';
-	/*
-		NOTE: Application Configuration!
-	*/
-	protected $map = array(), $dir = array(), $page = array(), $database = array();
 }

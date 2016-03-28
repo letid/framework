@@ -1,41 +1,58 @@
 <?php
 namespace Letid\Id;
-use Letid\Database;
 trait Http
 {
 	public function Request()
     {
-		session_start();
-		self::$scoreVar['hostname'] = $_SERVER['HTTP_HOST'];
-		if ($uri=trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), static::SlA)) {
-			self::$scoreVar['uri'] = explode(static::SlA, $uri);
-		} else {
-			self::$scoreVar['uri'] = [];
+		$this->SessionRequest();
+		Config::$hostname = $_SERVER['HTTP_HOST'];
+		// $this->HttpProtocol = Validate::protocal();
+		Config::$url = Validate::protocal().Config::SlH.Config::$hostname;
+		if ($uri=trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), Config::SlA)) {
+			Config::$uri = explode(Config::SlA, $uri);
 		}
 	}
 	public function Initiate()
     {
-		if ($this->initiateRoot($this->initiateHost())) {
-			$this->initiateAutoload();
-			if ($AppInit=$this->initiateExists(self::ANC()) and $app=$this->initiateClass($AppInit) or $app=$this->initiateClass(self::AIN())) {
-				$this->initiateDirectory($app->dir);
+		// check: application directory
+		if ($this->InitiateRoot($this->InitiateHost())) {
+			// composer: Autoload
+			$this->ModuleAutoload();
+			// load: application
+			if ($app=$this->ModuleApplication()) {
+				// load: authorization
+				$auth=$this->ModuleAuthorization();
+				// add: config
+				Config::$list = array_replace_recursive($this->config,$app->config);
 				if ($app->database) {
-					// TODO: Database Main need to move under Config Namespace...
-					$app->database=Database\Connection::Connectivity($app->database);
-					if ($app->database->connect_errno) {
-						return $this->initiateResponsive(File::$Notification['database'],array_merge(self::$DatabaseConnection,array('Message'=>$app->database->connect_error,'Code'=>$app->database->connect_errno)));
+					// mysql: connection
+					// $this->DatabaseRequest(array_merge($this->database,$app->database));
+					$this->DatabaseRequest($app->database);
+					if ($this->DatabaseError()) {
+						return $this->DatabaseInitiate();
+					} else {
+						$auth->database=$this->database;
 					}
 				}
-				$this->clusterRequestive($app->page);
-				$this->clusterInitiative();
-				$this->initiateEngine();
+				// get: necessary vars
+				$this->InitiateRequest($app);
+				$this->dir = array_merge($this->dir,$app->dir);
+				// get: necessary directory
+				$this->InitiateDirectory($this->dir);
+				// config: vars and verso
+				$this->VersoRequest($this->host);
+				// check: verso authorization
+				$this->page = array_replace_recursive($this->page,$app->page);
+				$this->VersoInitiate($this->page);
+				// get: necessary verso
+				$this->VersoResponse();
+				// load: verso
+				$this->InitiateResponse();
 			}
-		} else {
-            $this->initiateResponsive(File::$Notification['error'],self::$NoApplicationExists);
-        }
+		}
     }
 	public function Response()
     {
-		$this->template(self::$Content);
+		$this->TemplateResponse(self::$Content);
 	}
 }

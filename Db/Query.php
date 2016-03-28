@@ -1,6 +1,7 @@
 <?php
-namespace Letid\Database;
+namespace Letid\Db;
 /*
+use Letid\Db\Query;
 Query::load("SELECT id FROM tables WHERE name LIKE 'Jo%'")->toArray()->hasCount();
 Query::load("SELECT SQL_CALC_FOUND_ROWS id,name FROM tables WHERE name LIKE 'Jo%' LIMIT 3, 1;")->rowsTotal()->rowsCount()->toArray();
 Query::load("UPDATE tables SET name='Kent2s' WHERE id ='0000000003';")->rowsCount();

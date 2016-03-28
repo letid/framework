@@ -2,120 +2,92 @@
 namespace Letid\Id;
 trait Initiate
 {
-	private function initiateEngine()
+	private function InitiateRequest($app)
     {
-		if ($app=$this->initiateExists(self::APC(),true)) {
-			foreach (self::$scoreConfiguration as $name => $value) {
-				$app->{$name}=$value;
+		foreach (Config::$Initiate as $name) {
+			if (property_exists($app, $name)) {
+				$this->{$name} = $app->{$name};
 			}
-			self::$Content = call_user_func(array($app, self::$APD));
-		}
-	}
-	private function ANC()
-	{
-		return static::ANS.self::SlB.static::ANV.self::SlB.static::ANC;
-	}
-	private function APC()
-	{
-		return static::ANS.self::SlB.static::APE.self::SlB.self::$APC;
-	}
-	private function AIN()
-	{
-		return static::ANS.self::SlB.static::AIN;
-	}
-	// if ($AppInit=$this->initiateExists(self::ANC()) and $app=$this->initiateClass($AppInit) or $app=$this->initiateClass(self::AIN())) {
-	private function initiateExists($NS,$Instantiating)
-    {
-		if (class_exists($NS)) {
-			if ($Instantiating){
-				return new $NS();
-			} else {
-				return $NS;
+			if (property_exists(Config::class, $name) && property_exists($this, $name)) {
+				Config::${$name} = $this->{$name};
 			}
 		}
 	}
-	private function initiateClass($app)
+	private function InitiateResponse()
     {
-		if (class_exists($app)) {
-			return new $app();
-		} else {
-			// TODO: invalidResponse
-			$this->initiateResponsive(File::$Notification['error'],self::$NoApplicationInitiation);
+		if ($app=$this->ModuleVerso()) {
+			foreach (self::$CoreVar as $name => $value) {
+				$app->{$name} = $value;
+			}
+			// $coreVar, $coreConfiguration
+			self::$Content = call_user_func(array($app, $this->VersoMethod));
 		}
 	}
-	private function initiateResponsive($file,$msg) //invalidResponse
+	private function InitiateExists($NS,$Instantiating=null)
     {
-		$this->initiateResponsivefile($file);
+	}
+	private function InitiateError($file,$msg)
+    {
+		$this->InitiateErrorFile($file);
 		$invalid[$file] = $msg;
 		self::$Content = $invalid;
 	}
-	private function initiateResponsivefile($fileName)
+	private function InitiateErrorFile($fileName)
     {
-		if (file_exists(self::$scoreVar['directory']['root'].$fileName.File::$Extension['template'])) {
-			self::$scoreVar['directory']['template'] = self::$scoreVar['directory']['root'];
+		if (file_exists($this->ADE.$fileName.Config::$Extension['template'])) {
+			self::$CoreVar['directory']['template'] = $this->ADE;
 		} else {
-			self::$scoreVar['directory']['template'] = File::$Root.File::$Notification['root'];
+			self::$CoreVar['directory']['template'] = Config::$Root.Config::$Notification['dir'];
 		}
 	}
-	private function initiateHost()
+	private function InitiateHost()
     {
-		if ($Host=$this->initiateHostset(self::$scoreVar['hostname'])) return static::ARO.$Host;
+		if ($Host=$this->InitiateHostExists(Config::$hostname)) return $this->ADA.$Host;
 	}
-	private function initiateHostset($key)
+	private function InitiateHostExists($key)
     {
 		// session_unset($_SESSION[$ID]);
 		if ($_SESSION[$key]) {
 			return $_SESSION[$key];
-		} else if($this->map && $Name=$this->initiateHostadd()) {
+		} else if($this->host && $Name=$this->InitiateHostName()) {
 			return $_SESSION[$key]=$Name;
-		} else if(static::AMP) {
-			return $_SESSION[$key]=static::AMP;
+		} else if($this->ADT) {
+			return $_SESSION[$key]=$this->ADT;
 		}
 	}
-	private function initiateHostadd()
+	private function InitiateHostName()
     {
-		foreach ($this->map as $Name => $Regex)
+		foreach ($this->host as $Name => $Regex)
 		{
-			if ($Regex && $this->initiateHostmatch(is_array($Regex)?$Regex:array($Regex))) {
+			if ($Regex && $this->InitiateHostEngine(is_array($Regex)?$Regex:array($Regex))) {
 				return $Name;
 			}
 		}
 	}
-	private function initiateHostmatch($Regex)
+	private function InitiateHostEngine($Regex)
     {
 		foreach ($Regex as $Name)
 		{
-			if (preg_match("/$Name/", self::$scoreVar['hostname'])) {
+			if (preg_match("/$Name/", Config::$hostname)) {
 				return true;
 			}
 		}
 	}
-	private function initiateRoot($dir)
+	private function InitiateRoot($dir)
     {
-		// self::$int['directory'] = [];
-		if ($dir && file_exists($dir.static::SlB)) {
-			return self::$scoreVar['directory']['root'] = $dir.static::SlA;
+		// TODO: remove
+		if ($dir && file_exists($dir.Config::SlB)) {
+			return self::$CoreVar['directory']['root'] = $dir.Config::SlA;
+		} else {
+			$this->InitiateError(Config::$Notification['error'],Config::$NoApplicationExists);
 		}
-		// self::$int['directory'] = [];
-		// if ($dir && file_exists($dir.static::SlB)) {
-		// 	return self::$int['directory']['root'] = $dir.static::SlA;
-		// }
 	}
-	private function initiateAutoload()
-	{
-		$loader = new \Composer\Autoload\ClassLoader();
-		$loader->addPsr4(static::ANS.static::SlB,array(self::$scoreVar['directory']['root']),true);
-		// $loader->loadClass(\App\Private\Configuration);
-		$loader->register(true);
-		// $loader->setUseIncludePath(true);
-		// print_r($loader);
-	}
-	private function initiateDirectory($dir)
+	private function InitiateDirectory($dir)
     {
-		if (self::$scoreVar['directory']['root'] && is_array($dir)) {
+		if (self::$CoreVar['directory']['root'] && is_array($dir)) {
 			foreach ($dir as $id => $name)
 			{
-				self::$scoreVar['directory'][$id] = self::$scoreVar['directory']['root'].$name.static::SlA;
+				self::$CoreVar['directory'][$id] = self::$CoreVar['directory']['root'].$name.Config::SlA;
 			}
 		}
 	}

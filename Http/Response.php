@@ -1,22 +1,8 @@
 <?php
 namespace Letid\Http;
-use Letid\Meta;
-abstract class Response extends Meta\Application
+use Letid\Id;
+abstract class Response extends Id\Application
 {
-    /*
-		NOTE: Slashes
-	*/
-	const SlA = '/', SlB = '\\';
-	/*
-		NOTE: Application Class & Method
-	*/
-	protected static $APC, $APD;
-	/*
-		NOTE: variables available through Framework!
-	*/
-	protected static $error, $warning, $message=array();
-	/*
-		NOTE: Sessions Identification!
-	*/
-	protected static $SpeedId = '123';
+    // NOTE: Please refer to docs/todo.md
+     use Id\Template, Id\Database, Id\Verso, Id\Html;
 }
