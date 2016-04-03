@@ -3,27 +3,12 @@ namespace Letid\Id;
 trait Core
 {
 	/*
-		let: vars
-	*/
-	// protected static $let = array(), $letVar = array(), $letConfiguration = array(), $letDatabase = array();
-	/*
-		Core: vars
-		TODO: $CoreConfiguration, $CoreVar can be remove now...
-	*/
-	protected static $CoreConfiguration = array(), $CoreVar = array();
-	protected static $CoreProperty = array();
-	/*
 		NOTE: HTML
 	*/
 	public static $Content, $ContentType, $ContentMeta;
 	/*
 		TODO: ???
 	*/
-	// private static $ETIO = 'Everything in order!';
-	// private static $COIV = 'Configuration Invalid!';
-	// private static $COVL = 'Configuration Valid!';
-	//scoreConfiguration, scoreVar
-
 	/*
 	NOTE: Prefixes and Suffixes for... traits and ...classes methods
 		Requestive
@@ -41,9 +26,7 @@ trait Core
 		Interjection
 		Integration
 
-
-	Gui: LetGUId
-	Cli: LetCLId
+	Gui: LetGUId, Cli: LetCLId
 	NOTE: Prefixes and Suffixes for... namespaces
 		Configuration
 		- framework/(entire app): Core, Shell, Root

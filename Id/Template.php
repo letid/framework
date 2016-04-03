@@ -69,6 +69,6 @@ trait Template
 	}
 	private function TemplateFile($fileName)
     {
-		return self::$CoreVar['directory']['template'].$fileName.Config::$Extension['template'];
+		return Config::$dir->template.$fileName.Config::$Extension['template'];
 	}
 }

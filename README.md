@@ -12,11 +12,17 @@ or add require section in your composer.json.
 "letid/framework": "dev-master"
 ```
 ## Usage
-Our [wiki] described detail of...
+Docs and [wiki] described detail of...
 - Getting Started
 - Installation
 - Configuration
 - Available Methods
+
+## Available
+- Menu (since 1.0.2)
+- Language (since 1.0.3)
+- Template (since 1.0.2)
+- Database queries (since 1.0.1)
 
 ## License
 For [MIT License](LICENSE) information.

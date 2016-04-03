@@ -42,10 +42,11 @@ Application (folder) => hostname (regex without slashs)
 #### $dir
     protected $dir = array(
         'template'=>'template'
+        'language'=>'language'
     );
 #### $config
     protected $config = array(
-        'API_key'=>"1.2.3"
+        'language_default'=>'en'
     );
 #### ANS
     const ANS = __NAMESPACE__;

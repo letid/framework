@@ -62,31 +62,6 @@ trait Verso
 		});
 		return $menu;
 	}
-	/*
-	private function VersoAuthorized_____($page)
-	{
-		$_is_auth = 0;
-		foreach($page as $auth => $type)
-		{
-			$self_auth = @self::$user[$auth];
-			if (is_array($type)) {
-				if (isset($type['operator'])) {
-					$au_mch = ($self_auth)?$self_auth:0;
-					if (eval("return ($au_mch {$type['operator']} {$type[0]});")) {
-						$_is_auth ++;
-					}
-				} else {
-					if (in_array($self_auth,$type)) {
-						$_is_auth ++;
-					}
-				}
-			} elseif (is_numeric($type) and $self_auth >= $type) {
-				$_is_auth ++;
-			}
-		}
-		return $_is_auth;
-	}
-	*/
 	private function VersoExtendsEngine($v,$href)
 	{
 		if ($ol = array_filter($v, function($y, $x) {if ($this->VersoExists($y)) return $y;})) {

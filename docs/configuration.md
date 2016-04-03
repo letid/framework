@@ -26,9 +26,12 @@ class Route extends Http\Request
         )
     );
     protected $dir = array(
-		'template'=>'template'
+		'template'=>'template',
+		'language'=>'language'
 	);
-    protected $config = array();
+    protected $config = array(
+        'language_default'=>'en'
+    );
     /*
         ANS: the Application's Namespace!
     */

@@ -39,6 +39,8 @@ trait Http
 				$this->dir = array_merge($this->dir,$app->dir);
 				// get: necessary directory
 				$this->InitiateDirectory($this->dir);
+				// TODO: working
+				$this->LanguageRequest($_GET['language']);
 				// config: vars and verso
 				$this->VersoRequest($this->host);
 				// check: verso authorization

@@ -1,19 +1,6 @@
 # Todo
 Public methods, which needs to console with `Http\Response`
 
-## Template
-    $this->template()
-> Done!
-
-## Html
-    new html(tag:string, text:string, attr:array)
-    $this->html()
-> Done: This is require to completed other task. This Method should be available in both `Request\Html` and `$this->html()`
-
-## Page Menu
-    $this->menu()
-> Done!
-
 ## Database Connection
     DbQuery
     DbTable
@@ -21,14 +8,36 @@ Public methods, which needs to console with `Http\Response`
     DbMySQLi
 > Not done!
 
-## Authorization
-    $this->authorization()
+## is Live
+    Application is live or deploy!
 > Not done!
 
 ## Language
     $this->language()
-> Not done!
+> Done! but need to improved
 
 ## trait Initiate
     self::$CoreVar['directory']['template']
-> Not done! should moved to Config::
+> Done! moved to Config:: and object
+
+###### Template
+    $this->template()
+> Done!
+
+###### Html
+    new html(tag:string, text:string, attr:array)
+    $this->html()
+> Done: This is required to complete other task. This Method should be available in both `Request\Html` and `$this->html()`
+
+###### Page Menu
+    $this->menu()
+> Done!
+
+###### Authorization
+    $this->authorization()
+> Done! but need to improved
+
+###### None Class/Method exists
+    error message (disable InitiateError on live application)
+    $this->InitiateResponse()
+> Done!

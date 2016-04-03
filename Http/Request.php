@@ -3,7 +3,7 @@ namespace Letid\Http;
 use Letid\Id;
 abstract class Request extends Id\Application
 {
-    use Id\Session, Id\Http, Id\Database, Id\Module, Id\Initiate, Id\Verso, Id\Template, Id\Html;
+    use Id\Session, Id\Http, Id\Database, Id\Module, Id\Initiate, Id\Verso, Id\Template, Id\Html, Id\Language;
     /*
 		NOTE: Application Configuration!
 	*/
@@ -14,7 +14,7 @@ abstract class Request extends Id\Application
 		To avoid errors/warnings we just sat default value.
 	*/
     /*
-		NOTE: Route Configuration!
+		$host: Route Configuration!
 	*/
 	protected $host = array();
     /*

@@ -19,6 +19,14 @@ trait Constructor
 	{
 		return Config::$list;
 	}
+	public function lang($k)
+	{
+		// if ($k && isset(Config::$lang[$k])) {
+		// 	return Config::$lang[$k];
+		// } else {
+		// 	return $k;
+		// }
+	}
 	public function __set($name, $value)
 	{
 		$this->{$name} = $value;

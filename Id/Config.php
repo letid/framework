@@ -19,6 +19,18 @@ class Config
 	*/
 	static $hostname;
 	/*
+		$dir: (object)directory
+	*/
+	static $dir;
+	/*
+		$language: (array) Language list
+	*/
+	static $language;
+	/*
+		$lang: Language default and current merged
+	*/
+	static $langname = array();
+	/*
 		$url: http://domain.ext, used in Http
 	*/
 	static $url;
@@ -59,30 +71,39 @@ class Config
 		NOTE: Default Template's Extension
 	*/
 	static $Extension = array(
-		'template'=>'.html'
+		'template'=>'.html',
+		'script'=>'.php'
 	);
 	/*
 		NOTE: Message On Core Configuration is Missing/Invalid
 	*/
 	static $NoApplicationExists = array(
 		'Title'=>'Invalid configuration',
-		'Description'=>'Oops, Invalid configuration, no configuration file found!',
-		'Message'=>'No Application exists!'
+		'Description'=>'Oops, no configuration file found!',
+		'Message'=>'No application exists!'
 	);
 	/*
 		NOTE: Message On Application Initiation is Missing/Invalid
 	*/
 	static $NoApplicationInitiation = array(
 		'Title'=>'No Initiate Class found',
-		'Description'=>'Oops, Invalid configuration, no Initiate class found!',
-		'Message'=>'Invalid Initiate Class!'
+		'Description'=>'Oops, no Initiate class found!',
+		'Message'=>'Invalid configuration!'
+	);
+	/*
+		NOTE: Message On Application Class & Method are missing
+	*/
+	static $NoApplicationResponse = array(
+		'Title'=>'No Class/Method found',
+		'Description'=>'Oops, no valid Method found!',
+		'Message'=>'Invalid Class/Method!'
 	);
 	/*
 		NOTE: Message On Application Database is Error
 	*/
 	static $DatabaseConnection = array(
 		'Title'=>'Invalid Database configuration',
-		'Description'=>'Oops, Invalid configuration!',
+		'Description'=>'Oops, invalid configuration!',
 		'Message'=> 0,
 		'Code'=> 0
 	);
@@ -90,8 +111,8 @@ class Config
 		$letid: Framework Info
 	*/
 	static $letid = array(
-		'Build' => '29.03.16.22.59',
-		'Version' => '1.0.2',
+		'Build' => '29.04.03.09.45',
+		'Version' => '1.0.3',
 		'Name' => 'Letid',
 		'Description' => 'Letid PHP Framework'
 	);

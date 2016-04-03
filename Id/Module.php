@@ -39,7 +39,7 @@ trait Module
 	private function ModuleAutoload()
 	{
 		$loader = new Composer\Autoload\ClassLoader();
-		$loader->addPsr4($this->ModuleName(),array(self::$CoreVar['directory']['root']),true);
+		$loader->addPsr4($this->ModuleName(),array(Config::$dir->root),true);
 		// $loader->loadClass(\App\Private\Configuration);
 		$loader->register(true);
 		// $loader->setUseIncludePath(true);

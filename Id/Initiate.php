@@ -16,11 +16,14 @@ trait Initiate
 	private function InitiateResponse()
     {
 		if ($app=$this->ModuleVerso()) {
-			foreach (self::$CoreVar as $name => $value) {
-				$app->{$name} = $value;
-			}
+			// foreach (self::$CoreVar as $name => $value) {
+			// 	$app->{$name} = $value;
+			// }
 			// $coreVar, $coreConfiguration
 			self::$Content = call_user_func(array($app, $this->VersoMethod));
+		} else {
+			// TODO: disable InitiateError on live application
+			$this->InitiateError(Config::$Notification['error'],Config::$NoApplicationResponse);
 		}
 	}
 	private function InitiateExists($NS,$Instantiating=null)
@@ -35,9 +38,11 @@ trait Initiate
 	private function InitiateErrorFile($fileName)
     {
 		if (file_exists($this->ADE.$fileName.Config::$Extension['template'])) {
-			self::$CoreVar['directory']['template'] = $this->ADE;
+			// Config::$dir['template'] = $this->ADE;
+			Config::$dir->template = $this->ADE;
 		} else {
-			self::$CoreVar['directory']['template'] = Config::$Root.Config::$Notification['dir'];
+			// Config::$dir['template'] = Config::$Root.Config::$Notification['dir'];
+			Config::$dir->template = Config::$Root.Config::$Notification['dir'];
 		}
 	}
 	private function InitiateHost()
@@ -77,17 +82,17 @@ trait Initiate
     {
 		// TODO: remove
 		if ($dir && file_exists($dir.Config::SlB)) {
-			return self::$CoreVar['directory']['root'] = $dir.Config::SlA;
+			return Config::$dir->root = $dir.Config::SlA;
 		} else {
 			$this->InitiateError(Config::$Notification['error'],Config::$NoApplicationExists);
 		}
 	}
 	private function InitiateDirectory($dir)
     {
-		if (self::$CoreVar['directory']['root'] && is_array($dir)) {
+		if (Config::$dir->root && is_array($dir)) {
 			foreach ($dir as $id => $name)
 			{
-				self::$CoreVar['directory'][$id] = self::$CoreVar['directory']['root'].$name.Config::SlA;
+				Config::$dir->{$id} = Config::$dir->root.$name.Config::SlA;
 			}
 		}
 	}
