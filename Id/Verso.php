@@ -25,7 +25,7 @@ trait Verso
 	private function VersoInitiate()
 	{
 		// TODO: session or cookie
-		// NOTE: get version session id
+		// NOTE: get verso session id
 		$id = $this->SessionID('verso');
 		if (!$_SESSION[$id]) {
 			$_SESSION[$id] = $this->VersoExtends(func_get_args()[0]);
@@ -125,15 +125,15 @@ trait Verso
 	{
 		return array_filter($v, function($y, $x){if ($this->VersoExists($y)) return $y;});
 	}
-	private function VersoMenu($menuContent,$menuClass,$is)
+	private function VersoMenu(&$Menu,$menuContent,$Option,$menuClass,$is)
 	{
 		$i = array();
 		foreach ($menuContent as $k => $v) {
-			if (is_string($type=$v[Config::$APT]) && $this->VersoExists($v)) {//&& $this->VersoMenuOption->type == $type
+			if (is_string($type=$v[Config::$APT]) && $this->VersoExists($v)) {//&& $Option->type == $type
 				$class = array($k);
-				if (is_string($this->VersoMenuOption->activeClass)) {
+				if (is_string($Option->activeClass)) {
 					if ($this->VersoCurrent(count($v['href'])-1) == $k) {
-						array_push($class,$this->VersoMenuOption->activeClass);
+						array_push($class,$Option->activeClass);
 					}
 				}
 				$link = array(
@@ -141,75 +141,43 @@ trait Verso
 						'text'=>$this->lang($v[Config::$APE]), 'attr'=>array('href'=>implode($v['href'],Config::SlA))
 					)
 				);
-				if (is_string($this->VersoMenuOption->hasChild) && $context = $this->VersoMenuEngine($v)) {
-					array_push($class,$this->VersoMenuOption->hasChild);
-					array_push($link, $this->VersoMenu($context,$k.$this->VersoMenuOption->suffixChild));
+				if (is_string($Option->hasChild) && $context = $this->VersoMenuEngine($v)) {
+					array_push($class,$Option->hasChild);
+					array_push($link, $this->VersoMenu($Menu,$context,$Option,$k.$Option->suffixChild));
 				}
-				$ilist = array(
-					$this->VersoMenuOption->list=>array(
+				$list = array(
+					$Option->list=>array(
 						'text'=>$link, 'attr'=>array('class'=>$class)
 					)
 				);
 				if($is) {
-					Config::$tmp[$type][] = $ilist;
+					$Menu[$type][] = $list;
 				} else {
-					$i[] = $ilist;
+					$i[] = $list;
 				}
 			}
 		}
-		return array(
-			$this->VersoMenuOption->menu=>array(
-				'text'=>$i, 'attr'=>array('class'=>$menuClass)
-			)
-		);
-		// return array(
-		// 	$this->VersoMenuOption->menu=> array(
-		// 		'text'=>array_map(
-		// 			function ($k, $v) {
-		// 				if (is_string($type=$v[Config::$APT]) && $this->VersoMenuOption->type == $type && $this->VersoExists($v)) {
-		// 					$class = array($k);
-		// 					if (is_string($this->VersoMenuOption->activeClass)) {
-		// 						if ($this->VersoCurrent(count($v['href'])-1) == $k) {
-		// 							array_push($class,$this->VersoMenuOption->activeClass);
-		// 						}
-		// 					}
-		// 					$link = array(
-		// 						'a'=>array(
-		// 							'text'=>$this->lang($v[Config::$APE]), 'attr'=>array('href'=>implode($v['href'],Config::SlA))
-		// 						)
-		// 					);
-		// 					if (is_string($this->VersoMenuOption->hasChild) && $context = $this->VersoMenuEngine($v)) {
-		// 						array_push($class,$this->VersoMenuOption->hasChild);
-		// 						array_push($link, $this->VersoMenu($context,$k.$this->VersoMenuOption->suffixChild));
-		// 					}
-		// 					return array(
-		// 						$this->VersoMenuOption->list=>array(
-		// 							'text'=>$link, 'attr'=>array('class'=>$class)
-		// 						)
-		// 					);
-		// 				}
-		// 			}, array_keys($menuContent), $menuContent
-		// 		),
-		// 		'attr'=>['class'=>$menuClass]
-		// 	)
-		// );
+		if ($i) {
+			return array(
+				$Option->menu=>array(
+					'text'=>$i, 'attr'=>array('class'=>$menuClass)
+				)
+			);
+		}
 	}
 	public function menu($Option=array())
 	{
 		// $timeStart = microtime(true);
 		// NOTE: check Option and merge with default
-		$this->VersoMenuOption = (object) array_merge(Config::$VersoMenuOption,$Option);
-		//TODO: class:isCurrent, hasChild href:getPath
-		//TODO: custom tag, class, href:reference to other domain(blank), home, Auth
-		// $this->versoMenuArray = array();
-		Config::$tmp = array();
-		$this->VersoMenu(Config::$Verso['page'],$this->VersoMenuOption->menuClass,true);
-		foreach (Config::$tmp as $k => $i) {
-			$varName=$this->VersoMenuOption->varName.'_'.$k;
+		$Option = (object) array_merge(Config::$VersoMenuOption,$Option);
+		$Menu = array();
+		$this->VersoMenu($Menu,Config::$Verso['page'],$Option,$Option->menuClass,true);
+		foreach ($Menu as $k => $i) {
+			$varName=$Option->varName.'_'.$k;
 			$this->{$varName} = $this->html(
 				array(
-					$this->VersoMenuOption->menu=>array(
-						'text'=>$i, 'attr'=>array('class'=>array($this->VersoMenuOption->menuClass,$k))
+					$Option->menu=>array(
+						'text'=>$i, 'attr'=>array('class'=>array($Option->menuClass,$k))
 					)
 				)
 			);

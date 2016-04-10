@@ -19,8 +19,8 @@ trait Session
 	    }
 	    return false;
 	}
-	private function SessionID($name)
+	private function SessionID($id)
     {
-		return $name.'.'.$this->config('version');
+		return $id.'.'.$this->config('version');
 	}
 }

@@ -13,7 +13,8 @@ Public methods, which needs to console with `Http\Response`
 > Not done!
 
 ## Language
-    $this->language()
+    Initiation - $this->language()
+    Manager
 > Done! but need to improved
 
 ## trait Initiate
