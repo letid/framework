@@ -21,6 +21,9 @@ trait Initiate
 			// }
 			// $coreVar, $coreConfiguration
 			self::$Content = call_user_func(array($app, $this->VersoMethod));
+			//  if(is_callable(array($app, $this->VersoMethod))) {
+			// 	 self::$Content = $app->{$this->VersoMethod}();
+			//  }
 		} else {
 			// TODO: disable InitiateError on live application
 			$this->InitiateError(Config::$Notification['error'],Config::$NoApplicationResponse);

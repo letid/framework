@@ -19,13 +19,23 @@ trait Constructor
 	{
 		return Config::$list;
 	}
+	public function config($k,$v='')
+	{
+		if ($k) {
+			if ($v) {
+				return $this->setConfig($k,$v);
+			} else {
+				return $this->getConfig($k);
+			}
+		}
+	}
 	public function lang($k)
 	{
-		// if ($k && isset(Config::$lang[$k])) {
-		// 	return Config::$lang[$k];
-		// } else {
-		// 	return $k;
-		// }
+		if ($k && isset(Config::$language[$k])) {
+			return Config::$language[$k];
+		} else {
+			return $k;
+		}
 	}
 	public function __set($name, $value)
 	{

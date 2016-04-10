@@ -5,11 +5,15 @@ class Config
 	/*
 		SlA: Slashes
 	*/
-	const SlA = '/', SlB = '\\', SlH = '://';
+	const SlP='.', SlA='/', SlB='\\', SlH='://';
 	/*
 		$Root: Root Directory
 	*/
 	static $Root = __DIR__;
+	/*
+		$tmp: Temporary
+	*/
+	static $tmp;
 	/*
 		$list: Configuration
 	*/
@@ -46,7 +50,7 @@ class Config
 		$VersoMenuOption: Menu -> option
 	*/
 	static $VersoMenuOption = array(
-		'menu'=>'ol', 'menuClass'=>'menuClass', 'list'=>'li', 'suffixChild'=>'Child', 'activeClass'=>'active', 'hasChild'=>'hasChild', 'type'=>'page'
+		'varName'=>'menu', 'menu'=>'ol', 'menuClass'=>'menu', 'list'=>'li', 'suffixChild'=>'Child', 'activeClass'=>'active', 'hasChild'=>'hasChild', 'type'=>'page'
 	);
 	/*
 		$VersoMenuDefault: Menu -> default
@@ -72,7 +76,8 @@ class Config
 	*/
 	static $Extension = array(
 		'template'=>'.html',
-		'script'=>'.php'
+		'language'=>'ini',
+		'script'=>'php'
 	);
 	/*
 		NOTE: Message On Core Configuration is Missing/Invalid

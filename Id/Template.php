@@ -37,9 +37,10 @@ trait Template
 			return preg_replace_callback(Config::$ATR,
 				function ($k) use ($v){
 					if (is_array($v[$k[1]])) {
+
 						if(count(array_filter(array_keys($v[$k[1]]), 'is_string')) > 0) {
 							return $this->TemplateEngine($k[1], $v[$k[1]]);
-						} else {
+						} else if ($v[$k[1]]) {
 							return implode(
 								array_map(
 									function ($child) use ($k) {
@@ -47,13 +48,29 @@ trait Template
 									}, $v[$k[1]]
 								)
 							);
+						} else {
+							// NOTE: check
+							return $this->TemplateEngine($k[1]);
 						}
 					} elseif ($v[$k[1]]) {
-						 return $v[$k[1]];
+ 						 return $v[$k[1]];
+					} elseif (is_string($this->{$k[1]})) {
+						 return $this->{$k[1]};
+					} elseif ($lang=$this->lang($k[1])) {
+						 return $lang;
 					} elseif (ctype_upper($k[1]{0})) {
+						//NOTE: when upper case
 						return $k[1];
 					} else {
-						return $k[0];
+
+						// echo $k[1];
+						// if (is_string($this->{$k[1]}))
+						// print_r($this);
+						// echo $this->{$k[1]};
+						// echo $this->{$k[0]};
+						// echo $k[1];
+						//NOTE: when not match
+						// return $k[0];
 					}
 				}, $template
 			);
