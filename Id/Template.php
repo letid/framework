@@ -4,8 +4,13 @@ trait Template
 {
 	public function template($cluster)
     {
+		// if (is_array($cluster)) {
+		// 	return $this->TemplateRequest($cluster);
+		// }
 		if (is_array($cluster)) {
 			return $this->TemplateRequest($cluster);
+		} else {
+			return $cluster;
 		}
 	}
 	private function TemplateRequest($cluster)
@@ -18,6 +23,7 @@ trait Template
 			)
 		);
 	}
+	/*
 	private function TemplateResponse($cluster)
     {
 		if (is_array($cluster)) {
@@ -26,11 +32,13 @@ trait Template
 			// 		print_r($this->TemplateEngine($k, $v));
 			// 	}
 			// );
-			foreach ($cluster as $k => $v) print_r($this->TemplateEngine($k,$v));
+			// foreach ($cluster as $k => $v) print_r($this->TemplateEngine($k,$v));
+			print_r($this->TemplateRequest($cluster));
 		} else {
 			print_r($cluster);
 		}
 	}
+	*/
 	private function TemplateEngine($cluster, $v)
     {
 		if ($template=$this->TemplateExists($cluster)) {
@@ -50,26 +58,20 @@ trait Template
 							);
 						} else {
 							// NOTE: check
-							return $this->TemplateEngine($k[1]);
+							// return $this->TemplateEngine($k[1]);
 						}
 					} elseif ($v[$k[1]]) {
  						 return $v[$k[1]];
 					} elseif (is_string($this->{$k[1]})) {
 						 return $this->{$k[1]};
-					} elseif ($lang=$this->lang($k[1])) {
-						 return $lang;
+					} elseif (isset(Config::$language[$k[1]])) {
+						// NOTE: if lang has
+						 return Config::$language[$k[1]];
 					} elseif (ctype_upper($k[1]{0})) {
-						//NOTE: when upper case
+						// NOTE: when upper case
 						return $k[1];
 					} else {
-
-						// echo $k[1];
-						// if (is_string($this->{$k[1]}))
-						// print_r($this);
-						// echo $this->{$k[1]};
-						// echo $this->{$k[0]};
-						// echo $k[1];
-						//NOTE: when not match
+						// NOTE: when not match
 						// return $k[0];
 					}
 				}, $template

@@ -77,6 +77,7 @@ class Config
 	static $Extension = array(
 		'template'=>'.html',
 		'language'=>'ini',
+		'environment'=>'ini',
 		'script'=>'php'
 	);
 	/*

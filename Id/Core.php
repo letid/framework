@@ -1,11 +1,11 @@
 <?php
-namespace Letid\Id;
+// namespace Letid\Id;
 trait Core
 {
 	/*
 		NOTE: HTML
 	*/
-	public static $Content, $ContentType, $ContentMeta;
+	// public static $Content, $ContentType, $ContentMeta;
 	/*
 		TODO: ???
 	*/

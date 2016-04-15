@@ -19,7 +19,6 @@ trait Initiate
 			// foreach (self::$CoreVar as $name => $value) {
 			// 	$app->{$name} = $value;
 			// }
-			// $coreVar, $coreConfiguration
 			self::$Content = call_user_func(array($app, $this->VersoMethod));
 			//  if(is_callable(array($app, $this->VersoMethod))) {
 			// 	 self::$Content = $app->{$this->VersoMethod}();

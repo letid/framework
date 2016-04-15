@@ -3,7 +3,8 @@ namespace Letid\Http;
 use Letid\Id;
 abstract class Request extends Id\Application
 {
-    use Id\Session, Id\Http, Id\Database, Id\Module, Id\Initiate, Id\Verso, Id\Template, Id\Html, Id\Language;
+    use Id\Http, Id\Module, Id\Initiate, Id\Session, Id\Database, Id\Language, Id\Verso;
+    static $Content, $ContentType, $ContentMeta;
     /*
 		NOTE: Application Configuration!
 	*/

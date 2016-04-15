@@ -125,10 +125,10 @@ trait Verso
 	{
 		return array_filter($v, function($y, $x){if ($this->VersoExists($y)) return $y;});
 	}
-	private function VersoMenu(&$Menu,$menuContent,$Option,$menuClass,$is)
+	private function VersoMenu(&$Menu,$Content,$Option,$menuClass,$is)
 	{
 		$i = array();
-		foreach ($menuContent as $k => $v) {
+		foreach ($Content as $k => $v) {
 			if (is_string($type=$v[Config::$APT]) && $this->VersoExists($v)) {//&& $Option->type == $type
 				$class = array($k);
 				if (is_string($Option->activeClass)) {
@@ -171,7 +171,7 @@ trait Verso
 		// NOTE: check Option and merge with default
 		$Option = (object) array_merge(Config::$VersoMenuOption,$Option);
 		$Menu = array();
-		$this->VersoMenu($Menu,Config::$Verso['page'],$Option,$Option->menuClass,true);
+		self::VersoMenu($Menu,Config::$Verso['page'],$Option,$Option->menuClass,true);
 		foreach ($Menu as $k => $i) {
 			$varName=$Option->varName.'_'.$k;
 			$this->{$varName} = $this->html(

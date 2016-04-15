@@ -24,10 +24,10 @@ trait Http
 				$auth=$this->ModuleAuthorization();
 				// add: config
 				Config::$list = array_replace_recursive($this->config,$app->config);
-				if ($app->database) {
+				// TODO: needs to improved
+				if ($db=parse_ini_file(Config::$dir->root.$this->AIV.Config::SlP.Config::$Extension['environment'])) {
 					// mysql: connection
-					// $this->DatabaseRequest(array_merge($this->database,$app->database));
-					$this->DatabaseRequest($app->database);
+					$this->DatabaseRequest($db);
 					if ($this->DatabaseError()) {
 						return $this->DatabaseInitiate();
 					} else {
@@ -55,6 +55,7 @@ trait Http
     }
 	public function Response()
     {
-		$this->TemplateResponse(self::$Content);
+		print_r($this->template(self::$Content));
+		// print_r(get_class_methods($this));
 	}
 }

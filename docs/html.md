@@ -39,7 +39,7 @@ $this->html(
     			'class'=>'currentClass'
     		)
     	)
-    );
+    )
 );
 ```
 ```php
@@ -61,6 +61,17 @@ $this->html(
     			'class'=>'current'
     		)
     	)
-    );
+    )
+);
+
+$this->html(
+    array(
+    	'div'=>array(
+    		'text'=>'Message goes here',
+    		'attr'=>array(
+    			'class'=>'current'
+    		)
+    	)
+    )
 );
 ```

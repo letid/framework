@@ -1,14 +1,24 @@
 <?php
 namespace Letid\Request;
 use Letid\Db;
+class Database extends Db\Query
+{
+}
 /*
-use Letid\Request\DbQuery;
-DbQuery::load("SELECT id FROM tables WHERE name LIKE 'Jo%'")->toArray()->hasCount();
-DbQuery::load("SELECT SQL_CALC_FOUND_ROWS id,name FROM tables WHERE name LIKE 'Jo%' LIMIT 3, 1;")->rowsTotal()->rowsCount()->toArray();
-DbQuery::load("UPDATE tables SET name='Kent2s' WHERE id ='0000000003';")->rowsCount();
-class DbQuery extends Query
+Database::load(
+Database::select()->from()->where()
+Database::insert()->to()
+Database::update()->to()->where()
+Database::query()
+INSERT INTO {$this->users_table} SET $rowsData, created = NOW(), modified = NOW()
+SELECT id FROM {$this->users_table} WHERE $row = '$value'
+
+table, fields = '*', where = NULL, $order = NULL, limit = NULL, offset = NULL
+data,list,info,result, listNum,listRow
+
 */
-class DbQuery extends Db\Request
+/*
+class Database extends Db\Request
 {
 	static function load()
 	{
@@ -30,3 +40,4 @@ class DbQuery extends Db\Request
 		return call_user_func_array(array($this, rows_total),func_get_args());
 	}
 }
+*/

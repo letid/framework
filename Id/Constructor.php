@@ -1,42 +1,11 @@
 <?php
-namespace Letid\Id;
+// namespace Letid\Id;
 trait Constructor
 {
-	use Core;
 	public function __construct()
     {
         // constructor!
     }
-	public function setConfig($name, $value)
-	{
-		Config::$list[$name] = $value;
-	}
-	public function getConfig($name)
-	{
-		return Config::$list[$name];
-	}
-	public function rowConfig()
-	{
-		return Config::$list;
-	}
-	public function config($k,$v='')
-	{
-		if ($k) {
-			if ($v) {
-				return $this->setConfig($k,$v);
-			} else {
-				return $this->getConfig($k);
-			}
-		}
-	}
-	public function lang($k)
-	{
-		if ($k && isset(Config::$language[$k])) {
-			return Config::$language[$k];
-		} else {
-			return $k;
-		}
-	}
 	public function __set($name, $value)
 	{
 		$this->{$name} = $value;
@@ -54,4 +23,47 @@ trait Constructor
 	// public function __toString()
 	// {
 	// }
+	public function config($k,$v='')
+	{
+		if (is_bool($k)) {
+			return Config::$list;
+		} else if ($k) {
+			if ($v) {
+				return Config::$list[$k] = $v;
+			} else {
+				return Config::$list[$k];
+			}
+		}
+	}
+	public function lang($y,$v=array())
+	{
+		if ($y) {
+			if ($v) {
+				return preg_replace_callback(Config::$ATR,
+					function ($k) use ($v){
+						if (is_array($v[$k[1]])) {
+							return implode(', ',$v[$k[1]]);
+						} elseif ($v[$k[1]]) {
+							 return $v[$k[1]];
+						} elseif (is_string($this->{$k[1]})) {
+							 return $this->{$k[1]};
+						} elseif (isset(Config::$language[$k[1]])) {
+							// NOTE: if lang has
+							 return Config::$language[$k[1]];
+						} elseif (ctype_upper($k[1]{0})) {
+							// NOTE: when upper case
+							return $k[1];
+						} else {
+						}
+					}, $this->lang($y)
+				);
+			} else {
+				if (isset(Config::$language[$y])) {
+					return Config::$language[$y];
+				} else {
+					return $y;
+				}
+			}
+		}
+	}
 }

@@ -1,10 +1,6 @@
 <?php
 namespace Letid\Request;
 use Letid\Id;
-/*
-use Letid\Request\Config;
-- Config:set(), ...
-*/
 class Config extends Id\Config
 {
     public static function set($name, $value)

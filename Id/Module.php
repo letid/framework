@@ -5,9 +5,8 @@ trait Module
 {
 	private function ModuleApplication()
     {
-		if ($Classname = $this->ModuleExists($this->AIV.Config::SlB.$this->AVC) or $Classname = $this->ModuleExists($this->AAI)) {
+		if ($Classname = $this->ModuleExists($this->AAI)) {
 			return $this->ModuleApp = new $Classname();
-			// $this->ModuleApp
 		} else {
 			$this->InitiateError(Config::$Notification['error'],Config::$NoApplicationInitiation);
 		}

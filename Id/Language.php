@@ -14,8 +14,10 @@ trait Language
 		//NOTE: is language enabled!
 		if ($this->langDefault=$this->getConfig('language_default')) {
 			//NOTE: Session keys
-			$this->LSLG= 'lang.uage';
-			$this->LSLN= 'lang.name';
+			$this->LSLG= $this->SessionID('lang.uage');
+			$this->LSLN= $this->SessionID('lang.name');
+			// $this->LSLG= 'lang.uage';
+			// $this->LSLN= 'lang.name';
 			$lang = array(
 				$this->langDefault => array()
 			);
@@ -27,7 +29,9 @@ trait Language
 					$lang[$sil]=array();
 				}
 			} else {
-				$_SESSION['sil'] = $this->langDefault;
+				if (!$_SESSION['sil']) {
+					$_SESSION['sil'] = $this->langDefault;
+				}
 			}
 			$this->LanguageEngine($lang);
 			// NOTE: testing
