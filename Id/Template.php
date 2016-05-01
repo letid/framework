@@ -62,8 +62,11 @@ trait Template
 						}
 					} elseif ($v[$k[1]]) {
  						 return $v[$k[1]];
-					} elseif (is_string($this->{$k[1]})) {
+					} elseif (is_scalar($this->{$k[1]})) {
 						 return $this->{$k[1]};
+					} elseif (isset(Config::$data[$k[1]])) {
+						// NOTE: if data has
+						 return Config::$data[$k[1]];
 					} elseif (isset(Config::$language[$k[1]])) {
 						// NOTE: if lang has
 						 return Config::$language[$k[1]];

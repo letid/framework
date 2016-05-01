@@ -1,18 +1,12 @@
 <?php
 namespace Letid\Id;
-use Letid\Db\Connection;
+use Letid\Database\Connection;
 trait Database
 {
 	// NOTE: method available to user
-	// public function database()
-	// {
-	// 	return Connection::$db;
-	// }
-	// NOTE: method available only for let
 	private function DatabaseRequest()
     {
 		$this->database = $this->DatabaseConnectMySQLi(func_get_args()[0]);
-		// return \Letid\Database\Connection::Connectivity(func_get_args()[0]);
 	}
 	private function DatabaseConnectMySQLi($d)
 	{
@@ -25,14 +19,6 @@ trait Database
 			// Connection::$db->set_charset("utf8");
 			return Connection::$db;
 		}
-	}
-	private function DatabaseConnectMySQL($d)
-	{
-		// ?
-	}
-	private function DatabaseConnectPDO($d)
-	{
-		// ?
 	}
 	private function DatabaseError()
     {

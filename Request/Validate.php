@@ -1,7 +1,6 @@
 <?php
 namespace Letid\Request;
 use Letid\Id;
-trait Application
+class Validate extends Id\Validate
 {
-    use Id\Common;
 }

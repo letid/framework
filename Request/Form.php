@@ -1,15 +1,33 @@
 <?php
 namespace Letid\Request;
-use Letid\Id\Validate;
-class Form
+class Form extends StaticConstructor
 {
-	public function request($formName,$setting=array())
+	/*
+	local required method(Common):
+		lang
+		template
+		html
+		config
+		data
+	*/
+	// static $custom;
+	static function request()
 	{
-		$formSubmit=isset($_POST[$formName]);
-		$formData=array();
-		$formStatus=array();
-		$Star = '*';
-		$messageName=$formName.'_form_message';
+		return new self('formName',func_get_args()[0]);
+	}
+	public function setting()
+	{
+		self::$iClass = func_get_args()[0];
+		$formName 		= $this->formName;
+		$formSubmit		= isset($_POST[$formName]);
+		$formData		= array();
+		$formStatus		= array();
+		$formRequired 	= '*';
+		$setting 		= $this->settingConfiguration($formName.'_setting');
+		$messageName	= $this->messageName = $formName.'_form_message';
+		// $this->data('registration_value_username','Ok');
+		// $this->registration_value_username = 'what';
+		// Config::$data['registration_value_username']= 'what';
 		foreach ($setting as $fillName => $is) {
 			$valueName = $formName.'_value_'.$fillName;
 			$maskName = $formName.'_mask_'.$fillName;
@@ -19,11 +37,13 @@ class Form
 			*/
 			if ($formSubmit) {
 				if (isset($_POST[$fillName])) {
-					$setting[$fillName]['value'] = $_POST[$fillName];
-					self::hasValue($setting[$fillName],$valueName);
+					$setting[$fillName]['value'] = $this->hasValue($valueName,$_POST[$fillName]);
+					$fillValue = $setting[$fillName]['value'];
+					// $setting[$fillName]['value'] = $_POST[$fillName];
+					// $this->hasValue($valueName,$setting[$fillName]);
 				}
 			} else {
-				self::hasValue($is,$valueName);
+				$fillValue = $this->hasValue($valueName,$is);
 			}
 			/*
 				'require'=>array(
@@ -31,13 +51,12 @@ class Form
 					'status'=>'Username'
 				)
 			*/
-			if (is_array($is['require'])) {
-				$isRequire = $is['require'];
-				$this->{$maskName} = $Star;
+			if (isset($is['require']) && is_array($isRequire=$is['require'])) {
+				$this->hasMask($maskName,$formRequired);
 				if ($formSubmit) {
-					if (!$this->{$valueName}) {
-						$formStatus[] = self::hasStatus($isRequire,$fillName);
-						self::hasMask($isRequire,$maskName);
+					if (!$fillValue) {
+						$formStatus[] = $this->hasStatus($fillName,$isRequire);
+						$this->hasMask($maskName,$isRequire);
 					}
 				}
 			}
@@ -48,29 +67,27 @@ class Form
 					'status'=>'a valid Email'
 				)
 			*/
-			if (is_array($is['validate'])) {
-				$isValidate = $is['validate'];
-				if ($formSubmit && $this->{$valueName}) {
-					if ($isValidate['task']) {
-						if (!forward_static_call_array(array(Validate::class, $isValidate['task']), array($this->{$valueName}))) {
-							$formStatus[] = self::hasStatus($isValidate,$fillName);
-							self::hasMask($isValidate,$maskName);
+			if (isset($is['validate']) && is_array($isValidate=$is['validate'])) {
+				if ($formSubmit && $fillValue) {
+					if (isset($isValidate['task'])) {
+						// call_user_func_array(array(Validate::class, $isValidate['task']), array($fillValue))
+						// !forward_static_call_array(array(Validate, $isValidate['task']), array($fillValue))
+						if (!forward_static_call_array(array(Validate::class, $isValidate['task']), array($fillValue))) {
+							$formStatus[] = $this->hasStatus($fillName,$isValidate);
+							$this->hasMask($maskName,$isValidate);
 						}
 					}
 				}
 			}
 		}
-		// NOTE: registration start
 		// print_r($setting);
+		// NOTE: registration start
 		if ($formSubmit){
 			if ($formStatus) {
-				// NOTE: fail validation
-				$Message = $this->lang('required VALUE.',
-					array('value'=>$this->joinAndOr($formStatus))
+				$Message = $this->lang('required VALUE',
+					array('value'=>$this->array_sentence($formStatus))
 				);
-				$this->{$messageName} = self::hasMessage(
-					$Message, array('invalid')
-				);
+				$this->hasMessage($messageName, $Message, array('default'));
 			} else {
 				// NOTE: success validation, and begin custom Methods
 				foreach ($setting as $fillName => $is) {
@@ -91,27 +108,27 @@ class Form
 		                    )
 						)
 					*/
-					if (is_array($is['custom'])) {
-						foreach ($is['custom'] as $userFunction => $isCustom) {
+					if (isset($is['custom']) && is_array($is['custom'])) {
+						foreach ($is['custom'] as $customMethod => $isCustom) {
 							if (is_array($isCustom)) {
-								if (is_array($isCustom['task'])) {
-									array_push($isCustom['task'], $is['value'], $fillName);
-								} else {
-									if ($isCustom['task']) {
-										$isCustom['task'] = array($isCustom['task'], $is['value'], $fillName);
+								if (isset($isCustom['task'])) {
+									if (is_array($isCustom['task'])) {
+										array_push($isCustom['task'], $is['value'], $fillName);
 									} else {
-										$isCustom['task'] = array($is['value'], $fillName);
+										$isCustom['task'] = array($isCustom['task'], $is['value'], $fillName);
 									}
+								} else {
+									$isCustom['task'] = array($is['value'], $fillName);
 								}
-								$isCustomResponse=call_user_func_array(array($this, $userFunction), $isCustom['task']);
+								$isCustomResponse=call_user_func_array(array(self::$iClass, $customMethod), $isCustom['task']);
 								if ($isCustomResponse) {
 									if (isset($isCustom['modify'])) {
 										$formData[$fillName]=$isCustomResponse;
 									}
 								} else {
-									$formStatus = self::hasStatus($isCustom,'Error');
+									$formStatus = $this->hasStatus('Error',$isCustom);
 									if ($isCustom['mask']) {
-										$this->{$is['maskName']} = $this->lang($isCustom['mask']);
+										$this->hasMask($is['maskName'],$isCustom);
 									}
 									break;
 								}
@@ -121,42 +138,94 @@ class Form
 				}
 				if ($formStatus) {
 					// NOTE: feil custom Methods
-					$this->{$messageName} = self::hasMessage(
-						$Message, array('error')
-					);
+					$this->hasMessage($messageName, $Message, array('error'));
 				} else {
 					// NOTE: success validation and custom Methods
-					$this->{$messageName} = self::hasMessage(
-						$this->lang('Done'), array('success')
-					);
-					return $formData;
+					$this->formData = $formData;
+					// $this->messageName = $messageName;
+					// $this->hasMessage($messageName, $this->lang('Done'), array('success'));
+					// echo $this->array_key_join_value($formData);
+					// echo Utilities::array_key_join_value($formData);
+					// return $formData;
 				}
 			}
 		} else {
 			// NOTE: default
-			$this->{$messageName} = self::hasMessage(
-				$this->lang('form default'), array('default')
-			);
+			// $this->hasMessage($messageName, 'form default', array('default'));
+		}
+		return $this;
+	}
+	public function response()
+	{
+		// NOTE: insert, update, delete, select
+		// $this->responseValue = 'what';
+		// print_r(get_class_methods($this));
+		// $this->responseTest = $this->data('test');
+		// $this->hasMessage($this->messageName, $this->lang('Done'), array('success'));
+		// print_r($this);
+		if (isset($this->formData)) {
+			// echo $this->array_key_join_value($this->formData);
+
+			$this->hasMessage($this->messageName, $this->lang('Done'), array('success'));
+			// $abc = Database::insert('userTable')->set($this->formData)->build();
+			$abc = array_keys($this->formData);
+			print_r($abc);
+			// print_r($this);
+		}
+		return $this;
+	}
+	public function insert()
+	{
+		$rowsData = implode(', ', array_map(
+            function ($v, $k) { return sprintf("%s='%s'", $k, $v); },
+            $d, array_keys($d)
+        ));
+        // print_r($rowsData);
+        $db=Database::load("INSERT INTO {$this->users_table} SET $rowsData, created = NOW(), modified = NOW()");
+        print_r($db);
+		// return $this;
+	}
+	public function select()
+	{
+		return $this;
+	}
+	public function update()
+	{
+		return $this;
+	}
+	public function delete()
+	{
+		return $this;
+	}
+	private function hasValue($valueName,$has) {
+		if (is_scalar($has)) {
+			return $this->data($valueName,$has);
+		} else if (isset($has['value'])) {
+			return $this->data($valueName,$has['value']);
 		}
 	}
-	private function hasValue($has,$valueName) {
-		if (isset($has['value'])) {
-			$this->{$valueName} = $has['value'];
-		}
-	}
-	private function hasStatus($has,$fillName=null) {
+	private function hasStatus($fillName,$has) {
 		if (isset($has['status'])) {
 			return $this->lang($has['status']);
 		} elseif ($fillName) {
 			return $fillName;
 		}
 	}
-	private function hasMask($has,$maskName) {
-		if ($has['mask']) {
-			$this->{$maskName} = $this->lang($has['mask']);
+	private function hasMask($maskName,$has) {
+		if (is_scalar($has)) {
+			$this->data($maskName,$this->lang($has));
+		} else if (isset($has['mask'])) {
+			$this->data($maskName,$this->lang($has['mask']));
 		}
 	}
-	private function hasMessage($msg,$attr='message') {
+	private function hasMessage($messageName, $msg, $value) {
+		$this->data($messageName,
+			$this->hasMessageHtml(
+				$msg, $value
+			)
+		);
+	}
+	private function hasMessageHtml($msg,$attr='message') {
 		return $this->html(
 		    array(
 		    	'p'=>array(
@@ -169,13 +238,3 @@ class Form
 		);
 	}
 }
-/*
-if (is_array($is['require'])) {
-	if ($formSubmit) {
-		if ($_POST[$fillName]) {
-		} else {
-		}
-	} else {
-	}
-}
-*/

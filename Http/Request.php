@@ -3,7 +3,7 @@ namespace Letid\Http;
 use Letid\Id;
 abstract class Request extends Id\Application
 {
-    use Id\Http, Id\Module, Id\Initiate, Id\Session, Id\Database, Id\Language, Id\Verso;
+    use Id\Http, Id\Module, Id\Initiate, Id\Session, Id\Database, Id\Lang, Id\Verso;
     static $Content, $ContentType, $ContentMeta;
     /*
 		NOTE: Application Configuration!
@@ -68,6 +68,10 @@ abstract class Request extends Id\Application
 		$APM: Page's Authorization (Not in use)
 	*/
 	protected $APA = 'Auth';
+    /*
+		$APL: Page's Link
+	*/
+	protected $APL = 'Link';
     /*
 		$APM: Page's Type (Not in use)
 	*/

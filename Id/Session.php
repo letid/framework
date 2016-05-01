@@ -21,6 +21,7 @@ trait Session
 	}
 	private function SessionID($id)
     {
+		// return $id.'.'.uniqid();
 		return $id.'.'.$this->config('version');
 	}
 }

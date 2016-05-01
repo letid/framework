@@ -2,14 +2,19 @@ Updates
 ==========
 Letid PHP Framework
 
-
-### v1.0.4 (??)
+### v1.0.4 (29.05.01.09.16)
 - Added
     - Form
+- Changes
+    - Language(method) to Lang
+    - Db(namespace) to Database
 - Improved
-    - Language
-    - Menu
+    - Lang (is_scalar)
+    - Menu (speed, child's activeClass)
+    - Template (is_scalar)
+    - Database (query, insert, select, update, delete, drop, truncate)
     - Structure
+    - bugs fixed(error, warning)
 
 > NOTE: ?
 

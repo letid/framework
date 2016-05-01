@@ -7,6 +7,7 @@ trait Http
 		$this->SessionRequest();
 		Config::$hostname = $_SERVER['HTTP_HOST'];
 		// $this->HttpProtocol = Validate::protocal();
+		// Config::$url = (new Validate)->protocal().Config::SlH.Config::$hostname;
 		Config::$url = Validate::protocal().Config::SlH.Config::$hostname;
 		if ($uri=trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), Config::SlA)) {
 			Config::$uri = explode(Config::SlA, $uri);
@@ -40,7 +41,7 @@ trait Http
 				// get: necessary directory
 				$this->InitiateDirectory($this->dir);
 				// TODO: working
-				$this->LanguageRequest($_GET['language']);
+				$this->LangRequest();
 				// config: vars and verso
 				$this->VersoRequest($this->host);
 				// check: verso authorization
@@ -55,7 +56,6 @@ trait Http
     }
 	public function Response()
     {
-		print_r($this->template(self::$Content));
-		// print_r(get_class_methods($this));
+		echo $this->template(self::$Content);
 	}
 }

@@ -1,8 +1,8 @@
 <?php
 namespace Letid\Id;
-trait Language
+trait Lang
 {
-	private function LanguageRequest($sil)
+	private function LangRequest()
 	{
 		/*
 		HACK: language Requests created:
@@ -11,43 +11,38 @@ trait Language
 		NOTE: In order to get the language work "language_default" and "language" dir needs to set!
 		substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 		*/
-		//NOTE: is language enabled!
-		if ($this->langDefault=$this->getConfig('language_default')) {
+		// NOTE: is language enabled!
+		if ($this->langDefault=$this->config('language_default')) {
 			//NOTE: Session keys
 			$this->LSLG= $this->SessionID('lang.uage');
 			$this->LSLN= $this->SessionID('lang.name');
-			// $this->LSLG= 'lang.uage';
-			// $this->LSLN= 'lang.name';
 			$lang = array(
 				$this->langDefault => array()
 			);
-			if ($sil) {
+			if (isset($_GET['language']) && $sil=$_GET['language']) {
 				if (!$_SESSION['sil'] || $sil != $_SESSION['sil']) {
-					//NOTE: user request other, so we reset the previous one
+					// NOTE: user requested language, so we reset the previous one
 					unset($_SESSION[$this->LSLG]);
 					$_SESSION['sil'] = $sil;
 					$lang[$sil]=array();
 				}
 			} else {
-				if (!$_SESSION['sil']) {
+				if (!isset($_SESSION['sil'])) {
 					$_SESSION['sil'] = $this->langDefault;
 				}
 			}
-			$this->LanguageEngine($lang);
-			// NOTE: testing
-			// print_r(Config::$langname);
-			// print_r(Config::$language);
+			$this->LangEngine($lang);
 		}
 	}
-	private function LanguageEngine($lang)
+	private function LangEngine($lang)
 	{
 		// $isCurrent = $this->langDefault;
-		if ($_SESSION[$this->LSLG] && $_SESSION[$this->LSLN]) {
+		if (isset($_SESSION[$this->LSLG]) && isset($_SESSION[$this->LSLN])) {
 			Config::$langname = $_SESSION[$this->LSLN];
 			Config::$language = $_SESSION[$this->LSLG];
 		} else {
 			$dir = Config::$dir->language;
-			foreach ($this->LanguageDirectory($dir) as $langName) {
+			foreach ($this->LangDirectory($dir) as $langName) {
 				if ($langName==$_SESSION['sil']) {
 					$isCurrent = true;
 					Config::$langname[$langName]=true;
@@ -56,7 +51,7 @@ trait Language
 				}
 				// Config::$langname[$langName]=($langName==$_SESSION['sil'])?true:false;
 				if (array_key_exists($langName,$lang)) {
-					foreach ($this->LanguageDirectory($dir.$langName) as $fileName) {
+					foreach ($this->LangDirectory($dir.$langName) as $fileName) {
 						$filePath = $dir.$langName.Config::SlA.$fileName;
 						$file = pathinfo($filePath);
 						if($file['extension'] == Config::$Extension['language']) {
@@ -81,7 +76,7 @@ trait Language
 			$_SESSION[$this->LSLG] = Config::$language;
 		}
 	}
-	private function LanguageDirectory($dir)
+	private function LangDirectory($dir)
 	{
 		return array_diff(scandir($dir), array('..', '.'));
 	}

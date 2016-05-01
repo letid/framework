@@ -15,6 +15,10 @@ class Config
 	*/
 	static $tmp;
 	/*
+		$content: content used in Template and Language
+	*/
+	static $data = array('test'=>'this is test');
+	/*
 		$list: Configuration
 	*/
 	static $list = array();
@@ -117,8 +121,8 @@ class Config
 		$letid: Framework Info
 	*/
 	static $letid = array(
-		'Build' => '29.04.03.09.45',
-		'Version' => '1.0.3',
+		'Build' => '29.05.01.09.16',
+		'Version' => '1.0.4',
 		'Name' => 'Letid',
 		'Description' => 'Letid PHP Framework'
 	);
@@ -140,12 +144,12 @@ class Config
 	/*
 		$Init: Merge these properties from Config->Route->Application (see how it work: Id\Initiate)
 	*/
-	static $Initiate = array('AIV','AVC','APN', 'APT', 'ATR','APH','APE','APC','APM');
+	static $Initiate = array('AIV','AVC','APN', 'APL', 'APT', 'ATR','APH','APE','APC','APM');
 	/*
 		NOTE: Everything down here can be modified in:
 			- App\Core
 		To avoid errors/warnings we just sat default value. Please see Http/Request.
 	*/
-	static $ATR, $APH, $APT, $APE, $APC, $APM;
+	static $ATR, $APH, $APL, $APT, $APE, $APC, $APM;
 
 }

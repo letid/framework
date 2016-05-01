@@ -83,6 +83,7 @@ trait Initiate
 	private function InitiateRoot($dir)
     {
 		// TODO: remove
+		Config::$dir = (object)array();
 		if ($dir && file_exists($dir.Config::SlB)) {
 			return Config::$dir->root = $dir.Config::SlA;
 		} else {
