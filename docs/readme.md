@@ -1,4 +1,4 @@
 # :seedling: Readme
 ---
-Documentation are now available in [Wiki][Wiki]!
+Documentation is now available in [Wiki][Wiki]!
 [Wiki]: ../../../wiki

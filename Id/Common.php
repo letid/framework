@@ -59,10 +59,6 @@ trait Common
 			}
 		}
 	}
-	// public function validate($method, $queue)
-	// {
-	// 	return forward_static_call_array(array(Validate::class,$method), $queue);
-	// }
 	public function error_get_last()
 	{
 		if ($message = error_get_last()) {
