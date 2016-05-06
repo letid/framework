@@ -121,8 +121,8 @@ class Config
 		$letid: Framework Info
 	*/
 	static $letid = array(
-		'Build' => '29.05.01.09.16',
-		'Version' => '1.0.4',
+		'Build' => '05.06.16.11.06',
+		'Version' => '1.0.5',
 		'Name' => 'Letid',
 		'Description' => 'Letid PHP Framework'
 	);
