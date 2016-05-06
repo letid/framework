@@ -42,10 +42,10 @@ trait Common
 						} elseif (is_scalar($this->{$k[1]})) {
 							 return $this->{$k[1]};
 						} elseif (isset(Config::$language[$k[1]])) {
-							// NOTE: if lang has
+							// NOTE: if language has
 							 return Config::$language[$k[1]];
 						} elseif (ctype_upper($k[1]{0})) {
-							// NOTE: when upper case
+							// NOTE: when uppercase
 							return $k[1];
 						}
 					}, $this->lang($y)
