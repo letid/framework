@@ -6,9 +6,7 @@ trait Http
     {
 		$this->SessionRequest();
 		Config::$hostname = $_SERVER['HTTP_HOST'];
-		// $this->HttpProtocol = Validate::protocal();
-		// Config::$url = (new Validate)->protocal().Config::SlH.Config::$hostname;
-		Config::$url = Validate::protocal().Config::SlH.Config::$hostname;
+		Config::$url = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,strpos($_SERVER["SERVER_PROTOCOL"],'/'))).Config::SlH.Config::$hostname;
 		if ($uri=trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), Config::SlA)) {
 			Config::$uri = explode(Config::SlA, $uri);
 		}

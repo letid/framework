@@ -4,6 +4,7 @@ trait Template
 {
 	public function template($cluster)
     {
+		// TODO: header
 		// if (is_array($cluster)) {
 		// 	return $this->TemplateRequest($cluster);
 		// }

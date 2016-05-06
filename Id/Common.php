@@ -16,15 +16,6 @@ trait Common
 				return Config::$list;
 			}
 		}
-		// if (is_bool($y)) {
-		// 	return Config::$list;
-		// } else if ($y) {
-		// 	if ($v) {
-		// 		return Config::$list[$y] = $v;
-		// 	} elseif (isset(Config::$list[$y])) {
-		// 		return Config::$list[$y];
-		// 	}
-		// }
 	}
 	public function data($y,$v='')
 	{
@@ -68,13 +59,15 @@ trait Common
 			}
 		}
 	}
+	// public function validate($method, $queue)
+	// {
+	// 	return forward_static_call_array(array(Validate::class,$method), $queue);
+	// }
 	public function error_get_last()
 	{
-		if ($LEM = error_get_last()) {
+		if ($message = error_get_last()) {
 			$this->error_get_last = $this->template(
-				array(
-					'error_get_last'=>$LEM
-				)
+				array('error_get_last'=>$message)
 			);
 		}
 	}

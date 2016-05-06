@@ -21,14 +21,15 @@ abstract class Connection
 	}
 	public function execute()
 	{
-		if ($this->build()) {
-			$this->result = self::$db->query($this->query);
+		$this->build();
+		if (!self::$db->query($this->query)) {
+			$this->is_error();
 		}
 		return $this;
 	}
-	protected function terminal($args)
+	protected function terminal()
 	{
-		$this->queries=func_get_args()[0][0];
+		$this->queries = func_get_args()[0][0];
 		if (is_object(self::$db)) {
 			return $this->queries;
 		} else {
@@ -91,17 +92,16 @@ abstract class Connection
 	}
 	private function on_insert($Id=self::rowsId)
 	{
-		// mysqli_insert_id(self::$db)
-		return $this->{$Id} = self::$db->insert_id;
+		return $this->{$Id} = self::$db->insert_id; // mysqli_insert_id(self::$db)
 	}
 	private function on_update($Id=self::rowsAffected)
 	{
-		// mysqli_affected_rows(self::$db)
-		return $this->{$Id} = self::$db->affected_rows;
+		return $this->{$Id} = self::$db->affected_rows; // mysqli_affected_rows(self::$db)
 	}
 	private function on_select($Id=self::rowsCount)
 	{
-		// mysqli_num_rows($this->data)
-		return $this->{$Id} = $this->result->num_rows;
+		if ($this->is_result()) {
+			return $this->{$Id} = $this->result->num_rows; // mysqli_num_rows($this->data)
+		}
 	}
 }

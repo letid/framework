@@ -66,4 +66,4 @@ In come cases we may wanted to rename the *vendor* folder. To do so we just need
     "vendor-dir": "vendor"
 }
 ```
-Finally we are done initiating composer package with it's dependencies. Now it's the time to [Setup](docs/setup.md) our Application.
+Finally we are done initiating composer package with it's dependencies. Now it's the time to [Setup](setup.md) our Application.

@@ -1,6 +1,5 @@
 <?php
 namespace Letid\Request;
-use Letid\Id;
-class Timer extends Id\Timer
+class Timer extends \Letid\Id\Timer
 {
 }

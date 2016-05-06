@@ -6,12 +6,6 @@ trait Select
 	{
 		return new self(array('SELECT' => array(func_get_args())));
 	}
-	public function alter()
-	{
-		return $this->queries(function($queue, $args){
-			return array_merge(array('ALTER TABLE' => $args), $queue);
-		},func_get_args());
-	}
 	public function rowsCalc()
 	{
 		return $this->queries('SELECT',function($q,$name){

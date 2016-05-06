@@ -1,5 +1,8 @@
 <?php
 namespace Letid\Database;
+/*
+
+*/
 trait Build
 {
     public function build()
@@ -86,6 +89,123 @@ trait Build
     // }
     private function build_where($Name,$args)
     {
+        /*
+        'AND'=>array('id',1),
+        'OR'=>array('id','1%'),
+        */
+        // $args = array(
+        //     // array('id',1)
+        //     // array(
+        //     //     array('a1','1%'),
+        //     //     array('a2','1%'),
+        //     //     array('a3','>','1')
+        //     // ),
+        //     // // 'OR'=>array('id','>','1'),
+        //     // array(
+        //     //     array(
+        //     //         array('b1','1'),
+        //     //         array('b2','1')
+        //     //     ),
+        //     //     array(
+        //     //         array('c1','1'),
+        //     //         array('c3','1')
+        //     //     )
+        //     // )
+        //     // array(
+        //     //     array('a','>','1'),
+        //     //     'or',
+        //     //     array('b','<','2'),
+        //     // ),
+        //     // 'or',
+        //     // array(
+        //     //     array(
+        //     //         array('e','>','1'),
+        //     //         array('f','>','1')
+        //     //     ),
+        //     //     'or',
+        //     //     array(
+        //     //         array('g','>','1'),
+        //     //         array('g','>','1')
+        //     //     )
+        //     // ),
+        //     // 'or',
+        //     // array('z','>','1'),
+        //     // 'or',
+        //     // array('trt','>','1')
+        // );
+        // $args = array('id',1);
+
+        if (count($args) == count($args, COUNT_RECURSIVE)) {
+            return $this->build_where_helper($args);
+        } else {
+            // print_r($args);
+            $args =  $this->build_where_deep($args);
+            print_r($args);
+            $args_map =  $this->build_where_map($args,true);
+            // print_r($args_map);
+            return join(' ', $args_map);
+        }
+    }
+    private function build_where_map($args,$test)
+    {
+        return array_map(
+            function ($v,$k) use($test) {
+                $Ope='';
+                if ($k % 2 == 0) {
+                    // if (is_array($v)) {
+                    //     $Ope = 'AND';
+                    // }
+                    // if ($test) {
+                    //
+                    //     $Ope = 'AND...';
+                    // }
+                } else {
+                    if (is_array($v)) {
+                        $Ope = 'AND';
+                    }
+                }
+
+                // if ($k > 0) {
+                //     if (is_array($v)) {
+                //         $Ope = 'AND';
+                //     }
+                // }
+                if (is_array($v)) {
+                    $map = $this->build_where_map($v);
+                    if ($Ope) {
+                        $format = '%s %s';
+                        if (count($map) > 1) {
+                            $format = '%s (%s)';
+                        }
+                        return sprintf($format, $Ope, join(' ',$map));
+                    } elseif (count($map) > 1) {
+                        return sprintf("(%s)", join(' ',$map));
+                    } else {
+                        return join(' ', $map);
+                    }
+                } elseif (strpos($v, ' ') > 0) {
+                    return $v;
+                } else {
+                    return strtoupper($v);
+                }
+            }, $args, array_keys($args)
+        );
+    }
+    private function build_where_deep($args)
+    {
+        array_walk($args, function(&$value) {
+            if (is_array($value)) {
+                if (count($value) == count($value, COUNT_RECURSIVE)) {
+                    $value = array($this->build_where_helper($value));
+                } else {
+                    $value = $this->build_where_deep($value);
+                }
+            }
+        });
+        return $args;
+    }
+    private function build_where_helper($args)
+    {
         if (count($args) == 2) {
             if (substr($args[1], 0, 1) == '%' or substr($args[1], -1) == '%') {
                 $operator = array('LIKE');
@@ -95,6 +215,7 @@ trait Build
             array_splice($args, 1, 0, $operator);
         }
         return vsprintf("%s %s '%s'", $args);
+        // return sprintf("%s %s '%s'", $args[0], $args[1], $args[2]);
     }
     private function build_insert_into($Name,$args)
     {

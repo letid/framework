@@ -3,8 +3,22 @@ namespace Letid\Id;
 abstract class Application
 {
 	use Common;
-	public function __construct()
+	static $scoop;
+	protected function scoop_set()
 	{
+		if (func_get_args()) {
+			return self::$scoop=func_get_args()[0];
+		}
+	}
+	protected function scoop_get()
+	{
+		if (func_get_args()) {
+			if (self::$scoop->{func_get_args()[0]}) {
+				return self::$scoop->{func_get_args()[0]};
+			}
+		} else {
+			return self::$scoop;
+		}
 	}
 	public function __set($name, $value)
 	{
@@ -12,17 +26,10 @@ abstract class Application
 	}
 	public function __get($name)
 	{
-		if(property_exists($this, $name)) {
-			return $this->{$name};
-		}
+		if(property_exists($this, $name)) return $this->{$name};
 	}
 	public function __call($name, $arguments)
 	{
-		// if(method_exists($this, $name) == false) return $this;
+		return $this;
 	}
-	/*
-	public function __toString()
-	{
-	}
-	*/
 }

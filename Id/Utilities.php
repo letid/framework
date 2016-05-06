@@ -2,23 +2,16 @@
 namespace Letid\Id;
 trait Utilities
 {
-	/*
-	toStrOrAnd, toStrSentence, toStrKeyValue
-	createSentence
-	arrayToSentence,
-	arrayJoinWithKey
-	createQuery
-	*/
-	function array_sentence($Data,$Or=', ',$And=' & ')
+	public function array_sentence($x,$y=', ',$z=' & ')
     {
-		return join($And, array_filter(array_merge(array(join($Or, array_slice($Data, 0, -1))), array_slice($Data, -1)), 'strlen'));
+		return join($z, array_filter(array_merge(array(join($y, array_slice($x, 0, -1))), array_slice($x, -1)), 'strlen'));
 	}
-	function array_key_join_value($Data,$sep=', ',$format="%s='%s'")
+	public function array_key_join_value($x,$y=', ',$z="%s='%s'")
     {
-		return join($sep, array_map(
-			function ($v, $k) use($format) {
-				return sprintf($format, $k, $v);
-			}, $Data, array_keys($Data)
+		return join($y, array_map(
+			function ($v, $k) use($z) {
+				return sprintf($z, $k, $v);
+			}, $x, array_keys($x)
 		));
 	}
 }

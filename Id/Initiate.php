@@ -54,7 +54,7 @@ trait Initiate
 	private function InitiateHostExists($key)
     {
 		// session_unset($_SESSION[$ID]);
-		if ($_SESSION[$key]) {
+		if (isset($_SESSION[$key]) && $_SESSION[$key]) {
 			return $_SESSION[$key];
 		} else if($this->host && $Name=$this->InitiateHostName()) {
 			return $_SESSION[$key]=$Name;

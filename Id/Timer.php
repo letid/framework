@@ -16,3 +16,7 @@ class Timer
 		return $this->TimerFinish = round((microtime(true) - $this->TimerStart), 4);
 	}
 }
+/*
+$timer = new Timer();
+$timer->finish();
+*/

@@ -4,7 +4,6 @@ trait Delete
 {
 	static function delete()
 	{
-		// return new self(func_get_args()[0]);
 		return new self(array('DELETE' => func_get_args()));
 	}
 	static function drop()
@@ -20,27 +19,24 @@ trait Delete
 	//--------------
 	static function delete_from()
 	{
-		// The DELETE TABLE Statement
+		// The DELETE TABLE Statement is used to delete rows
 		// DELETE FROM tableName
 		return new self(array('DELETE FROM' => func_get_args()));
 	}
 	static function truncate_table()
 	{
-		// The TRUNCATE TABLE Statement
-		// What if we only want to delete the data inside the table, and not the table itself? Then, use the TRUNCATE TABLE statement:
+		// The TRUNCATE TABLE Statement is used to delete the data inside the table, and not the table itself
 		// TRUNCATE TABLE tableName
 		return new self(array('TRUNCATE TABLE' => func_get_args()));
 	}
 	static function drop_database()
 	{
-		// The DROP DATABASE Statement
 		// The DROP DATABASE statement is used to delete a database.
 		// DROP DATABASE databaseName
 		return new self(array('DROP DATABASE' => func_get_args()));
 	}
 	static function drop_table()
 	{
-		// The DROP TABLE Statement
 		// The DROP TABLE statement is used to delete a table.
 		// DROP TABLE tableName
 		return new self(array('DROP TABLE' => func_get_args()));
