@@ -13,10 +13,6 @@ trait Response
 		}
 		return $this;
     }
-	public function login()
-    {
-		return $this;
-    }
 	public function insert()
     {
 		if ($this->issetPost($this->formName)) {
@@ -35,16 +31,24 @@ trait Response
 		}
 		return $this;
     }
+	public function login()
+    {
+		if ($this->issetPost($this->formName)) {
+			if ($this->formPost) {
+				$this->responseError('Login is not ready');
+			} else {
+				$this->responseDefault($this->formMessage);
+			}
+		} elseif ($this->formMessage) {
+			$this->responseDefault($this->formMessage);
+		}
+		return $this;
+    }
 	public function update()
     {
 		if ($this->issetPost($this->formName)) {
 			if ($this->formPost) {
-				// $db = Database::update($this->formPost)->to($this->formTable)->where()->execute()->rowsAffected();
-				// if ($db->rowsAffected) {
-				// 	$this->responseSuccess("Done! What's next?"); // $db->query
-				// } else {
-				// 	$this->responseError($db->msg);
-				// }
+				$this->responseError('Update is not ready');
 			} else {
 				$this->responseDefault($this->formMessage);
 			}
@@ -55,6 +59,15 @@ trait Response
     }
 	public function delete()
     {
+		if ($this->issetPost($this->formName)) {
+			if ($this->formPost) {
+				$this->responseError('Delete is not ready');
+			} else {
+				$this->responseDefault($this->formMessage);
+			}
+		} elseif ($this->formMessage) {
+			$this->responseDefault($this->formMessage);
+		}
 		return $this;
     }
 }
