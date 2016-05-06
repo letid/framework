@@ -25,7 +25,7 @@ trait Common
 			} elseif (isset(Config::$data[$y])) {
 				return Config::$data[$y];
 			}
-		}
+		}	
 	}
 	public function lang($y,$v=array())
 	{
