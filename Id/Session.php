@@ -4,7 +4,7 @@ trait Session
 {
 	private function SessionRequest()
     {
-		if ($this->SessionExists() === FALSE ) {
+		if ($this->SessionExists() === false ) {
 			session_start();
 		}
 	}
