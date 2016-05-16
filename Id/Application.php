@@ -3,21 +3,23 @@ namespace Letid\Id;
 abstract class Application
 {
 	use Common;
-	static $scoop;
+	static protected $let, $id, $user;
+	static $scope;
+	// TODO: $scope should be scope
 	protected function scoop_set()
 	{
 		if (func_get_args()) {
-			return self::$scoop=func_get_args()[0];
+			return self::$scope=func_get_args()[0];
 		}
 	}
 	protected function scoop_get()
 	{
 		if (func_get_args()) {
-			if (self::$scoop->{func_get_args()[0]}) {
-				return self::$scoop->{func_get_args()[0]};
+			if (isset(self::$scope->{func_get_args()[0]})) {
+				return self::$scope->{func_get_args()[0]};
 			}
 		} else {
-			return self::$scoop;
+			return self::$scope;
 		}
 	}
 	public function __set($name, $value)
