@@ -16,8 +16,8 @@ trait Query
 	}
 	public function toObject($rowsName=self::rowsName)
 	{
-		if ($data=self::is_result()) {
-			$this->{$rowsName} = $data->fetch_object();
+		if ($db=self::is_result()) {
+			$this->{$rowsName} = $db->fetch_object();
 		}
 		return $this;
 	}

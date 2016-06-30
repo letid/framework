@@ -25,7 +25,7 @@ trait Insert
 	}
 }
 /*
-uniqid(); NOW(); date('Y-m-d G:i:s');
+uniqid(); NOW(); date('Y-m-d G:i:s'); date("mdHis");
 Database::insert(
 		array('username'=>1, 'password'=>2)
 	)
@@ -34,6 +34,29 @@ Database::insert(
 	)
 	->build();
 HACK: INSERT INTO tableName SET username = '1', modified = '2';
+
+Database::insert(
+		array('username'=>array(1), 'password'=>array(2))
+	)
+	->to(
+		'tableName'
+	)
+	->build();
+HACK: INSERT INTO tableName SET username = 1, modified = 2;
+
+Database::$database->insert(
+	array(
+		'visit'=>1,
+		'ip'=>'127.0.1'
+	)
+)->to(
+	tableName
+)->duplicateUpdate(
+	array(
+		'visit'=>array('(visit+1)')
+	)
+)->execute();
+HACK: INSERT INTO tableName SET visit='1', ip='127.0.1' ON DUPLICATE KEY UPDATE visit=(visit+1)
 
 Database::insert(
 		array('username', 'password')

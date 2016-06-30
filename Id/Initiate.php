@@ -1,102 +1,44 @@
 <?php
 namespace Letid\Id;
-trait Initiate
+abstract class Initiate extends Core
 {
-	private function InitiateRequest($app)
-    {
-		foreach (Config::$Initiate as $name) {
-			if (property_exists($app, $name)) {
-				$this->{$name} = $app->{$name};
-			}
-			if (property_exists(Config::class, $name) && property_exists($this, $name)) {
-				Config::${$name} = $this->{$name};
-			}
-		}
-	}
-	private function InitiateResponse()
-    {
-		if ($app=$this->ModuleVerso()) {
-			// foreach (self::$CoreVar as $name => $value) {
-			// 	$app->{$name} = $value;
-			// }
-			self::$Content = call_user_func(array($app, $this->VersoMethod));
-			//  if(is_callable(array($app, $this->VersoMethod))) {
-			// 	 self::$Content = $app->{$this->VersoMethod}();
-			//  }
+	public function InitiateRequest()
+	{
+		// print_r(Application::cookie()->sign()->get(true));
+		if (isset($_GET['signout'])) {
+			$this->InitiateReset();
 		} else {
-			// TODO: disable InitiateError on live application
-			$this->InitiateError(Config::$Notification['error'],Config::$NoApplicationResponse);
+			// Application::cookie()->sign()->get(true)
+			// AssetCookie::sign()->get(true)
+			if ($signCookieValue = Application::cookie()->sign()->get(true)) {
+				$this->InitiateUser($signCookieValue);
+			}
 		}
 	}
-	private function InitiateExists($NS,$Instantiating=null)
+	private function InitiateUser($signCookieValue)
     {
-	}
-	private function InitiateError($file,$msg)
-    {
-		$this->InitiateErrorFile($file);
-		$invalid[$file] = $msg;
-		self::$Content = $invalid;
-	}
-	private function InitiateErrorFile($fileName)
-    {
-		if (file_exists($this->ADE.$fileName.Config::$Extension['template'])) {
-			// Config::$dir['template'] = $this->ADE;
-			Config::$dir->template = $this->ADE;
+        $user = Application::$database->select('*')->from($this->table['user'])->where($signCookieValue)->execute()->toObject()->rowsCount();
+		if ($user->rowsCount) {
+			Application::$user = $this->user = $user->rows;
+			Application::content('display.name')->set($user->rows->displayname);
 		} else {
-			// Config::$dir['template'] = Config::$Root.Config::$Notification['dir'];
-			Config::$dir->template = Config::$Root.Config::$Notification['dir'];
+			$this->TerminalReset();
 		}
-	}
-	private function InitiateHost()
+    }
+    private function InitiateDatabase()
     {
-		if ($Host=$this->InitiateHostExists(Config::$hostname)) return $this->ADA.$Host;
-	}
-	private function InitiateHostExists($key)
+        // return new Id\Database;
+    }
+    private function InitiateReset()
     {
-		// session_unset($_SESSION[$ID]);
-		if (isset($_SESSION[$key]) && $_SESSION[$key]) {
-			return $_SESSION[$key];
-		} else if($this->host && $Name=$this->InitiateHostName()) {
-			return $_SESSION[$key]=$Name;
-		} else if($this->ADT) {
-			return $_SESSION[$key]=$this->ADT;
-		}
-	}
-	private function InitiateHostName()
-    {
-		foreach ($this->host as $Name => $Regex)
-		{
-			if ($Regex && $this->InitiateHostEngine(is_array($Regex)?$Regex:array($Regex))) {
-				return $Name;
-			}
-		}
-	}
-	private function InitiateHostEngine($Regex)
-    {
-		foreach ($Regex as $Name)
-		{
-			if (preg_match("/$Name/", Config::$hostname)) {
-				return true;
-			}
-		}
-	}
-	private function InitiateRoot($dir)
-    {
-		// TODO: remove
-		Config::$dir = (object)array();
-		if ($dir && file_exists($dir.Config::SlB)) {
-			return Config::$dir->root = $dir.Config::SlA;
-		} else {
-			$this->InitiateError(Config::$Notification['error'],Config::$NoApplicationExists);
-		}
-	}
-	private function InitiateDirectory($dir)
-    {
-		if (Config::$dir->root && is_array($dir)) {
-			foreach ($dir as $id => $name)
-			{
-				Config::$dir->{$id} = Config::$dir->root.$name.Config::SlA;
-			}
-		}
-	}
+		// TODO: Not all session should be removed
+		// session_unset();
+		Application::session()->remove();
+		// session_unset($_SESSION[$hostname]);
+		// AssetCookie::sign()->remove();
+		// Application::cookie(Application::configuration('signCookieId'))->remove();
+		// AssetCookie::sign()->remove();
+		Application::cookie()->sign()->remove();
+		// Application::cookie(Application::$config['signCookieId'])->sign()->remove();
+    }
 }

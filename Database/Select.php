@@ -15,7 +15,10 @@ trait Select
 	public function from()
 	{
 		return $this->queries(function($q, $args){
-			if (isset($q['SELECT'])) {
+			if (isset($q['SELECT']) or isset($q['DELETE'])) {
+				if(isset($q['DELETE'])) {
+					$q['DELETE'] = array();
+				}
 				$q['FROM'] = $args;
 			} else {
 				$q[]=$args;
@@ -28,6 +31,61 @@ trait Select
 		// TODO: advance features such as AND, OR, ()
 		return $this->queries('WHERE',func_get_args());
 	}
+	public function whereAnd()
+	{
+		return $this->queries(function($q,$args){
+			$q['WHERE'] = $this->whereOrAnd($q['WHERE'], $args);
+			return $q;
+		},func_get_args());
+	}
+	public function whereOr()
+	{
+		return $this->queries(function($q,$args){
+			$q['WHERE'] = $this->whereOrAnd($q['WHERE'], $args,'OR');
+			return $q;
+		},func_get_args());
+	}
+	public function whereAndNot()
+	{
+		return $this->queries(function($q,$args){
+			$q['WHERE'] = $this->whereOrAnd($q['WHERE'], $args,'AND','!=');
+			return $q;
+		},func_get_args());
+	}
+	public function whereOrNot()
+	{
+		return $this->queries(function($q,$args){
+			$q['WHERE'] = $this->whereOrAnd($q['WHERE'], $args,'OR','!=');
+			return $q;
+		},func_get_args());
+	}
+	private function whereOrAnd($queries,$args,$oper='AND',$int=null)
+	{
+		if (is_array($args[0])) {
+			$args = $args[0];
+		}
+		if ($int) {
+			array_splice($args, 1, 0, $int);
+		}
+		return array($queries,$oper,$args);
+	}
+	/*
+	protected function queries($name,$args)
+	{
+		if (isset($args)) {
+			if (is_callable($args)) {
+				$this->queries[$name]=call_user_func($args, $this->queries, $name);
+			} elseif (is_callable($name)) {
+				$this->queries=call_user_func($name, $this->queries, $args);
+			} else {
+				$this->queries[$name]=$args;
+			}
+		} else {
+			$this->queries[]=$name;
+		}
+		return $this;
+	}
+	*/
 	public function group_by()
 	{
 		return $this->queries('GROUP BY',func_get_args());

@@ -5,7 +5,9 @@ class Request extends Connection
 	use Query, Build, Insert, Select, Update, Delete;
 	public function __construct()
 	{
-		if (!$this->terminal(func_get_args())) $this->is_error();
+		if (func_get_args()) {
+			if (!$this->terminal(func_get_args())) $this->is_error();
+		}
 	}
 	public function alter()
 	{
@@ -13,16 +15,13 @@ class Request extends Connection
 			return array_merge(array('ALTER TABLE' => $args), $queue);
 		},func_get_args());
 	}
-	public function __set($name, $value)
+	
+	public function duplicateUpdate()
 	{
-		$this->{$name} = $value;
+		return $this->queries('ON DUPLICATE KEY UPDATE',func_get_args());
 	}
-	public function __get($name)
+	public function duplicateIgnore()
 	{
-		if(property_exists($this, $name)) return $this->{$name};
+		return $this->queries('ON DUPLICATE KEY IGNORE',func_get_args());
 	}
-	public function __call($name, $arguments)
-    {
-		return $this;
-    }
 }

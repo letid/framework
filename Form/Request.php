@@ -2,18 +2,29 @@
 namespace Letid\Form;
 class Request extends \Letid\Id\Application
 {
-	use Name, Setting, Custom, Response;
-	public function __construct($name,$arguments)
+	use Initiate, Custom, Response;
+	static protected $scope;
+	public function __construct($vars)
 	{
-		$this->{$name} = $arguments;
+		$this->formName = $vars;
 	}
-	private function formMethod()
+	private function scope()
 	{
-		$this->formData = $this->formSwitch();
+		if (func_get_args()) {
+			if (isset(self::$scope->{func_get_args()[0]})) {
+				return self::$scope->{func_get_args()[0]};
+			}
+		} else {
+			return self::$scope;
+		}
+	}
+	static function request()
+	{
+		return new self(func_get_args()[0]);
 	}
 	private function formSwitch()
 	{
-		switch (strtolower($this->scoop_get($this->formName.'_method'))) {
+		switch (strtolower($this->scope('method'))) {
 			case 'request': return $_REQUEST;
 			case 'get': return $_GET;
 			default: return $_POST;
@@ -29,24 +40,32 @@ class Request extends \Letid\Id\Application
 	}
 	private function hasCustom($customMethod)
 	{
-		if (method_exists($this->scoop_get(),$customMethod)) {
-			return array($this->scoop_get(), $customMethod);
-		} elseif (method_exists($this,'custom_'.$customMethod)) {
-			return array($this, 'custom_'.$customMethod);
+		if (method_exists($this->scope(),$customMethod)) {
+			return array($this->scope(), $customMethod);
+		} elseif (method_exists($this,'custom'.$customMethod)) {
+			return array($this, 'custom'.$customMethod);
 		}
 	}
 	private function hasValue($valueName,$has)
 	{
 		if (is_scalar($has)) {
-			return $this->data($valueName,$has);
+			return self::content($valueName)->set($has);
 		} else if (isset($has['value'])) {
-			return $this->data($valueName,$has['value']);
+			// return self::content($valueName)->set($has['value']);
+			// if (is_array($has['value'])) {
+			// 	// $abc = '<option>Ok</option>';
+			// 	// print_r($has['value']);
+			// 	// return Application::content($valueName)->set($has['value'][0]);
+			// } else {
+			// 	return Application::content($valueName)->set($has['value']);
+			// }
+			return self::content($valueName)->set($has['value']);
 		}
 	}
 	private function hasStatus($fillName,$has)
 	{
 		if (isset($has['status'])) {
-			return $this->lang($has['status']);
+			return self::language($has['status'])->get();
 		} elseif ($fillName) {
 			return $fillName;
 		}
@@ -54,43 +73,73 @@ class Request extends \Letid\Id\Application
 	private function hasMask($maskName,$has)
 	{
 		if (is_scalar($has)) {
-			$this->data($maskName,$this->lang($has));
+			self::content($maskName)->set(self::language($has)->get());
 		} else if (isset($has['mask'])) {
-			$this->data($maskName,$this->lang($has['mask']));
+			self::content($maskName)->set(self::language($has['mask'])->get());
 		}
 	}
-	private function hasMessage($messageName, $msg, $value)
+	private function hasClass($className,$has)
 	{
-		$this->data($messageName,
-			$this->hasMessageHtml(
-				$msg, $value
-			)
-		);
+		if (is_scalar($has)) {
+			self::content($className)->set($has);
+		} elseif (is_array($has)) {
+			self::content($className)->set(implode($has,' '));
+		} else if (isset($has['class'])) {
+			if (is_scalar($has['class'])) {
+				self::content($className)->set($has['class']);
+			} else {
+				self::content($className)->set(implode($has['class'],' '));
+			}
+		}
+	}
+	private function hasMessage($formMessageName, $msg, $value)
+	{
+		self::content($formMessageName)->set($this->hasMessageHtml(
+			$msg, $value
+		));
 	}
 	private function hasMessageHtml($msg,$attr='message')
 	{
-		return $this->html(
-		    array(
-		    	'p'=>array(
-		    		'text'=>$msg,
-		    		'attr'=>array(
-		    			'class'=>$attr
-		    		)
-		    	)
-		    )
-		);
+		return self::html('p')->text($msg)->attr(
+			array('class'=>$attr)
+		)->response();
 	}
-	private function responseError($Message)
+	private function responseTerminal()
     {
-		$this->hasMessage($this->messageName, $Message, array('message error'));
+		if ($this->formSubmit) {
+			if ($this->formError) {
+				$this->responseError($this->formMessage);
+			} else {
+				return true;
+			}
+		} elseif ($this->formMessage) {
+			$this->responseDefault();
+		}
+		return false;
     }
-	private function responseSuccess($Message)
+	private function responseTask($args,$query)
     {
-		$this->hasMessage($this->messageName, $Message, array('message success'));
+		if (is_callable($args)) {
+			$this->responseSuccess(call_user_func($args, $query));
+		} else {
+			$this->formPost = false;
+			if (isset($query) and $query->msg) {
+				$this->responseError($query->msg);
+			} else {
+				$this->responseError($args);
+			}
+		}
+    }
+	private function responseError($msg)
+    {
+		$this->hasMessage($this->formMessageName, $msg, array('message error'));
+    }
+	private function responseSuccess($msg)
+    {
+		$this->hasMessage($this->formMessageName, $msg, array('message success'));
     }
 	private function responseDefault()
     {
-		$this->hasMessage($this->messageName, $this->formMessage,array('message'));
-		// $this->hasMessage($this->messageName, $Message);
+		$this->hasMessage($this->formMessageName, $this->formMessage, array('message'));
     }
 }

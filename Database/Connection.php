@@ -1,10 +1,7 @@
 <?php
 namespace Letid\Database;
-abstract class Connection
+class Connection
 {
-	public static $db	= 'Unavailable';
-	const SP			= ' ';
-	const ED			= ';';
 	const rowsName		= 'rows';
 	const rowsId		= 'rowsId';
 	const rowsAffected	= 'rowsAffected';
@@ -13,28 +10,44 @@ abstract class Connection
 	private static $fn 	= array(
 		'select'=>array('on_select','selecting'),
 		'update'=>array('on_update','updating'),
-		'insert'=>array('on_insert','inserting')
+		'insert'=>array('on_insert','inserting'),
+		'delete'=>array('on_update','deleting')
 	);
-	protected function close()
+	public function connection($d)
 	{
-		self::$db->close(); // mysqli_close()
+        if (is_array($d)) {
+            if(strpos($d['host'],'/cloudsql/') !== false) {
+                // NOTE: Google App Engine
+                Application::$db = new \mysqli(NULL, $d['username'], $d['password'], $d['database'], NULL, $d['host']);
+            } else {
+                Application::$db = new \mysqli($d['host'], $d['username'], $d['password'], $d['database']);
+            }
+            // Application::$db->set_charset("utf8");
+        }
+	}
+	public function errorConnection()
+    {
+		return Application::$db->connect_errno;
+	}
+	public function close()
+	{
+		Application::$db->close(); // mysqli_close()
 	}
 	public function execute()
 	{
 		$this->build();
-		if (!self::$db->query($this->query)) {
-			$this->is_error();
-		}
+		$this->result=Application::$db->query($this->query);
+		$this->is_error();
 		return $this;
 	}
 	protected function terminal()
 	{
 		$this->queries = func_get_args()[0][0];
-		if (is_object(self::$db)) {
+		if (is_object(Application::$db)) {
 			return $this->queries;
 		} else {
 			$this->error = true;
-			$this->msg = self::$db;
+			$this->msg = Application::$db;
 		}
 	}
 	protected function queries($name,$args)
@@ -64,13 +77,13 @@ abstract class Connection
 	protected function rows_total($Id=self::rowsTotal)
 	{
 		if (stripos($this->query,'SQL_CALC_FOUND_ROWS')) {
-			$this->{$Id}=self::$db->query('SELECT FOUND_ROWS();')->fetch_row()[0];
+			$this->{$Id}=Application::$db->query('SELECT FOUND_ROWS();')->fetch_row()[0];
 		}
 		return $this;
 	}
 	private function rows_num()
 	{
-		$i = strtolower(strtok($this->query, self::SP));
+		$i = strtolower(strtok($this->query, Application::SlS));
 		if (isset(self::$fn[$i])) {
 			return self::$fn[$i][0];
 		} else {
@@ -85,18 +98,18 @@ abstract class Connection
 	}
 	protected function is_error()
 	{
-		if (self::$db->errno){
-			$this->msg = self::$db->error;
-			return $this->error = self::$db->errno;
+		if (Application::$db->errno){
+			$this->msg = Application::$db->error;
+			return $this->error = Application::$db->errno;
 		}
 	}
 	private function on_insert($Id=self::rowsId)
 	{
-		return $this->{$Id} = self::$db->insert_id; // mysqli_insert_id(self::$db)
+		return $this->{$Id} = Application::$db->insert_id; // mysqli_insert_id(Application::$db)
 	}
 	private function on_update($Id=self::rowsAffected)
 	{
-		return $this->{$Id} = self::$db->affected_rows; // mysqli_affected_rows(self::$db)
+		return $this->{$Id} = Application::$db->affected_rows; // mysqli_affected_rows(Application::$db)
 	}
 	private function on_select($Id=self::rowsCount)
 	{
