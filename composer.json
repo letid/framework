@@ -50,9 +50,8 @@
             "/.git",
             "/composer.lock",
             "/composer.phar",
-            "/*.gitattributes",
-            "/*.gitignore",
-            "/*.md"
+            "/.gitattributes",
+            "/.gitignore"
         ]
     }
 }
