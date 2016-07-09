@@ -1,15 +1,15 @@
 <?php
-namespace Letid\Database;
-trait Build
+namespace letId\database;
+trait build
 {
     public function build()
     {
-        $this->query = implode(Application::SlS, array_map(
+        $this->query = implode(avail::SlS, array_map(
             function ($v, $k) {
                 if (is_numeric($k)) {
                     return is_array($v)?implode(',',$v):$v;
                 } else {
-                    $fNQ = strtolower('build_'.str_replace(Application::SlS, '_', $k));
+                    $fNQ = strtolower('build_'.str_replace(avail::SlS, '_', $k));
                     if (method_exists($this, $fNQ)) {
                         $y = call_user_func_array(array($this, $fNQ),array($k,$v));
                         if (is_array($y)) {
@@ -32,7 +32,7 @@ trait Build
     }
     private function build_select($Name,$args)
     {
-        return implode(Application::SlS, array_map(
+        return implode(avail::SlS, array_map(
             function ($v, $k) {
                 if (!$rows = implode(',',$v)) {
                     $rows = '*';
@@ -40,7 +40,7 @@ trait Build
                 if (is_numeric($k)) {
                     return $rows;
                 } else {
-                    return $k.Application::SlS.$rows;
+                    return $k.avail::SlS.$rows;
                 }
             }, $args, array_keys($args)
         ));
@@ -151,9 +151,12 @@ trait Build
             return call_user_func_array(array($this, 'build_where_addslashes'), $args);
         }
     }
-    private function build_where_addslashes($k,$x,$v)
+    private function build_where_addslashes($k,$x='=',$v='')
     {
         // return vsprintf("%s %s '%s'", $args);
+        // if ($v) {
+        //     $v=addslashes($v);
+        // }
         return sprintf("%s %s '%s'",$k,$x,addslashes($v));
     }
     private function build_insert_into($Name,$args)

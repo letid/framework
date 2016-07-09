@@ -1,22 +1,24 @@
 <?php
-namespace Letid\Assist;
-/*
-$timer = new Timer();
-$timer->finish();
-*/
-abstract class Timer
+namespace letId\assist
 {
-	public function __construct()
+	/*
+	$timer = new timer();
+	$timer->finish();
+	*/
+	abstract class timer
 	{
-		$this->TimerStart = microtime(true);
-	}
-	public function restart()
-    {
-		$this->TimerStart = microtime(true);
-	}
-	public function finish()
-    {
-		// return (microtime(true) - $this->TimerStart);
-		return $this->TimerFinish = round((microtime(true) - $this->TimerStart), 4);
+		public function __construct()
+		{
+			$this->TimerStart = microtime(true);
+		}
+		public function restart()
+	    {
+			$this->TimerStart = microtime(true);
+		}
+		public function finish()
+	    {
+			// return (microtime(true) - $this->TimerStart);
+			return $this->TimerFinish = round((microtime(true) - $this->TimerStart), 4);
+		}
 	}
 }

@@ -1,6 +1,6 @@
 <?php
-namespace Letid\Database;
-trait Insert
+namespace letId\database;
+trait insert
 {
 	static function insert()
 	{

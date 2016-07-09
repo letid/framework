@@ -1,53 +1,56 @@
 <?php
-namespace Letid\Assist;
-/*
-Cookie::id('id')
-	->set(value);
-	->get(value);
-	->remove();
-*/
-abstract class Cookie
+namespace letId\assist
 {
-	protected $Id = '!';
-	public function __construct()
+	/*
+	cookie::request('id')
+		->has()
+		->set(value)
+		->get(unserialize)
+		->remove()
+		->delete();
+	*/
+	abstract class cookie extends avail
 	{
-		if (func_get_args()) {
-			$this->Id = func_get_args()[0];
-		}
-	}
-	static function id()
-	{
-		return new self(func_get_args()[0]);
-	}
-	public function get($Unserialize=false)
-	{
-		if (isset($_COOKIE[$this->Id])) {
-			if ($Unserialize) {
-				return unserialize($_COOKIE[$this->Id]);
-			} else {
-				return $_COOKIE[$this->Id];
+		public function has()
+        {
+            if (isset($_COOKIE[$this->Id])) return $_COOKIE[$this->Id];
+        }
+		public function get($Unserialize=false)
+		{
+			if ($this->has()) {
+				if ($Unserialize) {
+					return unserialize($_COOKIE[$this->Id]);
+				} else {
+					return $_COOKIE[$this->Id];
+				}
 			}
 		}
-	}
-	public function set($Info)
-	{
-		if (isset($Info)) {
-			if (is_array($Info)) {
-				setcookie($this->Id,serialize($Info),$this->time());
-			} else {
-				setcookie($this->Id,$Info,$this->time());
+		public function set($Id=null)
+		{
+			if ($Id) {
+				if (is_array($Id)) {
+					setcookie($this->Id,serialize($Id),$this->time());
+				} else {
+					setcookie($this->Id,$Id,$this->time());
+				}
 			}
 		}
-	}
-	public function remove()
-	{
-		if (isset($_COOKIE[$this->Id])) {
-			unset($_COOKIE[$this->Id]);
-			setcookie($this->Id, '', -1, '/');
+		public function remove()
+		{
+			if (isset($_COOKIE[$this->Id])) {
+				unset($_COOKIE[$this->Id]);
+				setcookie($this->Id, '', -1, '/');
+				// setcookie($this->Id, '', 1);
+				// setcookie($this->Id, '', 1, '/');
+			}
 		}
-	}
-	private function time()
-	{
-		return time()+1209600;
+		public function delete()
+		{
+			// setcookie($this->Id,false);
+		}
+		private function time()
+		{
+			return time()+1209600;
+		}
 	}
 }

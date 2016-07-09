@@ -1,6 +1,6 @@
 <?php
-namespace Letid\Database;
-trait Select
+namespace letId\database;
+trait select
 {
 	static function select()
 	{

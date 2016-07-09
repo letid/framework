@@ -1,8 +1,8 @@
 <?php
-namespace Letid\Database;
-class Request extends Connection
+namespace letId\database;
+class request extends connection
 {
-	use Query, Build, Insert, Select, Update, Delete;
+	use query, build, insert, select, update, delete;
 	public function __construct()
 	{
 		if (func_get_args()) {
@@ -15,7 +15,7 @@ class Request extends Connection
 			return array_merge(array('ALTER TABLE' => $args), $queue);
 		},func_get_args());
 	}
-	
+
 	public function duplicateUpdate()
 	{
 		return $this->queries('ON DUPLICATE KEY UPDATE',func_get_args());

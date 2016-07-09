@@ -1,7 +1,7 @@
 <?php
-namespace Letid\Service
+namespace letId\service
 {
-    class Form extends \Letid\Form\Request
+    class form extends \letId\support\form
     {
     }
 }

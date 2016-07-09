@@ -1,6 +1,6 @@
 <?php
-namespace Letid\Database;
-trait Delete
+namespace letId\database;
+trait delete
 {
 	static function delete()
 	{

@@ -1,145 +1,202 @@
 <?php
-namespace Letid\Form;
-class Request extends \Letid\Id\Application
+namespace letId\form;
+abstract class request
 {
-	use Initiate, Custom, Response;
-	static protected $scope;
+	use initiate, custom, response, database;
+	public $state, $submit, $error=array(), $table, $message, $messageName='.form.message';
+	public $form, $formName, $formId=array(), $formPost=array();
 	public function __construct($vars)
 	{
 		$this->formName = $vars;
 	}
-	private function scope()
+	private function requestState($Id=null)
 	{
-		if (func_get_args()) {
-			if (isset(self::$scope->{func_get_args()[0]})) {
-				return self::$scope->{func_get_args()[0]};
+		if ($Id) {
+			if (isset($this->state[$Id])) {
+				return $this->state[$Id];
 			}
 		} else {
-			return self::$scope;
+			return $this->state;
 		}
 	}
-	static function request()
+	private function requestMethod()
 	{
-		return new self(func_get_args()[0]);
-	}
-	private function formSwitch()
-	{
-		switch (strtolower($this->scope('method'))) {
+		switch (strtolower($this->requestState('method'))) {
 			case 'request': return $_REQUEST;
 			case 'get': return $_GET;
 			default: return $_POST;
 		}
 	}
-	private function issetPost($fillName)
+	private function requestSupport()
 	{
-		return isset($this->formData[$fillName]);
-	}
-	private function hasPost($fillName)
-	{
-		if ($this->issetPost($fillName)) return $this->formData[$fillName];
-	}
-	private function hasCustom($customMethod)
-	{
-		if (method_exists($this->scope(),$customMethod)) {
-			return array($this->scope(), $customMethod);
-		} elseif (method_exists($this,'custom'.$customMethod)) {
-			return array($this, 'custom'.$customMethod);
+		$support = $this->requestState('val');
+		if ($support) {
+			if (!$this->submit) {
+				return avail::$database->select()->from($this->table)->where($support)->execute()->toArray()->rows[0];
+			}
 		}
 	}
-	private function hasValue($valueName,$has)
+	private function requestVisibility($visibilityName,$visibilityValue,$fillName)
 	{
-		if (is_scalar($has)) {
-			return self::content($valueName)->set($has);
-		} else if (isset($has['value'])) {
-			// return self::content($valueName)->set($has['value']);
-			// if (is_array($has['value'])) {
-			// 	// $abc = '<option>Ok</option>';
-			// 	// print_r($has['value']);
-			// 	// return Application::content($valueName)->set($has['value'][0]);
-			// } else {
-			// 	return Application::content($valueName)->set($has['value']);
-			// }
-			return self::content($valueName)->set($has['value']);
+		if (is_array($visibilityValue)) {
+			foreach ($visibilityValue as $key => $value) {
+				if (is_numeric($key) && isset($_GET[$fillName])) {
+					avail::content($visibilityName)->set($value);
+				} elseif (isset($_GET[$key])) {
+					avail::content($visibilityName)->set($value);
+				}
+			}
+		} elseif (is_scalar($visibilityValue)) {
+			avail::content($visibilityName)->set($visibilityValue);
 		}
 	}
-	private function hasStatus($fillName,$has)
+	/*
+	private function requestRequire($requireName, $requireValue,$fillName)
 	{
-		if (isset($has['status'])) {
-			return self::language($has['status'])->get();
+		if (is_array($requireValue)) {
+			if ($this->submit) {
+				if (!$fillValue) {
+					// $this->error[] = $this->requestStatushas($fillName,$requireValue);
+					// $this->requestMaskhas($maskName,$requireValue);
+					// if ($classDefault) {
+					// 	array_push($classValue,$classDefault);
+					// }
+					// if (isset($requireValue['class'])) {
+					// 	array_push($classValue,$requireValue['class']);
+					// }
+				}
+			} else {
+			}
+		}
+	}
+	*/
+	private function requestPostset($fillName)
+	{
+		return isset($this->form[$fillName]);
+	}
+	private function requestPosthas($fillName)
+	{
+		if ($this->requestPostset($fillName)) return $this->form[$fillName];
+	}
+	private function requestPostvalue($name,$is)
+	{
+		if (is_scalar($is)) {
+			return avail::content($name)->set($is);
+		} else if (isset($is['value'])) {
+			if (is_array($is['value'])) {
+				avail::content($name)->set(json_encode($is['value']));
+				return $is['value'];
+			} else {
+				return avail::content($name)->set($is['value']);
+			}
+		} else {
+			avail::content($name)->set(json_encode($is));
+			return $is;
+		}
+	}
+	private function requestMaskhas($maskName,$is)
+	{
+		if (is_scalar($is)) {
+			avail::content($maskName)->set($is);
+		} else if (isset($is['mask'])) {
+			avail::content($maskName)->set($is['mask']);
+		}
+	}
+	private function requestStatushas($fillName,$is)
+	{
+		if (isset($is['status'])) {
+			return avail::language($is['status'])->get();
 		} elseif ($fillName) {
 			return $fillName;
 		}
 	}
-	private function hasMask($maskName,$has)
+	private function requestClasshas($className,$is)
 	{
-		if (is_scalar($has)) {
-			self::content($maskName)->set(self::language($has)->get());
-		} else if (isset($has['mask'])) {
-			self::content($maskName)->set(self::language($has['mask'])->get());
-		}
-	}
-	private function hasClass($className,$has)
-	{
-		if (is_scalar($has)) {
-			self::content($className)->set($has);
-		} elseif (is_array($has)) {
-			self::content($className)->set(implode($has,' '));
-		} else if (isset($has['class'])) {
-			if (is_scalar($has['class'])) {
-				self::content($className)->set($has['class']);
+		if (is_scalar($is)) {
+			avail::content($className)->set($is);
+		} elseif (is_array($is)) {
+			if (isset($is['class'])) {
+				if (is_scalar($is['class'])) {
+					avail::content($className)->set($is['class']);
+				} else {
+					avail::content($className)->set(implode($is['class'],' '));
+				}
 			} else {
-				self::content($className)->set(implode($has['class'],' '));
+				avail::content($className)->set(implode($is,' '));
 			}
 		}
 	}
-	private function hasMessage($formMessageName, $msg, $value)
+	private function requestCustomhas($method)
 	{
-		self::content($formMessageName)->set($this->hasMessageHtml(
-			$msg, $value
-		));
-	}
-	private function hasMessageHtml($msg,$attr='message')
-	{
-		return self::html('p')->text($msg)->attr(
-			array('class'=>$attr)
-		)->response();
-	}
-	private function responseTerminal()
-    {
-		if ($this->formSubmit) {
-			if ($this->formError) {
-				$this->responseError($this->formMessage);
-			} else {
-				return true;
-			}
-		} elseif ($this->formMessage) {
-			$this->responseDefault();
-		}
-		return false;
-    }
-	private function responseTask($args,$query)
-    {
-		if (is_callable($args)) {
-			$this->responseSuccess(call_user_func($args, $query));
+		if ($i = avail::assist(avail::validation())->is_callable($method)) {
+			return $i;
 		} else {
-			$this->formPost = false;
-			if (isset($query) and $query->msg) {
-				$this->responseError($query->msg);
-			} else {
-				$this->responseError($args);
-			}
+			return avail::assist($this)->is_callable('custom'.$method);
 		}
-    }
-	private function responseError($msg)
-    {
-		$this->hasMessage($this->formMessageName, $msg, array('message error'));
-    }
-	private function responseSuccess($msg)
-    {
-		$this->hasMessage($this->formMessageName, $msg, array('message success'));
-    }
-	private function responseDefault()
-    {
-		$this->hasMessage($this->formMessageName, $this->formMessage, array('message'));
-    }
+	}
+	private function requestInputCheckbox($is,$name,$value)
+	{
+		// <input type="checkbox" name="civil" value="1" checked="checked"> Married...
+		// <input type="checkbox" name="civil[]" value="1">
+		$checkbox = array();
+		foreach ($is as $id => $text) {
+			$attr = array('type'=>'checkbox','name'=>$name.'[]', 'value'=>$id, 'id'=>$id);
+			if (is_array($value)) {
+				if (in_array($id,$value)) {
+					$attr[]='checked';
+				}
+			} elseif ($id == $value) {
+				$attr[]='checked';
+			}
+			$checkbox[]=array(
+				'input'=>array('attr'=>$attr),
+				'label'=>array(
+					'text'=>$text, 'attr'=>array('for'=>$id)
+				)
+			);
+		}
+		return $checkbox;
+	}
+	private function requestInputRadio($is,$name,$value)
+	{
+		// <input type="radio" name="gender" value="1" checked> Male...
+		// <label for="gender">Male</label>
+		$radio = array();
+		foreach ($is as $id => $text) {
+			$attr = array('type'=>'radio','name'=>$name, 'value'=>$id, 'id'=>$id);
+			if ($id == $value) {
+				$attr[]='checked';
+			}
+			$radio[]=array(
+				'input'=>array('attr'=>$attr),
+				'label'=>array(
+					'text'=>$text, 'attr'=>array('for'=>$id)
+				)
+			);
+		}
+		return $radio;
+	}
+	private function requestSelectOption($is,$name,$value)
+	{
+		// <select name="country">
+		// 	<option value="NO">Norway</option>
+		// </select>
+		$option = array();
+		foreach ($is as $id => $text) {
+			$attr = array('value'=>$id);
+			if ($id == $value) {
+				$attr[]='selected';
+			}
+			$option[]=array(
+				'option'=>array(
+					'text'=>$text, 'attr'=>$attr
+				)
+			);
+		}
+		return array(
+			'select'=>array(
+				'text'=>$option, 'attr'=>array('name'=>$name)
+			)
+		);
+	}
 }

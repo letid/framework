@@ -1,169 +1,201 @@
 <?php
-namespace Letid\Form;
-trait Initiate
+namespace letId\form;
+trait initiate
 {
-	public function initiate($args=array())
+	public function setting($state=array())
 	{
-		self::$scope=(object) $args;
-		return $this->setting();
-	}
-	private function setting()
-	{
-		$this->formData 		= $this->formSwitch();
-		$this->formSubmit 		= $this->issetPost($this->formName);
-		$formPost				= array();
-		$formId					= array();
-		$formError				= array();
-		$maskDefault			= $this->scope('mask');
-		$classDefault 			= $this->scope('class');
-		$settingKey 			= $this->scope('setting');
-		$settingValue			= $this->scope('settingValue');
-		$this->formTable		= $this->scope('table');
-		$this->formMessage		= $this->scope('message');
-		$this->formMessageName	= $this->formName.'_form_message';
-		if (!$this->formSubmit) {
-			$settingValue = self::$database->select()->from($this->formTable)->where($settingValue)->execute()->toArray()->rows[0];
-		}
-		foreach ($settingKey as $fillName => $is) {
-			$valueName = $this->formName.'_value_'.$fillName;
-			$maskName = $this->formName.'_mask_'.$fillName;
-			$className = $this->formName.'_class_'.$fillName;
-			$visibilityName = $this->formName.'_visibility_'.$fillName;
-			// resetpassword_visibility_code
-			$settingKey[$fillName]['maskName'] = $maskName;
-			// $settingKey[$fillName]['className'] = $className;
-			$classValue = array($fillName);
-			/*
-				'value'=>'default',
-			*/
-			if ($this->formSubmit) {
-				if ($this->issetPost($fillName)) {
-					$settingKey[$fillName]['value'] = $this->hasValue($valueName,$this->hasPost($fillName));
-					$fillValue = $settingKey[$fillName]['value'];
-				}
-				if ($_GET[$fillName]) {
-					self::content($visibilityName)->set('readonly');
-				}
-				// if ($fillName =='code') {
-				// 	echo $this->hasPost($fillName);
-				// }
-			} else {
+		$this->state			= $state;
+		$this->form 			= $this->requestMethod();
+		$this->submit 			= $this->requestPostset($this->formName);
+		$this->table			= $this->requestState('table');
+		$this->message			= $this->requestState('msg');
 
-				if ($_GET[$fillName]) {
-					$fillValue = $this->hasValue($valueName,$_GET[$fillName]);
-					self::content($visibilityName)->set('readonly');
-				} elseif ($settingValue) {
-					$fillValue = $this->hasValue($valueName,$settingValue[$fillName]);
+		$maskDefault			= $this->requestState('mask');
+		$classDefault 			= $this->requestState('class');
+
+		$setting 				= $this->requestState('row'); // rows vals rowrows ssets rows input data key, val, rows vals sets gets post
+		$support				= $this->requestSupport();
+
+		foreach ($setting as $fillName => $is)
+		{
+			$valueName = $this->formName.'.value.'.$fillName;
+			$selectName = $this->formName.'.select.'.$fillName;
+			$maskName = $this->formName.'.mask.'.$fillName;
+			$setting[$fillName]['maskName'] = $maskName;
+			$className = $this->formName.'.class.'.$fillName;
+			// $setting[$fillName]['className'] = $className;
+			$visibilityName = $this->formName.'.visibility.'.$fillName;
+			$classValue = array($fillName);
+
+			if ($this->submit) {
+				if ($this->requestPostset($fillName)) {
+					$fillValue = $this->requestPostvalue($valueName,$this->requestPosthas($fillName));
+				} elseif (isset($is['select'])) {
+					$fillValue = $this->requestPostvalue($valueName,array());
 				} else {
-					$fillValue = $this->hasValue($valueName,$is);
+					$fillValue = $this->requestPostvalue($valueName,$is['value']);
 				}
-				// $fillValue = $this->hasValue($valueName,$is);
+				$setting[$fillName]['value'] = $fillValue;
+			} else {
+				if (isset($_GET[$fillName])) {
+					$fillValue = $this->requestPostvalue($valueName,$_GET[$fillName]);
+				} elseif (isset($support[$fillName])) {
+					$fillValue = $this->requestPostvalue($valueName,$support[$fillName]);
+				} elseif (isset($is['value'])) {
+					$fillValue = $this->requestPostvalue($valueName,$is['value']);
+				}
+			}
+			/*
+				'value'=>array(),
+				'type'=>'radio',
+				'select'=>array(
+					'MA'=>'Male',
+					'FE'=>'Female'
+				)
+			*/
+			if (isset($is['select'])) {
+				if (isset($is['type'])) {
+					$typeValue = $is['type'];
+					if ($typeValue == 'option') {
+						$selectValue = $this->requestSelectOption($is['select'],$fillName,$fillValue);
+					} elseif ($typeValue =='radio') {
+						$selectValue = $this->requestInputRadio($is['select'],$fillName,$fillValue);
+					} elseif ($typeValue == 'checkbox') {
+						$selectValue = $this->requestInputCheckbox($is['select'],$fillName,$fillValue);
+					}
+				}
+				// $selectValue = avail::html('option')->text('Ok')->attr(array('value'=>'abc','checked'))->response();
+				// $selectValue = \letId\asset\avail::html('b')->selectOption($is['select']);
+				// $selectValue = avail::html($fillValue)->selectOption($is['select']);
+				// TODO: this has to improved
+				if (isset($selectValue)) {
+					avail::content($selectName)->set(avail::html($selectValue));
+				}
+			}
+			/*
+				'visibility'=>'readonly',
+				'visibility'=>array(
+					'readonly'
+				),
+				'visibility'=>array(
+					'email'=>'readonly'
+				)
+			*/
+			if (isset($is['visibility'])) {
+				$this->requestVisibility($visibilityName,$is['visibility'],$fillName);
 			}
 			/*
 				'require'=>array(
-					'mask'=>'Required',
+					'mask'=>'*',
 					'class'=>'required',
 					'status'=>'Username'
 				)
 			*/
-			if (isset($is['require']) && is_array($isRequire=$is['require'])) {
-				if ($this->formSubmit) {
+			if (isset($is['require']) && is_array($requireValue=$is['require'])) {
+				if ($this->submit) {
 					if (!$fillValue) {
-						$formError[] = $this->hasStatus($fillName,$isRequire);
-						$this->hasMask($maskName,$isRequire);
+						$this->error[] = $this->requestStatushas($fillName,$requireValue);
+						$this->requestMaskhas($maskName,$requireValue);
 						if ($classDefault) {
 							array_push($classValue,$classDefault);
 						}
-						if (isset($isRequire['class'])) {
-							array_push($classValue,$isRequire['class']);
+						if (isset($requireValue['class'])) {
+							array_push($classValue,$requireValue['class']);
 						}
+					} else {
+						// print_r($fillValue);
+						// echo $fillName;
 					}
 				} else {
-					$this->hasMask($maskName,$maskDefault);
+					$this->requestMaskhas($maskName,$maskDefault);
 				}
-				// if ($this->formSubmit) {
-				// 	if (!$fillValue) {
-				// 		$formError[] = $this->hasStatus($fillName,$isRequire);
-				// 		$this->hasMask($maskName,$isRequire);
-				// 	}
-				// } else {
-				// 	$this->hasMask($maskName,$maskDefault);
-				// }
-				// if (isset($isRequire['class'])) {
-				// 	if ($this->formSubmit) {
-				// 		if (!$fillValue) {
-				// 			$this->hasClass($className,array($fillName,$isRequire['class']));
-				// 		}
-				// 	} else {
-				// 		$this->hasClass($className,$fillName);
-				// 	}
-				// }
 			}
 			/*
 				'validate'=>array(
 					'filter'=>FILTER_VALIDATE_EMAIL,
 					'task'=>FILTER_FLAG_PATH_REQUIRED,
 					'task'=>array(
-					    'flags' => FILTER_NULL_ON_FAILURE
+						'flags' => FILTER_NULL_ON_FAILURE
 					),
 					'task'=>array(
-					    'flags'=>FILTER_FLAG_ALLOW_OCTAL
-					    'options' => array(
-					        'default' => 3,
-					        'min_range' => 0
-					    )
+						'flags'=>FILTER_FLAG_ALLOW_OCTAL
+						'options' => array(
+							'default' => 3,
+							'min_range' => 0
+						)
 					),
 					'mask'=>'Invalid',
 					'status'=>'a valid Email'
 				),
+				'validate'=>array(
+					'task'=>'method from app\validation',
+					'mask'=>'Invalid',
+					'status'=>'a valid Email'
+				),
 			*/
-			if (isset($is['validate']) && is_array($isValidate=$is['validate'])) {
-				if ($this->formSubmit && $fillValue) {
-					if (isset($isValidate['filter'])) {
-						// Application::filter(EMAIL)->email();
+			if (isset($is['validate']) && is_array($validateValue=$is['validate'])) {
+				if ($this->submit && $fillValue) {
+					if (isset($validateValue['filter'])) {
+						// avail::filter(EMAIL)->email();
 						// call_user_func_array(array($foo, "bar"), array("three", "four"));
-						// call_user_func_array(array(self::filter(EMAIL), "bar"), array("three", "four"));
-						// call_user_func_array(array(self::filter($fillValue), "bar"), array("three", "four"));
-						if (self::filter($fillValue)->response($isValidate['filter'],@$isValidate['task']) == false) {
-							$formError[] = $this->hasStatus($fillName,$isValidate);
-							$this->hasMask($maskName,$isValidate);
+						// call_user_func_array(array(avail::filter(EMAIL), "bar"), array("three", "four"));
+						// call_user_func_array(array(avail::filter($fillValue), "bar"), array("three", "four"));
+						// TODO: need to do smarter
+						if (!isset($validateValue['task'])) {
+							$validateValue['task'] = array();
+						}
+						if (avail::filter($fillValue)->response($validateValue['filter'],$validateValue['task']) == false) {
+							$this->error[] = $this->requestStatushas($fillName,$validateValue);
+							$this->requestMaskhas($maskName,$validateValue);
 							if ($classDefault) {
 								array_push($classValue,$classDefault);
 							}
-							if (isset($isValidate['class'])) {
-								array_push($classValue,$isValidate['class']);
+							if (isset($validateValue['class'])) {
+								array_push($classValue,$validateValue['class']);
+							}
+						}
+					} elseif (isset($validateValue['task'])) {
+						$validateTaskValue = $validateValue['task'];
+						if (s_scalar($validateTaskValue)) {
+							if ($validateTaskObject = avail::assist(avail::validation())->is_callable($validateTaskValue)) {
+								if (call_user_func_array($validateTaskObject, array($is['value'], $fillName)) == false) {
+									$this->error[] = $this->requestStatushas($fillName,$validateValue);
+									$this->requestMaskhas($maskName,$validateValue);
+									if ($classDefault) {
+										array_push($classValue,$classDefault);
+									}
+									if (isset($validateValue['class'])) {
+										array_push($classValue,$validateValue['class']);
+									}
+								}
 							}
 						}
 					}
 				}
 			}
-			$this->hasClass($className,$classValue);
+			$this->requestClasshas($className,$classValue);
 		}
-
 		// NOTE: registration start
-		if ($this->formSubmit){
-			// print_r($settingKey);
-			if ($formError) {
-				$this->formMessage = self::language('required VALUE')->get(array(
-					'value'=>self::arrays($formError)->to_sentence()
+		if ($this->submit) {
+			if ($this->error) {
+				$this->message = avail::language('require VALUE')->get(array(
+					'value'=>avail::arrays($this->error)->to_sentence()
 				));
 			} else {
 				// NOTE: success validation, and begin custom Methods
-				foreach ($settingKey as $fillName => $is) {
-					if ($formError) {
+				foreach ($setting as $fillName => $is)
+				{
+					if ($this->error) {
 						break;
 					}
 					if (isset($is['id'])) {
-						// $formId[] = array($fillName,$is['value']);
-						$formId[$fillName] = $is['value'];
+						$this->formId[$fillName] = $is['value'];
 					} else {
-						$formPost[$fillName] = $is['value'];
+						$this->formPost[$fillName] = $is['value'];
 					}
 					/*
 						'custom'=>array(
                             'Duplicate'=>array(
-                                // 'task'=>array('a','b','c'),
-								// 'task'=>'existsCheck',
                                 'mask'=>'Exists',
                                 'status'=>'* is already exists.'
                             ),
@@ -171,43 +203,50 @@ trait Initiate
                                 'modify'=>true
                             )
                         )
+						'custom'=>array(
+                            'Exists'=>array(
+                                'task'=>array(
+                                    array('userid',1)
+                                ),
+                                'mask'=>'!',
+                                'status'=>'Password is not correct.'
+                            ),
+                            'Encrypt'=>array(
+                                'modify'=>true
+                            )
+                        )
 					*/
-
 					if (isset($is['custom']) && is_array($is['custom'])) {
-						foreach ($is['custom'] as $customMethod => $isCustom) {
-							if (is_array($isCustom)) {
-								if (isset($isCustom['task'])) {
-									$isCustom['task'] = array($is['value'], $fillName, $isCustom['task']);
-									// if (is_array($isCustom['task'])) {
-									// 	array_push($isCustom['task'], $is['value'], $fillName);
-									// } else {
-									// 	$isCustom['task'] = array($isCustom['task'], $is['value'], $fillName);
-									// }
+						// echo 'checking custom';
+						foreach ($is['custom'] as $customMethod => $customValue) {
+							if (is_array($customValue)) {
+								if (isset($customValue['task'])) {
+									$customValue['task'] = array($is['value'], $fillName, $customValue['task']);
 								} else {
-									$isCustom['task'] = array($is['value'], $fillName);
+									$customValue['task'] = array($is['value'], $fillName);
 								}
 								// TODO: check user class has callable, if not use here
-								$customValidation = $this->hasCustom($customMethod);
+								$customValidation = $this->requestCustomhas($customMethod);
 								if ($customValidation) {
-									$isCustomResponse = call_user_func_array($customValidation, $isCustom['task']);
-									if ($isCustomResponse) {
-										if (isset($isCustom['modify'])) {
-											$is['value'] = $isCustomResponse;
-											if (is_string($isCustom['modify'])) {
-												unset($formPost[$fillName]);
-												unset($formId[$fillName]);
-												$fillName = $isCustom['modify'];
+									$customValidationResponse = call_user_func_array($customValidation, $customValue['task']);
+									if ($customValidationResponse) {
+										if (isset($customValue['modify'])) {
+											$is['value'] = $customValidationResponse;
+											if (is_string($customValue['modify'])) {
+												unset($this->formPost[$fillName]);
+												unset($this->formId[$fillName]);
+												$fillName = $customValue['modify'];
 											}
 											if (isset($is['id'])) {
-												$formId[$fillName] = $is['value'];
+												$this->formId[$fillName] = $is['value'];
 											} else {
-												$formPost[$fillName] = $is['value'];
+												$this->formPost[$fillName] = $is['value'];
 											}
 										}
 									} else {
-										$formError = $this->hasStatus('Error',$isCustom);
-										if (isset($isCustom['mask'])) {
-											$this->hasMask($is['maskName'],$isCustom);
+										$this->error = $this->requestStatushas($customMethod.' returned null',$customValue);
+										if (isset($customValue['mask'])) {
+											$this->requestMaskhas($is['maskName'],$customValue);
 										}
 										break;
 									}
@@ -215,19 +254,15 @@ trait Initiate
 							}
 						}
 					}
-
 				}
-				if ($formError) {
+				if ($this->error) {
 					// NOTE: feil custom Methods
-					$this->formMessage = $formError;
-				} else {
-					// NOTE: success validation and custom Methods
-					$this->formPost = $formPost;
-					$this->formId = $formId;
+					$this->message = $this->error;
+					$this->formPost = array();
+					$this->formId = array();
 				}
 			}
 		}
-		$this->formError = $formError;
 		return $this;
 	}
 }

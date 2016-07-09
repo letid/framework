@@ -1,7 +1,8 @@
 <?php
-namespace Letid\Service
+namespace letId\service
 {
-    class Database extends \Letid\Database\Request
+    class database extends \letId\database\request
     {
+        // NOTE: not in use
     }
 }

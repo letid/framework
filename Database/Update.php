@@ -1,6 +1,6 @@
 <?php
-namespace Letid\Database;
-trait Update
+namespace letId\database;
+trait update
 {
 	static function update()
 	{

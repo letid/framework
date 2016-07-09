@@ -1,6 +1,6 @@
-# Letid PHP framework!
+# letId PHP framework!
 
-Letid is a simple oriented PHP framework and flexible configuration that allow developer to deploy multiply applications simultaneously. Yes, it's PHP Composer based, and using packages are up-to-you! Letid has a very minimum requirement and aim to provided as light as possible.
+letId is a simple oriented PHP framework and flexible configuration that allow developer to deploy multiply applications simultaneously. Yes, it's PHP Composer based, and using packages are up-to-you! letId has a very minimum requirement and aim to provided as light as possible.
 
 ## Composer
 The preferred way to install Letid is through [PHP Composer][getcomposer]. Require `letid/framework` by doing one of the following:

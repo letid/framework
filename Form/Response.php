@@ -1,226 +1,93 @@
 <?php
-namespace Letid\Form;
-trait Response
+namespace letId\form;
+trait response
 {
-	// NOTE: DONE -> RESPONSING
-	public function response($args)
+	public function response($Id=array())
     {
-		if ($this->responseTerminal()) {
-			if (isset($args)) {
-				$this->responseTask($args,$this);
-			}
+		if ($this->responseTerminal($Id)) {
+			$this->responseTask(true,$Id,false,array('Done!','Unchanged!'));
 		}
 		return $this;
     }
-	// NOTE: DONE -> SIGNING UP
-	public function signup($args)
-    {
-		if ($this->responseTerminal()) {
-			$db = self::$database->insert($this->formPost)->to($this->formTable)->execute()->rowsId();
-			if ($db->rowsId) {
-				$this->responseSuccess("Inserted!");
+
+	private function responseTerminal($Id=null)
+	{
+		if ($this->submit) {
+			if ($this->error) {
+				// $this->responseTaskerror($Id,$this,$this->message);
+				$this->responseError($this->message);
 			} else {
-				$this->responseTask('Error!',$db);
+				return true;
 			}
+		} else {
+			$this->responseDefault();
 		}
-		return $this;
-    }
-	// NOTE: DONE -> SIGNING IN
-	public function signin($args)
-    {
-		if ($this->responseTerminal()) {
-			$db = self::$database->select('*')->from($this->formTable)->where($this->formPost)->execute()->toObject()->rowsCount();
-			if ($db->rowsCount) {
-				if (isset($db->rows->status))
-				{
-					$rowsArray = (array) $db->rows;
-					if ($db->rows->status > 0)
-					{
-						if(isset($db->rows->logs))
-						{
-							self::$database->update(array_filter($rowsArray, function(&$v, $k) {
-								if ($k == 'logs') {
-									return $v=$v+1;
-								}
-								if ($k == 'modified') {
-									return $v=date('Y-m-d G:i:s');
-								}
-							}, ARRAY_FILTER_USE_BOTH))->to($this->formTable)->where($this->formPost)->execute()->rowsAffected();
-						}
-					}
-					else
-					{
-						// NOTE: user account has been deactivated, and needed to activate!
-					}
-					self::session()->remove();
-					self::cookie()->sign()->set(array_intersect_key($rowsArray, array_flip(array('userid','password'))));
-				}
-			} else {
-				$this->responseTask('Incorrect username or password!',$db);
-			}
+	}
+	private function responseTask($status,$callback,$db,$msg)
+	{
+		if ($status) {
+			$this->responseTasksuccess($callback,$db,$msg[0]);
+		} else {
+			$this->responseTaskerror($callback,$db,$msg[1]);
 		}
-		return $this;
-    }
-	// NOTE: UNDONE
-	public function signout()
-    {
-		$this->formPost = true;
-		return $this;
-    }
-	/**
-	* check email is exists
-	* check if sent
-	* then task insert or update
-	* redirect to reset page
-	*/
-	public function forgotpassword()
-    {
-		if ($this->responseTerminal()) {
-			$db = self::$database->select('*')->from($this->formTable)->where($this->formPost)->execute()->rowsId()->toObject();
-			if ($db->rowsCount) {
-				$taskId = self::assist('password')->sha1($db->rows->userid);
-				$taskCode = self::assist()->uniqid();
-				$taskQuery = array(
-					'taskid' => 'password-user-'.$db->rows->userid,
-					'code'=> $taskCode,
-					'status' => 1,
-					'userid' => $db->rows->userid,
-					'subject' => 'reset password'
-				);
-				self::$database->insert(
-					$taskQuery
-				)->to(
-					'tasks'
-				)->duplicateUpdate(
-					$taskQuery
-				)->execute();
-				if(self::mail(array('email/reset-password'=>$taskQuery))->send()) {
-					$this->responseSuccess("Verification code has been sent to your email.");
-				} else {
-					$this->responseTask('Mail count not sent, please try again later!');
-				}
-			} else {
-				$this->responseTask('No email exists!',$db);
-			}
+	}
+	private function responseTasksuccess($callback,$db,$msg)
+	{
+		if (is_callable($callback)) {
+			$msg = call_user_func($callback, true, $this);
 		}
-		return $this;
-    }
-	public function changepassword($args)
-    {
-		if ($this->responseTerminal()) {
-			$db = self::$database->update($this->formPost)->to($this->formTable)->where($this->formId)->execute()->rowsAffected();
-			if ($db->rowsAffected) {
-				self::cookie()->sign()->set(array_merge($this->formId,$this->formPost));
-			}
-			if (isset($args)) {
-				$this->responseTask($args,$db);
-			} else if ($db->rowsAffected) {
-				$this->responseSuccess('Changed!');
-			} else {
-				$this->responseTask('Unchanged!',$db);
-			}
+		$this->responseSuccess($msg);
+	}
+	private function responseTaskerror($callback,$db,$msg)
+	{
+		$this->formPost = false;
+		if (is_callable($callback)) {
+			$msg = call_user_func($callback, false, $db);
+		} elseif ($db and isset($db->msg)) {
+			$msg = $db->msg;
 		}
-		return $this;
-    }
-	public function resetpassword($args)
-    {
-		if ($this->responseTerminal()) {
-			$db = self::$database->select()->from('tasks')->where('code',$this->formPost['code'])->execute()->rowsCount()->toObject();
-			if ($db->rowsCount) {
-				$update = self::$database->update(
-					array('password'=>$this->formPost['password'], 'status'=>1)
-				)->to($this->formTable)->where('userid',$db->rows->userid)->execute()->rowsAffected();
-				if ($update->rowsAffected) {
-					 self::$database->delete()->from('tasks')->where('taskid',$db->rows->taskid)->execute();
-				} else {
-					$this->responseTask('Unchanged!',$update);
-				}
-			} else {
-				$this->responseTask('Invalid verification code!',$db);
-			}
+		$this->error = $msg;
+		$this->responseError($msg);
+	}
+	private function responseError($Id)
+	{
+		$this->responseMessage($this->formName.$this->messageName, $Id, array('message error'));
+	}
+	private function responseSuccess($Id)
+	{
+		$this->responseMessage($this->formName.$this->messageName, $Id, array('message success'));
+	}
+	private function responseDefault()
+	{
+		if ($this->message) {
+			$this->responseMessage($this->formName.$this->messageName, $this->message, array('message'));
 		}
-		return $this;
-    }
-	// NOTE: DONE -> INSERTING
-	public function insert($args)
-    {
-		if ($this->responseTerminal()) {
-			$db = self::$database->insert($this->formPost)->to($this->formTable)->execute()->rowsId();
-			if (isset($args)) {
-				$this->responseTask($args,$db);
-			} else if ($db->rowsId) {
-				$this->responseSuccess('Inserted!');
-			} else {
-				$this->responseTask('Unchanged!',$db);
-			}
-		}
-		return $this;
-    }
-	// NOTE: DONE -> UPDATING
-	public function update($args)
-    {
-		if ($this->responseTerminal()) {
-			$db = self::$database->update($this->formPost)->to($this->formTable)->where($this->formId)->execute()->rowsAffected();
-			if (isset($args)) {
-				$this->responseTask($args,$db);
-			} else if ($db->rowsAffected) {
-				$this->responseSuccess('Updated!');
-			} else {
-				$this->responseTask('Unchanged!',$db);
-			}
-		}
-		return $this;
-    }
-	// NOTE: DONE -> INSERTING OR UPDATING
-	public function insertOrupdate($args)
-    {
-		if ($this->responseTerminal()) {
-			$db = self::$database->insert(
-				array_merge($this->formId,$this->formPost)
-			)->to(
-				$this->formTable
-			)->duplicateUpdate(
-				$this->formPost
-			)->execute()->rowsAffected();
-			if (isset($args)) {
-				$this->responseTask($args,$db);
-			} else if ($db->result) {
-				$this->responseSuccess('Updated!');
-			} else {
-				$this->responseTask('Unchanged!',$db);
-			}
-		}
-		return $this;
-    }
-	// NOTE: DONE -> DELETING
-	public function delete()
-    {
-		if ($this->responseTerminal()) {
-			$db = self::$database->delete()->from($this->formTable)->where($this->formId)->execute()->rowsAffected();
-			if (isset($args)) {
-				$this->responseTask($args,$db);
-			} else if ($db->rowsAffected) {
-				// $db->rowsAffected > 0
-				$this->responseSuccess('Deleted!');
-			} else {
-				$this->responseTask('Unchanged!',$db);
-			}
-		}
-		return $this;
-    }
+	}
+	private function responseMessage($name, $msg, $attr)
+	{
+		avail::content($name)->set($this->responseMessageContainer(
+			$msg, $attr
+		));
+	}
+	private function responseMessageContainer($msg,$attr='message')
+	{
+		return avail::html('p')->text($msg)->attr(
+			array('class'=>$attr)
+		)->response();
+	}
 	// NOTE: DONE -> REDIRECTING
-	public function redirectIfsuccess($args)
-    {
-		if ($this->issetPost($this->formName)) {
-			if ($this->formPost) {
-				return header('Location: '.$args);
+	public function redirectOnsuccess($Id='/')
+	{
+		if ($this->submit) {
+			if (!$this->error) {
+				return header("Location: $Id");
 			}
 		}
 		return $this;
-    }
+	}
 	// NOTE: DONE
-	public function done($args)
-    {
-		return $args;
-    }
+	public function done($Id)
+	{
+		return $Id;
+	}
 }

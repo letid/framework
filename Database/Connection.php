@@ -1,6 +1,6 @@
 <?php
-namespace Letid\Database;
-class Connection
+namespace letId\database;
+class connection
 {
 	const rowsName		= 'rows';
 	const rowsId		= 'rowsId';
@@ -18,36 +18,36 @@ class Connection
         if (is_array($d)) {
             if(strpos($d['host'],'/cloudsql/') !== false) {
                 // NOTE: Google App Engine
-                Application::$db = new \mysqli(NULL, $d['username'], $d['password'], $d['database'], NULL, $d['host']);
+                avail::$databaseConnection = new \mysqli(NULL, $d['username'], $d['password'], $d['database'], NULL, $d['host']);
             } else {
-                Application::$db = new \mysqli($d['host'], $d['username'], $d['password'], $d['database']);
+                avail::$databaseConnection = new \mysqli($d['host'], $d['username'], $d['password'], $d['database']);
             }
-            // Application::$db->set_charset("utf8");
+            // avail::$databaseConnection->set_charset("utf8");
         }
 	}
 	public function errorConnection()
     {
-		return Application::$db->connect_errno;
+		return avail::$databaseConnection->connect_errno;
 	}
 	public function close()
 	{
-		Application::$db->close(); // mysqli_close()
+		avail::$databaseConnection->close(); // mysqli_close()
 	}
 	public function execute()
 	{
 		$this->build();
-		$this->result=Application::$db->query($this->query);
+		$this->result=avail::$databaseConnection->query($this->query);
 		$this->is_error();
 		return $this;
 	}
 	protected function terminal()
 	{
 		$this->queries = func_get_args()[0][0];
-		if (is_object(Application::$db)) {
+		if (is_object(avail::$databaseConnection)) {
 			return $this->queries;
 		} else {
 			$this->error = true;
-			$this->msg = Application::$db;
+			$this->msg = avail::$databaseConnection;
 		}
 	}
 	protected function queries($name,$args)
@@ -77,13 +77,13 @@ class Connection
 	protected function rows_total($Id=self::rowsTotal)
 	{
 		if (stripos($this->query,'SQL_CALC_FOUND_ROWS')) {
-			$this->{$Id}=Application::$db->query('SELECT FOUND_ROWS();')->fetch_row()[0];
+			$this->{$Id}=avail::$databaseConnection->query('SELECT FOUND_ROWS();')->fetch_row()[0];
 		}
 		return $this;
 	}
 	private function rows_num()
 	{
-		$i = strtolower(strtok($this->query, Application::SlS));
+		$i = strtolower(strtok($this->query, avail::SlS));
 		if (isset(self::$fn[$i])) {
 			return self::$fn[$i][0];
 		} else {
@@ -98,18 +98,18 @@ class Connection
 	}
 	protected function is_error()
 	{
-		if (Application::$db->errno){
-			$this->msg = Application::$db->error;
-			return $this->error = Application::$db->errno;
+		if (avail::$databaseConnection->errno){
+			$this->msg = avail::$databaseConnection->error;
+			return $this->error = avail::$databaseConnection->errno;
 		}
 	}
 	private function on_insert($Id=self::rowsId)
 	{
-		return $this->{$Id} = Application::$db->insert_id; // mysqli_insert_id(Application::$db)
+		return $this->{$Id} = avail::$databaseConnection->insert_id; // mysqli_insert_id(avail::$databaseConnection)
 	}
 	private function on_update($Id=self::rowsAffected)
 	{
-		return $this->{$Id} = Application::$db->affected_rows; // mysqli_affected_rows(Application::$db)
+		return $this->{$Id} = avail::$databaseConnection->affected_rows; // mysqli_affected_rows(avail::$databaseConnection)
 	}
 	private function on_select($Id=self::rowsCount)
 	{

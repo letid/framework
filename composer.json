@@ -1,6 +1,6 @@
 {
     "name": "letid/framework",
-    "description": "Letid PHP Framework",
+    "description": "letId PHP Framework",
     "type": "framework",
     "license": "MIT",
     "homepage": "https://github.com/letid/framework",
@@ -21,7 +21,7 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0.6-dev"
+            "dev-master": "1.0.7-dev"
         }
     },
     "minimum-stability": "dev",
@@ -37,7 +37,7 @@
         "psr-0": {
         },
         "psr-4": {
-            "Letid\\": ["Config/","Init/","Database/"]
+            "letId\\": ["config/","init/","database/"]
         },
         "classmap": [],
         "files": []

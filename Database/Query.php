@@ -1,6 +1,6 @@
 <?php
-namespace Letid\Database;
-trait Query
+namespace letId\database;
+trait query
 {
 	static function query()
 	{
