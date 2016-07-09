@@ -48,7 +48,7 @@ namespace letId\asset
 			/**
 			* NOTE: down from here can be modified in: App\Verso, Environment.ini
 			*/
-			'visitsPrevious'=>278123012025000,
+			'visitsPrevious'=>0,
 	        'visitsReset'=>999,
 			'signCookieId'=>'letIdUser',
 			/**
