@@ -8,8 +8,11 @@ The preferred way to install letId is through [PHP Composer][getcomposer]. Requi
 `php composer.phar require --prefer-dist letid/framework`
 
 or add require section in your composer.json.
-
-`"letid/framework": "dev-master"`
+`
+"require": {
+    "letid/framework": "dev-master"
+},
+`
 
 ## Usage
 [Wiki][wiki] described detail of...
