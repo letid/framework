@@ -20,7 +20,7 @@ abstract class request
 		if ($assign->host()->dir($this->configuration)) {
 			$module = new module;
 			$module->loader();
-			if ($assign->rewrite($this->rewrite)) {
+			if ($assign->rewrite(avail::$uri,$this->rewrite)) {
 				if ($route=$module->route()) {
 					if (isset($route->configuration)) {
 						$assign->con($route->configuration);
