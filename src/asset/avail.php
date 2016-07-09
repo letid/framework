@@ -19,7 +19,7 @@ namespace letId\asset
 		*/
 		static $root = __DIR__;
 		/**
-		* @var (string) Application's name
+		* @var (string) application's name
 		*/
 		static $name;
 		/**
@@ -32,21 +32,23 @@ namespace letId\asset
 		*/
 		static $databaseConnection = 'Unavailable';
 		/**
-		* @var (array) Setting, Configuration, Environment
+		* @var (array) setting, configuration, environment
 		*/
 		static $config = array(
 			/**
-			* ARO: application's root directory
-			* ARD: error's folder
+			* applications root directory
 			*/
 			'ARO' => '../app/',
+			/**
+			* error's folder which should be under applications root directory
+			*/
 			'ARD' => 'errors/',
 			/**
-			* Application Route's Classname
+			* application route's classname
 			*/
 			'ASR' => 'route',
 			/**
-			* NOTE: down from here can be modified in: App\Verso, Environment.ini
+			* down from here can be modified in: app\route and environment.ini
 			*/
 			'visitsPrevious'=>0,
 	        'visitsReset'=>999,
@@ -179,22 +181,21 @@ namespace letId\asset
 		static $AHE = array('<{tag}{attr}/>','<{tag}{attr}>{text}</{tag}>','{text}');
 		const AHR 	= '/{(.*?)}/';
 		/**
-		* NOTE: Framework Info
+		* NOTE: framework info.
 		*/
 		static $letid = array(
-			'Build' => '07.09.16.15.00',
-			'Version' => '1.0.7',
-			'Name' => 'letId',
-			'Description' => 'letId PHP Framework'
+			'build' => '07.09.16.15.00',
+			'version' => '1.0.7',
+			'name' => 'letId',
+			'description' => 'letId PHP Framework'
 		);
 		/**
 		* NOTE: Class availables
 		*/
 		static $database = array('host'=>0,'port'=>0,'username'=>0,'password'=>0,'database'=>0);
 		static $requestMail, $requestValidation, $requestAuthorization, $requestConfiguration;
-		// static $requestMail, $requestValidation, $requestAuthorization, $requestConfiguration;
 		/**
-		* parent Constructor
+		* parent constructor
 		* @var (string) Id
 		*/
 		public $Id = '!';
@@ -206,14 +207,10 @@ namespace letId\asset
 		}
 		static function request($Id=null)
 		{
-			// request, response touch, knock, claim, seek, apply, urge, ask, sue
 			return new self($Id);
 		}
-		// static function __callStatic($name, $arguments)
-	    // {
-	    // }
 		/**
-		* NOTE: Class availables
+		* NOTE: class availables
 		*/
 		static function language($Id=null)
 	    {
