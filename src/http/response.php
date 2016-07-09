@@ -47,7 +47,7 @@ abstract class response
 	public function resourceCache($file)
 	{
 		// Second to cache
-		$STC = 9600;
+		$STC = 86400;
 		// Greenwich Mean Time
 		$GMT = gmdate("D, d M Y H:i:s", time() + $STC) . " GMT";
 		// Last Modified
