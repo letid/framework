@@ -1,6 +1,6 @@
 <?php
 namespace letId\http;
-class response
+abstract class response
 {
 	protected $header = array(
 		'css'=> array(

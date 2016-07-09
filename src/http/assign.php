@@ -47,10 +47,11 @@ class assign
     {
         $this->con($configuration);
         avail::$dir = (object) array();
+        $dirRoot = avail::$config['ARO'].avail::$name.avail::SlA;
 		if (avail::$name && file_exists(avail::$config['ARO'].avail::$name.avail::SlB)) {
-			return avail::$dir->root = avail::$config['ARO'].avail::$name.avail::SlA;
+			return avail::$dir->root = $dirRoot;
 		} else {
-            assign::request('error')->error(avail::$errorConfiguration);
+            assign::request('configuration')->error(array('verso'=>avail::$config['ASR'],'root'=>$dirRoot));
 		}
 	}
     public function rewrite($uri,$rewrite)
@@ -70,22 +71,21 @@ class assign
 	}
     public function error($Id)
     {
-
+        avail::$contextResponse = avail::$contextType;
         avail::directory($this->Id)->existsTemplate();
-		avail::$context[$this->Id]=$Id;
+		return avail::$context[$this->Id]=$Id;
 	}
     public function database($Id)
     {
         avail::$database = new \letId\database\request;
         avail::$database->connection($Id);
         if (avail::$database->errorConnection()) {
-            return assign::request('database')->error(array_merge(
-                avail::$errorDatabase,
-                array(
-                    'Message'=>avail::$databaseConnection->connect_error,
-                    'Code'=>avail::$databaseConnection->connect_errno
-                    // 'src/style.css'=>array()
-                )
+            return assign::request('database')->error(array(
+                'env'=>avail::$config['ASE'],
+                'root'=>avail::$config['ARO'].avail::$name.avail::SlA,
+                'msg'=>avail::$databaseConnection->connect_error,
+                'code'=>avail::$databaseConnection->connect_errno
+                // 'src/style.css'=>array()
             ));
         }
     }

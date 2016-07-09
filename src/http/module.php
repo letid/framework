@@ -40,7 +40,6 @@ class module
             $Classname = $this->Id;
         }
         avail::$config[$Id] = $Classname;
-        // avail::configuration($Id)->set($Classname);
 	}
     /**
     * support extension for response
@@ -68,7 +67,7 @@ class module
 		if ($Classname = $this->nameExists(avail::$config['ASR'])) {
 			return new $Classname;
 		} else {
-            assign::request('error')->error(avail::$errorApplication);
+            assign::request('route')->error(array('class'=>avail::$config['ASR'],'root'=>avail::$dir->root));
 		}
 	}
     /**

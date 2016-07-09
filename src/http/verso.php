@@ -68,14 +68,16 @@ class verso
 				}
 			} else {
 				// avail::assist(14)->log('is_not_callable');
-				avail::language('Method')->set($versoMethod);
-				assign::request('error')->error(avail::$errorMethod);
+				assign::request('method')->error(array(
+					'class'=>avail::$config['ARO'].avail::$name.avail::SlA.avail::$config['ASP'].avail::SlA.$versoObject, 'method'=>$versoMethod,
+				));
 			}
 		} else {
 			// TODO: disable initial()->error() on live application
 			// avail::assist(14)->log('is_not_callable');
-			avail::language('Class')->set($versoObject);
-			assign::request('error')->error(avail::$errorClass);
+			assign::request('class')->error(array(
+				'class'=>$versoObject, 'root'=>avail::$config['ARO'].avail::$name.avail::SlA.avail::$config['ASP'].avail::SlA,
+			));
 		}
 	}
 	private function setArrange($v, $k)

@@ -1,7 +1,7 @@
 <?php
 namespace letId\support
 {
-    abstract class response extends \letId\http\response
+    class response extends \letId\http\response
     {
     }
 }

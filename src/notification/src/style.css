@@ -7,4 +7,4 @@ body {font-family: Arial, Helvetica, sans-serif; color: #666; font-size: 12px;  
 .wrapper h2 strong {color: #900;}
 .wrapper p {text-shadow: #FFF 2px 2px 2px;  padding: 5% 5%; background-color: #fff;}
 .wrapper p strong { color: #900; }
-.wrapper p em { color: #900; font-family: "Courier New", Courier, monospace; text-decoration: underline; font-style: normal;}
+.wrapper p em { color: #900; font-family: "Courier New", Courier, monospace; font-style: normal;}

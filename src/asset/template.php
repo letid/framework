@@ -12,7 +12,7 @@ avail::template(Id)->response()
 */
 class template
 {
-    public $requestContentss = array();
+    public $requestContent = array();
     public function __construct($Id=null)
 	{
         $this->Id = $Id;
@@ -86,11 +86,11 @@ class template
 	public function requestContents($name)
     {
         // TODO: save loaded file temp. for loop!
-		if (isset($this->requestContentss[$name])) {
-            return $this->template = $this->requestContentss[$name];
+		if (isset($this->requestContent[$name])) {
+            return $this->template = $this->requestContent[$name];
         } elseif (file_exists($file = $this->requestTemplate($name))) {
-			$this->requestContentss[$name] = file_get_contents($file);
-            return $this->template = $this->requestContentss[$name];
+			$this->requestContent[$name] = file_get_contents($file);
+            return $this->template = $this->requestContent[$name];
 		}
 	}
 	private function requestChild($name)

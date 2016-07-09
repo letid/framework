@@ -154,9 +154,12 @@ namespace letId\asset
 		static $Alert = array(
 			'dir'=>'/../notification/',
 			'error'=>'error',
-			'database'=>'database',
 			'maintaining'=>'maintaining',
-			'configuration'=>'configuration'
+			'database'=>'database',
+			'configuration'=>'configuration',
+			'route'=>'route',
+			'class'=>'class',
+			'method'=>'method'
 		);
 		/**
 		* @var (array) Default Template's Extension
@@ -166,39 +169,6 @@ namespace letId\asset
 			'language'=>'ini',
 			'environment'=>'ini',
 			'script'=>'php'
-		);
-		/**
-		* NOTE: Message On Application Initiation is Missing/Invalid
-		*/
-		static $errorApplication = array(
-			'Title'=>'No Initiate Class found',
-			'Description'=>'Oops, no Initiate class found!',
-			'Message'=>'Invalid configuration!'
-		);
-		/**
-		* NOTE: Message On Application Class & Method are missing
-		*/
-		static $errorClass = array(
-			'Title'=>'Class not found',
-			'Description'=>'Oops, no valid Class found!',
-			'Message'=>'Unable to reach Class!'
-		);
-		/**
-		* NOTE: Message On Application Class & Method are missing
-		*/
-		static $errorMethod = array(
-			'Title'=>'{Method}',
-			'Description'=>'Oops, no valid Method found!',
-			'Message'=>'Unable to call Method: {Method}!'
-		);
-		/**
-		* NOTE: Message On Application Database is Error
-		*/
-		static $errorDatabase = array(
-			'Title'=>'Invalid Database configuration',
-			'Description'=>'Oops, invalid configuration!',
-			'Message'=> 'error',
-			'Code'=> 1
 		);
 		/**
 		* NOTE: HTML tag generator
