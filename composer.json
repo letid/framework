@@ -37,7 +37,7 @@
         "psr-0": {
         },
         "psr-4": {
-            "letId\\": ["config/","init/","database/"]
+            "letId\\": "src/"
         },
         "classmap": [],
         "files": []
