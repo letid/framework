@@ -38,11 +38,6 @@ class language
     }
     private function requestId($Id)
     {
-        // if (isset(avail::$langlist[$Id])) {
-        //     return avail::$langlist[$Id];
-        // } else {
-        //     return $Id;
-        // }
         return isset(avail::$langlist[$Id])?avail::$langlist[$Id]:$Id;
     }
     private function requestEngine($v=array())
