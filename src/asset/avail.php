@@ -155,7 +155,8 @@ namespace letId\asset
 			'dir'=>'/../notification/',
 			'error'=>'error',
 			'database'=>'database',
-			'maintaining'=>'maintaining'
+			'maintaining'=>'maintaining',
+			'configuration'=>'configuration'
 		);
 		/**
 		* @var (array) Default Template's Extension
@@ -165,15 +166,6 @@ namespace letId\asset
 			'language'=>'ini',
 			'environment'=>'ini',
 			'script'=>'php'
-		);
-		/**
-		* NOTE: Message On Core Configuration is Missing/Invalid
-		* TODO: NoApplicationExists -> Message (Oops, Project configuration file LETHIL is missing! Pleace check INDEX in project/lethil/, until then lethil is under-construction!)
-		*/
-		static $errorConfiguration = array(
-			'Title'=>'Invalid configuration',
-			'Description'=>'Oops, no configuration file found!',
-			'Message'=>'No application exists!'
 		);
 		/**
 		* NOTE: Message On Application Initiation is Missing/Invalid
