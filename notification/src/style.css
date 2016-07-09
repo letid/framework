@@ -1,0 +1,10 @@
+* {margin: 0; padding: 0;}
+body {font-family: Arial, Helvetica, sans-serif; color: #666; font-size: 12px;  background-color:#FAFAFA;  }
+.wrapper {width:90%; max-width:590px; margin:7% 5%;border-radius: 2px; box-shadow: 0px 0px 1px 1px #DBD9D9; overflow: hidden;}
+.wrapper h2, .wrapper p { line-height:17px;}
+.wrapper h2 { text-shadow: #FFFFFF 1px 1px 1px; padding:17px 5%; background-color: #F5F5F5; border-bottom: 1px solid #DBD9D9;}
+.wrapper h2 span { color: #C00; text-transform: uppercase; }
+.wrapper h2 strong {color: #900;}
+.wrapper p {text-shadow: #FFF 2px 2px 2px;  padding: 5% 5%; background-color: #fff;}
+.wrapper p strong { color: #900; }
+.wrapper p em { color: #900; font-family: "Courier New", Courier, monospace; text-decoration: underline; font-style: normal;}
