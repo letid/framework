@@ -53,15 +53,16 @@ class assign
             assign::request('error')->error(avail::$errorConfiguration);
 		}
 	}
-    public function rewrite($rewrite)
+    public function rewrite($uri,$rewrite)
     {
-        if ($Id = avail::$uri[0] and isset($rewrite[$Id])) {
-            avail::$contextResponse = $rewrite[$Id];
-            avail::$contextType = pathinfo(avail::$uriPath, PATHINFO_EXTENSION);
-            avail::$context = preg_replace("/$Id/", avail::$dir->root.$rewrite[$Id], avail::$uriPath,1);
-        } else {
-            return true;
+        if ($uri) {
+            if (isset($rewrite[$uri[0]])) {
+                avail::$contextResponse = $rewrite[$uri[0]];
+                avail::$contextType = pathinfo(avail::$uriPath, PATHINFO_EXTENSION);
+                return !avail::$context = preg_replace("/$uri[0]/", avail::$dir->root.$rewrite[$uri[0]], avail::$uriPath,1);
+            }
         }
+        return true;
 	}
     public function con($Id)
     {
