@@ -15,7 +15,7 @@ namespace letId\asset
 		*/
 		static $application;
 		/**
-		* @var (string) Root directory
+		* @var (string) letId root directory
 		*/
 		static $root = __DIR__;
 		/**
@@ -26,7 +26,7 @@ namespace letId\asset
 		* @var (array) html content used in Template, Menu and Language
 		*/
 		static $content = array();
-		static $context = array(), $contextLog=array(),$contextResponse,$contextType='responseTemplate';// $contextMeta,$contextHeader,$contextExt;
+		static $context = array(), $contextLog=array(), $contextResponse, $contextType='responseTemplate';// $contextMeta,$contextHeader,$contextExt;
 		/**
 		* @var (object) database connection status
 		*/
@@ -36,7 +36,7 @@ namespace letId\asset
 		*/
 		static $config = array(
 			/**
-			* applications root directory
+			* all applications root directory
 			*/
 			'ARO' => '../app/',
 			/**
@@ -113,7 +113,7 @@ namespace letId\asset
 		/**
 		* @var (object) directory
 		*/
-		static $dir = array();
+		static $dir;
 		/**
 		* @var (array) Language list
 		*/
@@ -169,7 +169,8 @@ namespace letId\asset
 			'configuration'=>'configuration',
 			'route'=>'route',
 			'class'=>'class',
-			'method'=>'method'
+			'method'=>'method',
+			'success'=>'success'
 		);
 		/**
 		* @var (array) Default Template's Extension
@@ -192,8 +193,8 @@ namespace letId\asset
 		* NOTE: framework info.
 		*/
 		static $letid = array(
-			'build' => '07.09.16.15.00',
-			'version' => '1.0.7',
+			'build' => '07.10.16.17.20',
+			'version' => '1.0.8',
 			'name' => 'letId',
 			'description' => 'letId PHP Framework'
 		);
@@ -207,19 +208,14 @@ namespace letId\asset
 		* @var (string) Id
 		*/
 		public $Id = '!';
-		public function __construct()
+		public function __construct($Id='')
 		{
-			if (func_get_args()) {
-				$this->Id = func_get_args()[0];
-			}
+			$this->Id = $Id;
 		}
 		static function request($Id=null)
 		{
 			return new self($Id);
 		}
-		/**
-		* NOTE: class availables
-		*/
 		static function language($Id=null)
 	    {
 			return new language($Id);
@@ -235,10 +231,6 @@ namespace letId\asset
 		static function content($Id=null)
 	    {
 			return new content($Id);
-	    }
-		static function configuration($Id=null)
-	    {
-			return new configuration($Id);
 	    }
 		static function directory($Id=null)
 	    {
@@ -270,6 +262,10 @@ namespace letId\asset
 	    {
 			return new arrays($Id);
 	    }
+		static function configuration($Id=null)
+	    {
+			return new self::$config['ASC']($Id);
+	    }
 		static function validation($Id=array())
 	    {
 			return new self::$config['ASV']($Id);
@@ -282,21 +278,5 @@ namespace letId\asset
 	    {
 			return new self::$config['ASM']($Id);
 	    }
-		static function intObj($Id=self::class)
-		{
-			self::$application = new \ReflectionClass($Id);
-		}
-		static function hasObj($Id)
-		{
-	        return self::$application->hasProperty($Id);
-		}
-		static function getObj($Id)
-		{
-	        return self::$application->getStaticPropertyValue($Id);
-		}
-		static function setObj($Id,$Value)
-		{
-	        return self::$application->setStaticPropertyValue($Id,$Value);
-		}
 	}
 }

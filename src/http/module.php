@@ -31,12 +31,30 @@ class module
 		}
 	}
     /**
+    * support extension for configuration
+    */
+	public function configuration($Id)
+    {
+        $filename = avail::$config[$Id];
+        avail::$config[$Id] = $this->nameExists($filename);
+        if (avail::$config[$Id]) {
+            if (is_subclass_of(avail::configuration(), $this->Id)) {
+                return 1;
+            } else {
+                $require = 'require to extends!';
+                assign::request('configuration')->error(array('filename'=>$filename,'require'=>'require to extends!','root'=>avail::$config['ARO']));
+            }
+        } else {
+            return avail::$config[$Id] = $this->Id;
+        }
+	}
+    /**
     * support extension for validation, mail, authorization, form
     */
 	public function extension($Id)
     {
         $Classname = $this->nameExists(avail::$config[$Id]);
-		if (!$Classname) {
+        if (!$Classname) {
             $Classname = $this->Id;
         }
         avail::$config[$Id] = $Classname;
@@ -69,17 +87,6 @@ class module
 		} else {
             assign::request('route')->error(array('class'=>avail::$config['ASR'],'root'=>avail::$dir->root));
 		}
-	}
-    /**
-    * configuration
-    */
-	public function ASC()
-    {
-		if ($Classname = $this->nameExists(avail::$config['ASC'])) {
-            return avail::configuration('ASC')->set(new $Classname);
-		} else {
-            avail::configuration('ASC')->set();
-        }
 	}
     /**
     * map

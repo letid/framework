@@ -69,14 +69,14 @@ class verso
 			} else {
 				// avail::assist(14)->log('is_not_callable');
 				assign::request('method')->error(array(
-					'class'=>avail::$config['ARO'].avail::$name.avail::SlA.avail::$config['ASP'].avail::SlA.$versoObject, 'method'=>$versoMethod,
+					'class'=>avail::$config['ARO'].avail::$config['ASP'].avail::SlA.$versoObject, 'method'=>$versoMethod,
 				));
 			}
 		} else {
 			// TODO: disable initial()->error() on live application
 			// avail::assist(14)->log('is_not_callable');
 			assign::request('class')->error(array(
-				'class'=>$versoObject, 'root'=>avail::$config['ARO'].avail::$name.avail::SlA.avail::$config['ASP'].avail::SlA,
+				'class'=>$versoObject, 'root'=>avail::$config['ARO'].avail::$config['ASP'].avail::SlA,
 			));
 		}
 	}

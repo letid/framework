@@ -13,6 +13,7 @@ class assign
     public function host()
     {
         avail::$name=$this->hostExists();
+        avail::$config['name']=avail::$name;
         return $this;
     }
     private function hostExists()
@@ -57,29 +58,26 @@ class assign
     }
     public function dir($configuration)
     {
-        $this->con($configuration);
+        avail::$config = array_merge(avail::$config,$configuration);
         avail::$dir = (object) array();
-        $dirRoot = avail::$config['ARO'].avail::$name.avail::SlA;
-		if (avail::$name && file_exists(avail::$config['ARO'].avail::$name.avail::SlB)) {
-			return avail::$dir->root = $dirRoot;
+        avail::$config['ARO'] = avail::$config['ARO'].avail::$name.avail::SlA;
+        avail::$config['ARD'] = avail::$config['ARO'].avail::$config['ARD'];
+		if (avail::$name && file_exists(avail::$config['ARO'])) {
+			return avail::$dir->root = avail::$config['ARO'];
 		} else {
-            assign::request('configuration')->error(array('verso'=>avail::$config['ASR'],'root'=>$dirRoot));
+            assign::request('verso')->error(array('verso'=>avail::$config['ASR'],'root'=>avail::$config['ARO']));
 		}
 	}
-    public function rewrite($uri,$rewrite)
+    public function rewrite($rewrite)
     {
-        if ($uri) {
-            if (isset($rewrite[$uri[0]])) {
-                avail::$contextResponse = $rewrite[$uri[0]];
+        if ($uri=avail::$uri) {
+            if ($Id=$uri[0] and isset($rewrite[$Id])) {
+                avail::$contextResponse = $rewrite[$Id];
                 avail::$contextType = pathinfo(avail::$uriPath, PATHINFO_EXTENSION);
-                return !avail::$context = preg_replace("/$uri[0]/", avail::$dir->root.$rewrite[$uri[0]], avail::$uriPath,1);
+                return !avail::$context = preg_replace("/$Id/", avail::$dir->root.$rewrite[$Id], avail::$uriPath,1);
             }
         }
         return true;
-	}
-    public function con($Id)
-    {
-        avail::$config = array_merge(avail::$config,$Id);
 	}
     public function error($Id)
     {
@@ -94,7 +92,7 @@ class assign
         if (avail::$database->errorConnection()) {
             return assign::request('database')->error(array(
                 'env'=>avail::$config['ASE'],
-                'root'=>avail::$config['ARO'].avail::$name.avail::SlA,
+                'root'=>avail::$config['ARO'],
                 'msg'=>avail::$databaseConnection->connect_error,
                 'code'=>avail::$databaseConnection->connect_errno
                 // 'src/style.css'=>array()

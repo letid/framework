@@ -6,26 +6,26 @@ $directory->get();
 $directory->set(Value);
 $directory->all();
 
-directory::request(Id)
-directory::request(Id)->get()
-directory::request(Id)->set(Value)
-directory::request()->all()
-
 avail::directory(Id);
 avail::directory(Id)->get();
 avail::directory(Id)->set(Value);
 avail::directory()->all();
 */
-class directory extends avail
+class directory
 {
+    public $Id;
+    public function __construct($Id=null)
+    {
+        $this->Id = $Id;
+    }
     public function all()
     {
-        return self::$dir;
+        return avail::$dir;
     }
     public function has()
     {
         if ($this->Id) {
-            return isset(self::$dir[$this->Id]);
+            return isset(avail::$dir[$this->Id]);
         }
     }
     /**
@@ -34,14 +34,14 @@ class directory extends avail
     */
     public function set($Id=null)
     {
-        if (self::$dir->root) {
+        if (avail::$dir->root) {
             if (is_array($Id)) {
                 foreach ($Id as $name => $dir)
                 {
-                    self::$dir->{$name} = self::$dir->root.$dir.static::SlA;
+                    avail::$dir->{$name} = avail::$dir->root.$dir.avail::SlA;
                 }
             } elseif ($this->Id) {
-                self::$dir->{$this->Id} = self::$dir->root.$Id.static::SlA;
+                avail::$dir->{$this->Id} = avail::$dir->root.$Id.avail::SlA;
             }
         }
 
@@ -49,14 +49,15 @@ class directory extends avail
     public function get()
     {
         if ($this->has()) {
-        	return self::$dir[$this->Id];
+        	return avail::$dir[$this->Id];
         }
     }
     public function existsTemplate()
     {
-        self::$dir->template = self::$config['ARO'].self::$config['ARD'];
-		if (!file_exists(self::$dir->template.$this->Id.self::$Extension['template'])) {
-			self::$dir->template = self::$root.self::$Alert['dir'];
+        avail::$dir->template = avail::$config['ARD'];
+        // avail::$dir->template = avail::$config['ARO'].avail::$config['ARD'];
+		if (!file_exists(avail::$dir->template.$this->Id.avail::$Extension['template'])) {
+			avail::$dir->template = avail::$root.avail::$Alert['dir'];
 		}
 	}
     public function __toString()
