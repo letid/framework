@@ -7,6 +7,7 @@ abstract class request
     {
 		avail::intObj();
 		avail::session()->start();
+		avail::session()->delete();
 		avail::$hostname = $_SERVER['HTTP_HOST'];
 		avail::$http = strtolower(substr($_SERVER['SERVER_PROTOCOL'],0,strpos($_SERVER['SERVER_PROTOCOL'],'/'))).avail::SlH.avail::$hostname;
 		avail::$uriPath = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), avail::SlA);

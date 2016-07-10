@@ -26,22 +26,34 @@ class assign
     private function hostName()
     {
         if (is_array($this->Id)) {
-            foreach ($this->Id as $Name => $Regex)
-            {
-                if ($Regex && $this->hostEngine(is_array($Regex)?$Regex:array($Regex))) {
-                    return $Name; break;
+            foreach ($this->Id as $Id => $Name) {
+                if ($Name) {
+                    if (is_array($Name) and $this->hostEngine($Name)) {
+                        return $Id; break;
+                    } elseif ($Name == '*') {
+                        return $Id; break;
+                    } elseif ($this->hostMatch($Name)) {
+                        return $Id; break;
+                    }
+                } else {
+                    return $Id; break;
                 }
+            }
+        } else {
+            return $this->Id;
+        }
+    }
+    private function hostEngine($Name)
+    {
+        foreach ($Name as $Id) {
+            if ($this->hostMatch($Id)) {
+                return true; break;
             }
         }
     }
-    private function hostEngine($Regex)
+    private function hostMatch($Id)
     {
-        foreach ($Regex as $Name)
-        {
-            if (preg_match("/$Name/", avail::$hostname)) {
-                return true;
-            }
-        }
+        return preg_match("/$Id/", avail::$hostname);
     }
     public function dir($configuration)
     {
