@@ -40,6 +40,14 @@ namespace letId\asset
 			*/
 			'ARO' => '../app/',
 			/**
+	        * application's namespace, ANS can not be modified!
+	        */
+	        'ANS'=>'',
+	        /**
+	        * application's directory, ADR can not be modified! Not in used (at the moment)!
+	        */
+	        'ADR'=>'',
+			/**
 			* error's folder which should be under applications root directory
 			*/
 			'ARD' => 'errors/',
