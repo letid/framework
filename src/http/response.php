@@ -40,6 +40,7 @@ abstract class response
 		$this->resourceCache($file);
 		if (file_exists($file)) {
 			readfile($file);
+			// return file_get_contents($file);
 		} else {
 			header('HTTP/1.1 404 Not Found');
 		}
@@ -72,17 +73,17 @@ abstract class response
 		   exit;
 		}
 	}
-	public function responseTemplate()
+	public function responseTemplate($Id)
 	{
-		return avail::template(avail::$context);
+		return avail::template(avail::$contextId);
 	}
 	public function audio()
 	{
-		return avail::$context;
+		return avail::$contextId;
 	}
 	public function json()
 	{
-		return json_encode(avail::$context);
+		return json_encode(avail::$contextId);
 	}
 	public function text($Id)
 	{

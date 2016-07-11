@@ -95,7 +95,9 @@ class template
 	}
 	private function requestChild($name)
     {
-		if (file_exists($file = avail::$dir->template.$name)) return $file;
+		if (file_exists($file = avail::$dir->template.$name)) {
+            return $file;
+        }
 	}
 	private function requestTemplate($fileName)
     {

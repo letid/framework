@@ -6,10 +6,6 @@ class assign
 	{
 		$this->Id = $Id;
 	}
-    static function request($Id='error')
-	{
-		return new self(avail::$Alert[$Id]);
-	}
     public function host()
     {
         avail::$name=$this->hostExists();
@@ -60,43 +56,61 @@ class assign
     {
         avail::$config = array_merge(avail::$config,$configuration);
         avail::$dir = (object) array();
-        avail::$config['ARO'] = avail::$config['ARO'].avail::$name.avail::SlA;
         avail::$config['ARD'] = avail::$config['ARO'].avail::$config['ARD'];
-		if (avail::$name && file_exists(avail::$config['ARO'])) {
-			return avail::$dir->root = avail::$config['ARO'];
+        avail::$config['ARO'] = avail::$config['ARO'].avail::$name.avail::SlA;
+        avail::$dir->root = avail::$config['ARD'];
+        avail::$dir->template = avail::$dir->root.avail::$Alert['template'];
+		if (avail::$name) {
+            if (file_exists(avail::$config['ARO'])) {
+                return avail::$dir->root = avail::$config['ARO'];
+            } else {
+                assign::template('application')->error(array('class'=>avail::$config['ASR'],'root'=>avail::$config['ARO'],'controller'=>avail::$config['ASR']));
+            }
 		} else {
-            assign::request('verso')->error(array('verso'=>avail::$config['ASR'],'root'=>avail::$config['ARO']));
+            assign::template('application')->error(array('class'=>'route','root'=>'config','controller'=>'routeController','name'=>'application'));
 		}
 	}
-    public function rewrite($rewrite)
+
+    public function rewrite($rules)
     {
         if ($uri=avail::$uri) {
-            if ($Id=$uri[0] and isset($rewrite[$Id])) {
-                avail::$contextResponse = $rewrite[$Id];
-                avail::$contextType = pathinfo(avail::$uriPath, PATHINFO_EXTENSION);
-                return !avail::$context = preg_replace("/$Id/", avail::$dir->root.$rewrite[$Id], avail::$uriPath,1);
+            if ($Id=$uri[0]) {
+                if (isset($rules[$Id])) {
+                    avail::$contextResponse = $rules[$Id];
+                    avail::$contextType = pathinfo(avail::$uriPath, PATHINFO_EXTENSION);
+                    return !avail::$contextId = preg_replace("/$Id/", avail::$dir->root.$rules[$Id], avail::$uriPath,1);
+                }
             }
         }
         return true;
 	}
+    static function template($Id='error')
+    {
+        return new self(avail::$Alert[$Id]);
+    }
     public function error($Id)
     {
-        avail::$contextResponse = avail::$contextType;
-        avail::directory($this->Id)->existsTemplate();
-		return avail::$context[$this->Id]=$Id;
+        $src = preg_replace("/[^A-Za-z0-9 ]/", '', avail::$letid['version']);
+        avail::directory($this->Id)->alertExists();
+        if ($this->rewrite(array($src=>avail::$Alert['resource']))) {
+            avail::$content['letIdSRC'] = $src;
+            avail::$contextResponse = avail::$contextType;
+            avail::$contextId[$this->Id]=$Id;
+        }
 	}
     public function database($Id)
     {
         avail::$database = new \letId\database\request;
         avail::$database->connection($Id);
         if (avail::$database->errorConnection()) {
-            return assign::request('database')->error(array(
+            assign::template('database')->error(array(
                 'env'=>avail::$config['ASE'],
                 'root'=>avail::$config['ARO'],
                 'msg'=>avail::$databaseConnection->connect_error,
                 'code'=>avail::$databaseConnection->connect_errno
                 // 'src/style.css'=>array()
             ));
+            return true;
         }
     }
 }

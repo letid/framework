@@ -52,12 +52,11 @@ class directory
         	return avail::$dir[$this->Id];
         }
     }
-    public function existsTemplate()
+    public function alertExists()
     {
-        avail::$dir->template = avail::$config['ARD'];
-        // avail::$dir->template = avail::$config['ARO'].avail::$config['ARD'];
-		if (!file_exists(avail::$dir->template.$this->Id.avail::$Extension['template'])) {
-			avail::$dir->template = avail::$root.avail::$Alert['dir'];
+		if (!file_exists(avail::$dir->template.$this->Id.avail::SlP.avail::$Extension['template'])) {
+			avail::$dir->template = avail::$rootId.avail::$Alert['template'];
+            avail::$dir->root = avail::$rootId;
 		}
 	}
     public function __toString()

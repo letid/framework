@@ -45,8 +45,8 @@ class content
     {
         if ($this->has()) {
         	return avail::$content[$this->Id];
-        } else{
-        	return avail::configuration($this->Id)->get();
+        } elseif (isset(avail::$config[$this->Id])){
+        	return avail::$config[$this->Id];
         }
         // if ($this->has()) {
         // 	return avail::$content[$this->Id];
@@ -58,7 +58,9 @@ class content
     }
     public function statics()
     {
-        return avail::configuration($this->Id)->get();
+        if (isset(avail::$config[$this->Id])){
+            return avail::$config[$this->Id];
+        }
         // $needle = 'app.';
         // $haystack = $this->Id;
         // $position = strpos($haystack, $needle);

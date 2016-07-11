@@ -11,7 +11,9 @@ abstract class request
 		avail::$http = strtolower(substr($_SERVER['SERVER_PROTOCOL'],0,strpos($_SERVER['SERVER_PROTOCOL'],'/'))).avail::SlH.avail::$hostname;
 		avail::$config['http'] = avail::$http;
 		avail::$uriPath = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), avail::SlA);
-		avail::$uri = explode(avail::SlA, avail::$uriPath);
+		if (avail::$uriPath) {
+			avail::$uri = explode(avail::SlA, avail::$uriPath);
+		}
 	}
 	public function initiate()
     {
@@ -19,14 +21,13 @@ abstract class request
 		if ($assign->host()->dir($this->configuration)) {
 			$module = new module;
 			$module->loader();
-			if (module::request(support\configuration::class)->configuration('ASC')) {
+			if (module::request(support\configuration::class)->configuration()) {
 				$rewrite = avail::configuration($this->rewrite)->request('rewrite');
 				if ($assign->rewrite($rewrite)) {
 					if ($route=$module->route()) {
 						module::request(support\validation::class)->extension('ASV');
 						module::request(support\authorization::class)->extension('ASA');
 						module::request(support\mail::class)->extension('ASM');
-
 						$ase = $module->environment();
 						if ($ase) {
 							if (isset($ase['database'])) {
@@ -44,6 +45,7 @@ abstract class request
 						$verso = new verso($route->page);
 						$verso->set();
 						$verso->execute();
+
 					}
 				}
 			}
@@ -51,6 +53,6 @@ abstract class request
     }
 	public function response()
     {
-		echo call_user_func(array(module::request(support\response::class)->response(avail::$contextType),avail::$contextResponse),avail::$context);
+		echo call_user_func(array(module::request(support\response::class)->response(avail::$contextType),avail::$contextResponse),avail::$contextId);
 	}
 }

@@ -33,19 +33,18 @@ class module
     /**
     * support extension for configuration
     */
-	public function configuration($Id)
+	public function configuration()
     {
-        $filename = avail::$config[$Id];
-        avail::$config[$Id] = $this->nameExists($filename);
-        if (avail::$config[$Id]) {
+        $filename = avail::$config['ASC'];
+        avail::$config['ASC'] = $this->nameExists($filename);
+        if (avail::$config['ASC']) {
             if (is_subclass_of(avail::configuration(), $this->Id)) {
                 return 1;
             } else {
-                $require = 'require to extends!';
-                assign::request('configuration')->error(array('filename'=>$filename,'require'=>'require to extends!','root'=>avail::$config['ARO']));
+                assign::template('configuration')->error(array('filename'=>$filename,'require'=>'require to extends!','root'=>avail::$config['ARO']));
             }
         } else {
-            return avail::$config[$Id] = $this->Id;
+            return avail::$config['ASC'] = $this->Id;
         }
 	}
     /**
@@ -78,14 +77,14 @@ class module
 		return parse_ini_file(avail::$dir->root.avail::$config['ASE'].avail::SlP.avail::$Extension['environment'],true);
 	}
     /**
-    * verso
+    * route
     */
     public function route()
     {
 		if ($Classname = $this->nameExists(avail::$config['ASR'])) {
 			return new $Classname;
 		} else {
-            assign::request('route')->error(array('class'=>avail::$config['ASR'],'root'=>avail::$dir->root));
+            assign::template('route')->error(array('class'=>avail::$config['ASR'],'root'=>avail::$dir->root));
 		}
 	}
     /**

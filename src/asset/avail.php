@@ -17,7 +17,7 @@ namespace letId\asset
 		/**
 		* @var (string) letId root directory
 		*/
-		static $root = __DIR__;
+		static $rootId = __DIR__.'/../';
 		/**
 		* @var (string) application's name
 		*/
@@ -26,7 +26,7 @@ namespace letId\asset
 		* @var (array) html content used in Template, Menu and Language
 		*/
 		static $content = array();
-		static $context = array(), $contextLog=array(), $contextResponse, $contextType='responseTemplate';// $contextMeta,$contextHeader,$contextExt;
+		static $contextId=array(), $contextLog=array(), $contextResponse, $contextType='responseTemplate';// $contextMeta,$contextHeader,$contextExt;
 		/**
 		* @var (object) database connection status
 		*/
@@ -50,7 +50,7 @@ namespace letId\asset
 			/**
 			* error's folder which should be under applications root directory
 			*/
-			'ARD' => 'errors/',
+			'ARD' => 'error/',
 			/**
 			* application route's classname
 			*/
@@ -162,9 +162,11 @@ namespace letId\asset
 		* @var (array) Framework Templates
 		*/
 		static $Alert = array(
-			'dir'=>'/../notification/',
+			'template'=>'template/',
+			'resource'=>'resource',
 			'error'=>'error',
 			'maintaining'=>'maintaining',
+			'application'=>'application',
 			'database'=>'database',
 			'configuration'=>'configuration',
 			'route'=>'route',

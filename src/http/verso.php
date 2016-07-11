@@ -56,7 +56,7 @@ class verso
 		$versoMethod = $Id[avail::$config['APM']];
 		if ($Obj=module::request($versoObject)->map()) {
 			if (method_exists($Obj,$versoMethod) && is_callable(array($Obj,$versoMethod))) {
-				avail::$context = call_user_func(array($Obj,$versoMethod));
+				avail::$contextId = call_user_func(array($Obj,$versoMethod));
 				avail::$contextResponse = avail::$contextType;
 				$currentSupport = array($Obj,$versoMethod.avail::$config['AHS']);
 				if (is_callable($currentSupport)) {
@@ -68,14 +68,14 @@ class verso
 				}
 			} else {
 				// avail::assist(14)->log('is_not_callable');
-				assign::request('method')->error(array(
+				assign::template('method')->error(array(
 					'class'=>avail::$config['ARO'].avail::$config['ASP'].avail::SlA.$versoObject, 'method'=>$versoMethod,
 				));
 			}
 		} else {
 			// TODO: disable initial()->error() on live application
 			// avail::assist(14)->log('is_not_callable');
-			assign::request('class')->error(array(
+			assign::template('class')->error(array(
 				'class'=>$versoObject, 'root'=>avail::$config['ARO'].avail::$config['ASP'].avail::SlA,
 			));
 		}
@@ -107,7 +107,7 @@ class verso
 	private function setExists($i)
 	{
 		if (is_array($i)) {
-			return (isset($i[avail::$config['APE']]) || isset($i[avail::$config['APC']]) || isset($i[avail::$config['APM']]));
+			return isset($i[avail::$config['APE']]) || isset($i[avail::$config['APC']]) || isset($i[avail::$config['APM']]);
 		}
 	}
 	private function setAuthorization($className,$i,$Auth)
