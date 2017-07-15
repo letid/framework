@@ -1,23 +1,7 @@
 <?php
 namespace letId\assist
 {
-    abstract class avail
-    {
-        protected $Id;
-        public function __construct($Id=null)
-        {
-            $this->setId($Id);
-        }
-        public function setId($Id=null)
-        {
-            if ($Id) {
-                $this->Id = $Id;
-            }
-            return $this;
-        }
-        static function request($Id=null)
-        {
-            return new self($Id);
-        }
-    }
+  class avail extends \letId\request\avail
+  {
+  }
 }

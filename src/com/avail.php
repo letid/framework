@@ -1,7 +1,7 @@
 <?php
 namespace letId\com
 {
-    class avail
-    {
-    }
+  class avail
+  {
+  }
 }

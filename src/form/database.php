@@ -4,27 +4,24 @@ trait database
 {
 	// NOTE: DONE -> SIGNING UP
 	public function signup($Id=null)
-    {
+  {
 		if ($this->responseTerminal()) {
 			$db = avail::$database->insert($this->formPost)->to($this->table)->execute()->rowsId();
 			$this->responseTask($db->rowsId,$Id,$db,array('Inserted!','Unchanged!'));
 		}
 		return $this;
-    }
+  }
 	// NOTE: DONE -> SIGNING IN
 	public function signin($Id=null)
-    {
+  {
 		if ($this->responseTerminal()) {
-			$db = avail::$database->select()->from($this->table)->where($this->formPost)->execute()->toObject()->rowsCount();
+			$db = avail::$database->select()->from($this->table)->where($this->formPost)->execute()->toArray()->rowsCount();
 			if ($db->rowsCount) {
-				if (isset($db->rows->status))
-				{
-					$rowsArray = (array) $db->rows;
-					if ($db->rows->status > 0)
-					{
-						if(isset($db->rows->logs))
-						{
-							avail::$database->update(array_filter($rowsArray, function(&$v, $k) {
+				$row = $db->rows[0];
+				if (isset($row['status'])) {
+					if ($row['status'] > 0) {
+						if(isset($row['logs'])) {
+							avail::$database->update(array_filter($row, function(&$v, $k) {
 								if ($k == 'logs') {
 									return $v=$v+1;
 								}
@@ -33,13 +30,15 @@ trait database
 								}
 							}, ARRAY_FILTER_USE_BOTH))->to($this->table)->where($this->formPost)->execute()->rowsAffected();
 						}
-					}
-					else
-					{
+					} else {
 						// NOTE: user account has been deactivated, and needed to activate!
 					}
+					$userCookie = array_intersect_key($row, array_flip(array('userid','password')));
 					avail::session()->delete();
-					avail::cookie()->user()->set(array_intersect_key($rowsArray, array_flip(array('userid','password'))));
+					avail::cookie()->user()->set($userCookie);
+					// $this->responseTaskerror($Id,$db,'Ok....');
+					// setcookie("testme",serialize($userCookie),time()+199);
+					// print_r($userCookie);
 				}
 			} else {
 				$this->message = avail::language('invalid VALUE')->get(array(
@@ -49,14 +48,14 @@ trait database
 			}
 		}
 		return $this;
-    }
+  }
 	// NOTE: UNDONE
 	public function signout()
-    {
+  {
 		return $this;
-    }
+  }
 	public function forgotpassword()
-    {
+  {
 		if ($this->responseTerminal()) {
 			$db = avail::$database->select('*')->from($this->table)->where($this->formPost)->execute()->rowsId()->toObject();
 			if ($db->rowsCount) {
@@ -89,9 +88,9 @@ trait database
 			}
 		}
 		return $this;
-    }
+  }
 	public function changepassword($Id=null)
-    {
+  {
 		if ($this->responseTerminal()) {
 			$db = avail::$database->update($this->formPost)->to($this->table)->where($this->formId)->execute()->rowsAffected();
 			if ($db->rowsAffected) {
@@ -100,9 +99,9 @@ trait database
 			$this->responseTask($db->rowsAffected,$Id,$db,array('Changed!','Unchanged!'));
 		}
 		return $this;
-    }
+  }
 	public function resetpassword($Id=null)
-    {
+  {
 		if ($this->responseTerminal()) {
 			$db = avail::$database->select()->from('tasks')->where('code',$this->formPost['code'])->execute()->rowsCount()->toObject();
 			if ($db->rowsCount) {
@@ -118,28 +117,28 @@ trait database
 			}
 		}
 		return $this;
-    }
+  }
 	// NOTE: DONE -> INSERTING
 	public function insert($Id=null)
-    {
+  {
 		if ($this->responseTerminal()) {
 			$db = avail::$database->insert($this->formPost)->to($this->table)->execute()->rowsId();
 			$this->responseTask($db->rowsId,$Id,$db,array('Inserted!','Unchanged!'));
 		}
 		return $this;
-    }
+  }
 	// NOTE: DONE -> UPDATING
 	public function update($Id=null)
-    {
+  {
 		if ($this->responseTerminal()) {
 			$db = avail::$database->update($this->formPost)->to($this->table)->where($this->formId)->execute()->rowsAffected();
 			$this->responseTask($db->rowsAffected,$Id,$db,array('Updated!','Unchanged!'));
 		}
 		return $this;
-    }
+  }
 	// NOTE: DONE -> INSERTING OR UPDATING
 	public function insertOrupdate($Id=null)
-    {
+  {
 		if ($this->responseTerminal()) {
 			$db = avail::$database->insert(
 				array_merge($this->formId,$this->formPost)
@@ -151,14 +150,14 @@ trait database
 			$this->responseTask($db->result,$Id,$db,array('Updated!','Unchanged!'));
 		}
 		return $this;
-    }
+  }
 	// NOTE: DONE -> DELETING
 	public function delete($Id=null)
-    {
+  {
 		if ($this->responseTerminal()) {
 			$db = avail::$database->delete()->from($this->table)->where($this->formId)->execute()->rowsAffected();
 			$this->responseTask($db->rowsAffected,$Id,$db,array('Deleted!','Unchanged!'));
 		}
 		return $this;
-    }
+  }
 }

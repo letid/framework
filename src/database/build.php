@@ -97,7 +97,7 @@ trait build
     // }
     private function build_where($Name,$args)
     {
-        if (sizeof($args) == sizeof($args, COUNT_RECURSIVE)) {
+        if (count($args) == count($args, COUNT_RECURSIVE)) {
             return $this->build_where_operator($args);
         } else {
             return str_replace( array('AND AND AND','AND OR AND','AND AND','AND OR'), array('AND','OR'), $this->build_where_implode($args));

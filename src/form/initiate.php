@@ -65,7 +65,7 @@ trait initiate
 					}
 				}
 				// $selectValue = avail::html('option')->text('Ok')->attr(array('value'=>'abc','checked'))->response();
-				// $selectValue = \letId\asset\avail::html('b')->selectOption($is['select']);
+				// $selectValue = \letId\lethil\avail::html('b')->selectOption($is['select']);
 				// $selectValue = avail::html($fillValue)->selectOption($is['select']);
 				// TODO: this has to improved
 				if (isset($selectValue)) {

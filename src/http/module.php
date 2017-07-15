@@ -1,99 +1,99 @@
 <?php
-namespace letId\http;
-class module
+namespace letId\http
 {
-    public function __construct($Id=null)
-	{
-		$this->Id = $Id;
-	}
-    static function request($Id)
-	{
-		return new self($Id);
-	}
-    public function loader()
+  class module
+  {
+    private $Id;
+    public function __construct($Id=NULL)
+  	{
+  		$this->Id = $Id;
+  	}
+    static function load($Id=NULL)
+  	{
+  		return new self($Id);
+  	}
+    public function composer()
     {
-        $loader = new \Composer\Autoload\ClassLoader();
-        $loader->addPsr4($this->name(),array(avail::$dir->root),true);
-        // $loader->loadClass(\App\Private\Configuration);
-        $loader->register(true);
-        // $loader->setUseIncludePath(true);
-        // return $loader;
-        // print_r($loader);
+      $loader = new \Composer\Autoload\ClassLoader();
+      $loader->addPsr4($this->classPath(),array(avail::$dir->root),true);
+      // $loader->loadClass(\App\Private\Configuration);
+      $loader->register(true);
+      // $loader->setUseIncludePath(true);
+      // return $loader;
+      // print_r($loader);
     }
-    public function name($Id='')
+    private function classPath($Id='')
     {
-        return avail::$config['ANS'].avail::SlB.$Id;
+      return $this->IdName=avail::$config['ANS'].avail::SlB.$Id;
     }
-    private function nameExists($Id)
-    {
-		if (class_exists($Classname = $this->name($Id))) {
-			return $Classname;
-		}
-	}
     /**
     * support extension for configuration
     */
-	public function configuration()
+  	public function configuration()
     {
-        $filename = avail::$config['ASC'];
-        avail::$config['ASC'] = $this->nameExists($filename);
-        if (avail::$config['ASC']) {
-            if (is_subclass_of(avail::configuration(), $this->Id)) {
-                return 1;
-            } else {
-                assign::template('configuration')->error(array('filename'=>$filename,'require'=>'require to extends!','root'=>avail::$config['ARO']));
-            }
+      $className = $this->Id.'Controller';
+      if (class_exists($this->classPath($className))){
+        if (is_subclass_of($this->IdName,avail::$classRequest[$this->Id])) {
+          avail::$classRequest[$this->Id]=$this->IdName;
         } else {
-            return avail::$config['ASC'] = $this->Id;
+          return !assign::template('configuration')->error(array('filename'=>$className,'require'=>'Require to be extended!','root'=>avail::$config['ARO']));
         }
-	}
+      }
+      return true;
+  	}
     /**
-    * support extension for validation, mail, authorization, form
+    * TODO not in use, see more info $classExtension
+    * module::load()->extension();
     */
-	public function extension($Id)
+  	public function extension()
     {
-        $Classname = $this->nameExists(avail::$config[$Id]);
-        if (!$Classname) {
-            $Classname = $this->Id;
+      foreach (avail::$classExtension as $key => $value) {
+        if (class_exists($this->classPath($key.'Controller'))) {
+          if (is_subclass_of($this->IdName,$value)) {
+            avail::$classExtension[$key]=$this->IdName;
+          }
         }
-        avail::$config[$Id] = $Classname;
-	}
+      }
+  	}
     /**
-    * support extension for response
+    * NOTE: environment
+    * module::load()->environment();
     */
-	public function response($Id)
-    {
-        $Classname = $this->nameExists(avail::$config['ASO']);
-		if (!$Classname) {
-            $Classname = $this->Id;
+    static function environment()
+  	{
+  		$ase = parse_ini_file(avail::$dir->root.avail::$config['ASE'].avail::SlP.avail::$Extension['environment'],true);
+      if ($ase) {
+        avail::configuration($ase)->merge();
+        if (isset($ase['database']) && is_array($ase['database'])) {
+          if (assign::database(array_merge(avail::$database,$ase['database']))) {
+            return false;
+          } else {
+            // avail::configuration($ase)->merge();
+            // NOTE: remove database from $config
+            avail::configuration('database')->set();
+          }
         }
-        return new $Classname($Id);
-	}
+      }
+      return true;
+  	}
     /**
-    * environment
-    */
-    public function environment()
-	{
-		return parse_ini_file(avail::$dir->root.avail::$config['ASE'].avail::SlP.avail::$Extension['environment'],true);
-	}
-    /**
-    * route
+    * module::load()->route();
     */
     public function route()
     {
-		if ($Classname = $this->nameExists(avail::$config['ASR'])) {
-			return new $Classname;
-		} else {
-            assign::template('route')->error(array('class'=>avail::$config['ASR'],'root'=>avail::$dir->root));
-		}
-	}
+      if (class_exists($this->classPath(avail::$config['ASR']))) {
+        return avail::$classRequest['ASR'] = $this->IdName;
+      } else {
+        assign::template('route')->error(array('class'=>avail::$config['ASR'],'root'=>avail::$dir->root));
+      }
+  	}
     /**
-    * map
+    * module::load()->map();
     */
     public function map()
     {
-    	if ($Classname = $this->nameExists(avail::$config['ASP'].avail::SlB.$this->Id)) {
-    		return new $Classname;
-    	}
+    	// if ($Classname = $this->classExists(avail::$config['ASP'].avail::SlB.$this->Id)) return new $Classname;
+      if (class_exists($this->classPath(avail::$config['ASP'].avail::SlB.$this->Id))) return new $this->IdName;
     }
+  }
 }

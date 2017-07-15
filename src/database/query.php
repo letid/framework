@@ -26,8 +26,16 @@ trait query
 		if ($db=self::is_result()) {
 			$this->{$rowsName} = $db->fetch_all(MYSQLI_NUM);
 			// $db->free();
-			// mysqli_free_result($db);
-			// self::close();
+			$db->free_result();
+			self::close();
+		}
+		return $this;
+	}
+	public function rowArray($rowsName=self::rowsName)
+	{
+		if ($db=self::is_result()) {
+			$this->{$rowsName} = $db->fetch_row();
+			// $this->{$rowsName} = $db->fetch_fields();
 		}
 		return $this;
 	}

@@ -9,12 +9,12 @@ namespace letId\assist
 		->remove()
 		->delete();
 	*/
-	abstract class cookie extends avail
+	abstract class cookie extends essential
 	{
 		public function has()
-        {
-            if (isset($_COOKIE[$this->Id])) return $_COOKIE[$this->Id];
-        }
+    {
+      if (isset($_COOKIE[$this->Id])) return $_COOKIE[$this->Id];
+    }
 		public function get($Unserialize=false)
 		{
 			if ($this->has()) {
@@ -46,7 +46,7 @@ namespace letId\assist
 		}
 		public function delete()
 		{
-			// setcookie($this->Id,false);
+			setcookie($this->Id,false);
 		}
 		private function time()
 		{

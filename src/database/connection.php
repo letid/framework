@@ -29,9 +29,34 @@ class connection
     {
 		return avail::$databaseConnection->connect_errno;
 	}
+	/*
+	mysqli_close()
+	mysqli_result::close()
+	*/
 	public function close()
 	{
-		avail::$databaseConnection->close(); // mysqli_close()
+		avail::$databaseConnection->close();
+	}
+	/*
+	mysqli_result::free()
+	NOTE: not in use, because each fetch method can do it!
+	*/
+	public function free()
+	{
+		if (self::is_result()) {
+			$this->result->free();
+		}
+	}
+	/*
+	mysqli_free_result(self::is_result());
+	mysqli_result::free_result()
+	NOTE: not in use, because each fetch method can do it!
+	*/
+	public function free_result()
+	{
+		if (self::is_result()) {
+			$this->result->free_result();
+		}
 	}
 	public function execute()
 	{
@@ -54,9 +79,12 @@ class connection
 	{
 		if (isset($args)) {
 			if (is_callable($args)) {
-				$this->queries[$name]=call_user_func($args, $this->queries, $name);
+				// NOTE: might not work, 
+				// $this->queries[$name]=call_user_func($args, $this->queries, $name);
+				$this->queries[$name]=call_user_func_array($args, array($this->queries, $name));
 			} elseif (is_callable($name)) {
-				$this->queries=call_user_func($name, $this->queries, $args);
+				// $this->queries=call_user_func($name, $this->queries, $args);
+				$this->queries=call_user_func_array($name, array($this->queries, $args));
 			} else {
 				$this->queries[$name]=$args;
 			}

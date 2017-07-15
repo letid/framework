@@ -2,3 +2,63 @@
 ---
 Documentation is now available in [Wiki][Wiki]!
 [Wiki]: ../../../../wiki
+
+## User table
+```sql
+CREATE TABLE `users` (
+	`userid` INT(11) NOT NULL AUTO_INCREMENT,
+	`email` VARCHAR(225) NOT NULL,
+	`password` VARCHAR(225) NOT NULL,
+	`displayname` VARCHAR(225) NULL DEFAULT NULL,
+	`role` INT(1) NULL DEFAULT '1',
+	`logs` INT(11) NULL DEFAULT '1',
+	`status` INT(1) NULL DEFAULT '1',
+	`modified` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`created` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+	UNIQUE INDEX `unit` (`email`),
+	INDEX `key` (`userid`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=2;
+```
+## User description table
+```sql
+CREATE TABLE `users_desc` (
+	`userid` INT(11) NOT NULL,
+	`firstname` VARCHAR(225) NULL DEFAULT NULL,
+	`lastname` VARCHAR(225) NULL DEFAULT NULL,
+	`dob` DATE NULL DEFAULT NULL,
+	`site` VARCHAR(225) NULL DEFAULT NULL,
+	`address` VARCHAR(225) NULL DEFAULT NULL,
+	`postcode` VARCHAR(15) NULL DEFAULT NULL,
+	`city` VARCHAR(225) NULL DEFAULT NULL,
+	`state` VARCHAR(225) NULL DEFAULT NULL,
+	`country` VARCHAR(225) NULL DEFAULT NULL,
+	`telephone` VARCHAR(15) NULL DEFAULT NULL,
+	`mobile` VARCHAR(15) NULL DEFAULT NULL,
+	`profile` TEXT NULL,
+	`ip` VARCHAR(225) NULL DEFAULT NULL,
+	`gender` VARCHAR(50) NULL DEFAULT NULL,
+	`beh` VARCHAR(50) NULL DEFAULT NULL,
+	`khua` VARCHAR(50) NULL DEFAULT NULL,
+	`setting` TEXT NULL
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB;
+```
+## User visits table
+```sql
+CREATE TABLE `visits` (
+	`ip` VARCHAR(50) NULL DEFAULT '1',
+	`view` BIGINT(20) NOT NULL DEFAULT '1',
+	`locale` VARCHAR(5) NOT NULL DEFAULT 'en',
+	`lang` VARCHAR(5) NOT NULL DEFAULT 'en',
+	`modified` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`created` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+	UNIQUE INDEX `unique` (`ip`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+ROW_FORMAT=COMPACT;
+```

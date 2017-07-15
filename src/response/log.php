@@ -1,66 +1,74 @@
 <?php
-namespace letId\response;
-/**
-* log::request($Id)->response();
-* NOTE: TO reset -> ?visitsReset
-*/
-/*
-CREATE TABLE `visitor` (
-	`ip` VARCHAR(50) NULL DEFAULT '1',
-	`visit` BIGINT(20) NOT NULL DEFAULT '1',
-	`locale` VARCHAR(5) NOT NULL DEFAULT 'en',
-	`lang` VARCHAR(5) NOT NULL DEFAULT 'en',
-	`modified` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	`created` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
-	UNIQUE INDEX `unique` (`ip`)
-)
-COLLATE='utf8_general_ci'
-ENGINE=InnoDB
-ROW_FORMAT=COMPACT
-;
-*/
-class log
+namespace letId\response
 {
-	public $table,$column=array();
-	public function __construct($table=null)
+	/**
+	* log::request('tableName')->response();
+	* NOTE: TO reset -> ?visitsReset
+	*/
+	/*
+	CREATE TABLE `visits` (
+		`ip` VARCHAR(50) NULL DEFAULT '1',
+		`view` BIGINT(20) NOT NULL DEFAULT '1',
+		`locale` VARCHAR(5) NOT NULL DEFAULT 'en',
+		`lang` VARCHAR(5) NOT NULL DEFAULT 'en',
+		`modified` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+		`created` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+		UNIQUE INDEX `unique` (`ip`)
+	)
+	COLLATE='utf8_general_ci'
+	ENGINE=InnoDB
+	ROW_FORMAT=COMPACT;
+	*/
+class log
 	{
-		if ($table) {
-			$this->table = $table;
+		protected $table;
+		public function __construct($table=null)
+		{
+			if ($table) $this->table = $table;
+			$this->rowSelector=array('ip'=>$_SERVER['REMOTE_ADDR']);
 		}
-	}
-	static function requestTable($table=null)
-	{
-		return new self($table);
-	}
-	public function requestVisits()
-	{
-		if ($this->table) {
-			$this->requestVisitsUpdate(array('ip'=>$_SERVER['REMOTE_ADDR']),array('hit'=>array('(hit+1)')));
-			$select = avail::$database->select("SUM(hit) AS hits, COUNT(hit) AS total")->from($this->table)->execute()->toObject();
-			avail::content('visitor.hits')->set(number_format($select->rows->hits+avail::configuration('visitsPrevious')->get(0)));
-			if (isset($_GET['visitsReset']) || $select->rows->total >= avail::configuration('visitsReset')->get(999) ) {
-				avail::$database->truncate('TABLE')->from($this->table)->execute();
-				$this->requestVisitsUpdate(array('ip'=>$_SERVER['REMOTE_ADDR'],'hit'=>$select->rows->hits),array('hit'=>$select->rows->hits));
-				avail::content('visitor.total')->set($update->result);
-			} else {
-				avail::content('visitor.total')->set($select->rows->total);
+		public function requestVisits()
+		{
+			if ($this->table) {
+				if ($this->requestVisitsUpdate($this->rowSelector,array('view'=>array('(view+1)')))->result) {
+					$select = avail::$database->select("created,SUM(view) AS sum, COUNT(view) AS total")->from($this->table)->execute()->toObject();
+					// print_r($select);
+					// $user = avail::$database->select('locale, lang, view, modified, created')->from($this->table)->where($this->rowSelector)->execute()->toObject();
+					// avail::content('visitor.view')->set($user->rows->view);
+					// avail::configuration('locale')->set($user->rows->locale);
+					// avail::configuration('lang')->set($user->rows->lang);
+					// avail::configuration('modified')->set($user->rows->modified);
+					// avail::configuration('created')->set($user->rows->created);
+					
+					avail::content('visits.sum')->set(number_format($select->rows->sum+avail::configuration('visitsPrevious')->get(0)));
+					avail::content('visits.created')->set($select->rows->created);
+					
+					$visitsReset = avail::configuration('visitsReset');
+					
+					if (($visitsReset->has() && isset($_GET[$visitsReset->get()])) || $select->rows->total > avail::configuration('visitsLimit')->get(999)) {
+						// NOTE: visitsReset=1
+						avail::$database->truncate('TABLE')->from($this->table)->execute();
+						// $update = $this->requestVisitsUpdate($this->rowSelector,array('hit'=>$select->rows->hits));
+						$update = $this->requestVisitsUpdate(array_merge($this->rowSelector,array('view'=>$select->rows->sum)));
+						avail::content('visits.total')->set($update->result);
+					} else {
+						avail::content('visits.total')->set($select->rows->total);
+					}
+				}
 			}
 		}
-	}
-	private function requestVisitsUpdate($insert,$update)
-	{
-		$column = array_filter(array(
-			'locale'=>avail::session('sil')->has(), 'lang'=>avail::session('sol')->has()
-		));
-		// if ($this->column) {
-		// 	$column = array_merge($this->column,$column);
-		// }
-		return avail::$database->insert(
-			array_merge($column,$insert)
-		)->to(
-			$this->table
-		)->duplicateUpdate(
-			array_merge($column,$update)
-		)->execute();
+		private function requestVisitsUpdate($insert,$update=array())
+		{
+			$column = array_filter(array(
+				'locale'=>avail::session('locale')->version()->has(), 'lang'=>avail::session('lang')->version()->has()
+			));
+			return avail::$database->insert(
+				array_merge($column,$insert)
+			)->to(
+				$this->table
+			)->duplicateUpdate(
+				array_merge($column,$update)
+			)->execute();
+		}
 	}
 }
