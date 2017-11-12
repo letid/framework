@@ -1,11 +1,11 @@
 <?php
 /*
-$o= new googleTranslate(api_key);
+$o= new translator(api_key);
 $o->request(word,target,source);
 */
 namespace letId\service
 {
-	class googleTranslate
+	abstract class translator
 	{
 		/*
 		https://www.googleapis.com/language/translate/v2?

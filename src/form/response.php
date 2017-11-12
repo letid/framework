@@ -35,7 +35,8 @@ trait response
 	{
 		if (is_callable($callback)) {
 			// $msg = ($callback, true, $this);
-			$msg = call_user_func_array(array($callback), array(true, $this));
+			// $msg = call_user_func_array(array($callback), array(true, $this));
+			$msg = call_user_func_array($callback, array(true, $this));
 		}
 		$this->responseSuccess($msg);
 	}
@@ -44,7 +45,7 @@ trait response
 		$this->formPost = false;
 		if (is_callable($callback)) {
 			// $msg = ($callback, false, $db);
-			$msg = call_user_func_array(array($callback), array(false, $db));
+			$msg = call_user_func_array($callback, array(false, $db));
 		} elseif ($db and isset($db->msg)) {
 			$msg = $db->msg;
 		}

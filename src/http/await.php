@@ -9,6 +9,8 @@ namespace letId\http
 			// avail::session()->delete();
 			// avail::cookie()->user()->remove();
 			// avail::cookie()->user()->delete();
+			// if (defined('app_hostname')) {constant('app_hostname')}
+			// if (defined('app_uriPath')) {constant('app_uriPath')}
 			avail::$hostname = $_SERVER['HTTP_HOST'];
 			avail::$http = strtolower(substr($_SERVER['SERVER_PROTOCOL'],0,strpos($_SERVER['SERVER_PROTOCOL'],'/'))).avail::SlH.avail::$hostname;
 			avail::$config['http'] = avail::$http;
@@ -50,8 +52,6 @@ namespace letId\http
 								new verso();
 							}
 						}
-					} else {
-						echo 'essss';
 					}
 				}
 			}

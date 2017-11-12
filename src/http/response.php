@@ -34,6 +34,7 @@ namespace letId\http
 			if (is_array($Id)) {
 				foreach ($Id as $h) header($h);
 			} elseif (is_scalar($Id) && isset($this->header[$Id])) {
+				// print_r($this->header[$Id]);
 				foreach ($this->header[$Id] as $h) header($h);
 			}
 	  }

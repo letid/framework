@@ -40,7 +40,7 @@ namespace letId\lethil
       */
       'ANS'=>'',
       /**
-      * application's directory, ADR can not be modified! 
+      * application's directory, ADR can not be modified!
 			* NOTE: Not in use (at the moment)! as routeController->application already defined dynamically!
       */
       'ADR'=>'',
@@ -116,18 +116,18 @@ namespace letId\lethil
 			'session' => \letId\assets\session::class,
 			'template' => \letId\assets\template::class,
 			'timer' => \letId\assets\timer::class,
-			
+
 			'database' => \letId\request\database::class,
 			'form' => \letId\request\form::class,
 			'log' => \letId\request\log::class,
-			
+
 			'authorization' => \letId\request\authorization::class,
 			'mail' => \letId\request\mail::class,
 			'response' => \letId\request\response::class,
 			// TODO (Not in use).
 			'validation' => \letId\request\validation::class
 			// NOTE: no needed
-			
+
 			// 'map' => \letId\request\map::class,
 			// 'verse' => \letId\request\verse::class,
 			// 'verso' => \letId\request\verso::class
@@ -227,8 +227,8 @@ namespace letId\lethil
 		* NOTE: framework info.
 		*/
 		static $letid = array(
-			'build' => '07.10.16.17.20',
-			'version' => '1.0.8',
+			'build' => '12.11.17.09.03',
+			'version' => '1.0.9',
 			'name' => 'letId',
 			'description' => 'letId PHP Framework'
 		);

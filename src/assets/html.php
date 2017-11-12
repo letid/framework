@@ -26,19 +26,19 @@ namespace letId\assets
 	html::request('div')->text('Ok')->attr(array('class'=>'active'))->response();
 	html::request('div')->text('Ok')->response(array('class'=>'active'));
 	html::request('div')->response('Ok');
-	
+
 	$html = new html(Id);
 	$html->response(Text,Attr);
-	
+
 	$html = new html(Id);
 	$html->text(Text);
 	$html->attr(Attr);
 	$html->response(Text,Attr);
-	
+
 	html::request(Id);
 	html::request(Id)->response(Text,Attr);
 	html::request(Id)->text(Text)->attr(Attr)->response(Text,Attr);
-	
+
 	avail::html(Id);
 	avail::html(Id)->response(Text,Attr);
 	avail::html(Id)->text(Text)->attr(Attr)->response(Text,Attr);
@@ -84,7 +84,7 @@ namespace letId\assets
 		// {
 		// 	return $this;
 		// }
-	
+
 		public function response()
 		{
 			// $this->text(func_get_args()[0]);
@@ -136,7 +136,7 @@ namespace letId\assets
 					if (is_scalar($h[$i[1]])){
 						return $h[$i[1]];
 					} else {
-						print_r($h[$i[1]]);
+						// print_r($h[$i[1]]);
 					}
 				}, avail::$AHE[$tag?in_array($tag, avail::$AHS)?0:1:2]
 			);

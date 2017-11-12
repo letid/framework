@@ -86,7 +86,11 @@ namespace letId\assist
       if (isset($this->requestContent[$name])) {
         return $this->template = $this->requestContent[$name];
       } elseif (file_exists($file = $this->requestTemplate($name))) {
-        $this->requestContent[$name] = file_get_contents($file);
+        // $this->requestContent[$name] = file_get_contents($file);
+        // $this->requestContent[$name] = trim(file_get_contents($file));
+        // $this->requestContent[$name] = preg_replace('/[\r\n]+/', '', preg_replace('/[ \t]+/', ' ', file_get_contents($file)));
+        // $this->requestContent[$name] = preg_replace('/ \s+/', ' ', preg_replace('/[\r]+/', '', file_get_contents($file)));
+        $this->requestContent[$name] = preg_replace('/[\r\n]+/', '', preg_replace('/ \s+/', '',file_get_contents($file)));
         return $this->template = $this->requestContent[$name];
       }
     }
