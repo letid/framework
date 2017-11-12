@@ -17,10 +17,10 @@
     }],
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0.9-dev"
+            "dev-master": "1.0.9-stable"
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "php": ">=5.6.30"
     },

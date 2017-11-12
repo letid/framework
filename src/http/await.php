@@ -9,16 +9,30 @@ namespace letId\http
 			// avail::session()->delete();
 			// avail::cookie()->user()->remove();
 			// avail::cookie()->user()->delete();
-			// if (defined('app_hostname')) {constant('app_hostname')}
-			// if (defined('app_uriPath')) {constant('app_uriPath')}
-			avail::$hostname = $_SERVER['HTTP_HOST'];
+			if (!property_exists($this, 'uriPath')) {
+				$this->requestAfter();
+			}
 			avail::$http = strtolower(substr($_SERVER['SERVER_PROTOCOL'],0,strpos($_SERVER['SERVER_PROTOCOL'],'/'))).avail::SlH.avail::$hostname;
 			avail::$config['http'] = avail::$http;
-			avail::$uriPath = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), avail::SlA);
+			avail::$uriPath = trim(parse_url($this->uriPath, PHP_URL_PATH), avail::SlA);
 			avail::$contents['letIdSRC'] = avail::$letid['build'];
 			if (avail::$uriPath) {
 				avail::$uri = explode(avail::SlA, avail::$uriPath);
 			}
+		}
+		public function requestBefore()
+	  {
+			$hostname = dirname($_SERVER['SCRIPT_NAME']);
+			avail::$hostname = $_SERVER['HTTP_HOST'].$hostname;
+			$this->uriPath = str_replace($hostname,'',$_SERVER['REQUEST_URI']);
+			avail::$config['ARO'] ='';
+			// avail::$hostname = defined('app_hostname')?constant('app_hostname'):$_SERVER['HTTP_HOST'];
+			// avail::$uriPath = trim(parse_url(defined('app_uriPath')?constant('app_uriPath'):$_SERVER['REQUEST_URI'], PHP_URL_PATH), avail::SlA);
+		}
+		public function requestAfter()
+	  {
+			avail::$hostname = $_SERVER['HTTP_HOST'];
+			$this->uriPath = $_SERVER['REQUEST_URI'];
 		}
 		public function initiate()
 	  {

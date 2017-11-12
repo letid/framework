@@ -30,3 +30,6 @@ For [MIT License](LICENSE) information.
 [Wiki]: ../../wiki
 [getcomposer]: http://getcomposer.org/download/
 [packagist]: https://packagist.org
+
+## Fixed
+In aggregated query without GROUP BY
