@@ -41,7 +41,7 @@ namespace letId\lethil
       'ANS'=>'',
       /**
       * application's directory, ADR can not be modified!
-			* NOTE: Not in use (at the moment)! as routeController->application already defined dynamically!
+			* NOTE: Not in use (at the moment)! as routeController->configuration->ANS already defined dynamically!
       */
       'ADR'=>'',
 			/**
