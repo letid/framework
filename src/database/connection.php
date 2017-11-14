@@ -22,7 +22,8 @@ class connection
             } else {
                 avail::$databaseConnection = new \mysqli($d['host'], $d['username'], $d['password'], $d['database']);
             }
-            // avail::$databaseConnection->set_charset("utf8");
+						if ($d['charset']) avail::$databaseConnection->set_charset($d['charset']);
+						// printf(avail::$databaseConnection->character_set_name());
         }
 	}
 	public function errorConnection()
@@ -79,7 +80,7 @@ class connection
 	{
 		if (isset($args)) {
 			if (is_callable($args)) {
-				// NOTE: might not work, 
+				// NOTE: might not work,
 				// $this->queries[$name]=call_user_func($args, $this->queries, $name);
 				$this->queries[$name]=call_user_func_array($args, array($this->queries, $name));
 			} elseif (is_callable($name)) {
