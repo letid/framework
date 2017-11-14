@@ -29,7 +29,7 @@ namespace letId\http
 			// avail::$hostname = defined('app_hostname')?constant('app_hostname'):$_SERVER['HTTP_HOST'];
 			// avail::$uriPath = trim(parse_url(defined('app_uriPath')?constant('app_uriPath'):$_SERVER['REQUEST_URI'], PHP_URL_PATH), avail::SlA);
 		}
-		public function requestAfter()
+		private function requestAfter()
 	  {
 			avail::$hostname = $_SERVER['HTTP_HOST'];
 			$this->uriPath = $_SERVER['REQUEST_URI'];
