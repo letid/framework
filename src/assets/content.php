@@ -6,12 +6,12 @@ namespace letId\assets
   $content->get();
   $content->set(Value);
   $content->all();
-  
+
   content::request(Id)
   content::request(Id)->get()
   content::request(Id)->set(Value)
   content::request()->all()
-  
+
   avail::content(Id);
   avail::content(Id)->get();
   avail::content(Id)->set(Value);
@@ -32,7 +32,6 @@ namespace letId\assets
       if (is_scalar($this->Id)) return isset(avail::$contents[$this->Id]);
     }
     /**
-    * Add
     * avail::content(id)->set(string);
     */
     public function set($value=null)
@@ -43,41 +42,14 @@ namespace letId\assets
     }
     public function get()
     {
-      if ($this->has()) return avail::$contents[$this->Id];
+      return $this->has()?avail::$contents[$this->Id]:NULL;
     }
     public function resolve()
     {
-      if ($this->has()) {
-        return avail::$contents[$this->Id];
-      } elseif (is_scalar($this->Id) && isset(avail::$config[$this->Id])){
-        return avail::$config[$this->Id];
+      if (isset(avail::$config[$this->Id])) {
+        if (is_scalar(avail::$config[$this->Id])) return avail::$config[$this->Id];
       }
     }
-    public function statics()
-    {
-      if (is_scalar($this->Id) && isset(avail::$config[$this->Id])) return avail::$config[$this->Id];
-      // $needle = 'app.';
-      // $haystack = $this->Id;
-      // $position = strpos($haystack, $needle);
-      // if ($position === 0) {
-      //   $name = substr_replace($haystack, '', $position, strlen($needle));
-      //   if (is_scalar($varName=avail::getObj($name))) {
-      //     return $varName;
-      //   }
-      // }
-    }
-    // public function __get($name)
-    // {
-    //   if (isset(avail::$contents[$name])) {
-    //     return avail::$contents[$name];
-    //   }
-    // }
-    // public function __set($name, $value)
-    // {
-    //   if (is_scalar($value)) {
-    //     avail::$contents[$name]=$value;
-    //   }
-    // }
     public function __toString()
     {
       return $this->get();

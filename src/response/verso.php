@@ -46,7 +46,7 @@ namespace letId\response
 		{
 			if (isset(avail::$VersoMenu[$Id]) && !avail::content($this->requestOption['varName'].$Id)->has()) $this->requestEngine(avail::$VersoMenu[$Id]);
 			// if (isset(avail::$VersoMenu[$Id])) $this->requestEngine(avail::$VersoMenu[$Id]);
-			
+
 			// print_r(avail::$VersoMenu[$Id]);
 		}
 		private function requestEngine($menu)
@@ -76,7 +76,7 @@ namespace letId\response
 			$APT = avail::$config['APT'];
 			$APF = avail::$config['APF'];
 			$APE = avail::$config['APE'];
-			
+
 			foreach ($menuRoute as $k => $v) {
 				if (isset($v[$APT]) && is_string($type=$v[$APT])) {
 					$name=$v[$APF];
@@ -94,7 +94,7 @@ namespace letId\response
 					}
 					$link = array(
 						'a'=> array(
-							'text' => $this->requestLinkFilter($v[$APE]), 
+							'text' => $this->requestLinkFilter($v[$APE]),
 							'attr' => $this->requestAttr($v)
 						)
 					);
@@ -133,23 +133,13 @@ namespace letId\response
 		}
 		private function requestLinkFilter($i)
 		{
-			if (is_array($i)) {
-				$r=array();
-				foreach ($i as $k => $v) {
-					$r[]=array(
-						'span' => array(
-							'text' => $this->requestLink($v)
-						)
-					);
-				}
-				return $r;
-			} else {
+			return array_map(function($v) {
 				return array(
 					'span' => array(
-						'text' => $this->requestLink($i)
+						'text' => $this->requestLink($v)
 					)
 				);
-			}
+			}, is_array($i)?$i:array($i));
 		}
 		private function requestLink($y)
 		{
@@ -161,10 +151,9 @@ namespace letId\response
 		}
 		private function requestText($k)
 		{
-			// print_r($k);
-			if (avail::content($k)->resolve()) {
+			if (avail::content($k)->has()) {
 				// NOTE: content has it
-				return avail::content($k);
+				return avail::content($k)->get();
 			} elseif (avail::language($k)->has()) {
 				// NOTE: language has it
 				return avail::language($k);

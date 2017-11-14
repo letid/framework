@@ -6,18 +6,17 @@ namespace letId\assets
   $language->get();
   $language->all();
   $language->set(Value);
-  
+
   language::request()->get()
   language::request()->set()
   language::request()->all()
-  
+
   avail::language()->all();
   avail::language(Id)->get();
   avail::language(Id)->set(Value);
   */
   class language
   {
-    // private $Id;
     public function __construct($Id=NULL)
     {
       $this->Id = $Id;
@@ -28,7 +27,7 @@ namespace letId\assets
     // }
     public function has()
     {
-      return isset(avail::$localeList[$this->Id]);
+      if (is_scalar($this->Id)) return isset(avail::$localeList[$this->Id]);
     }
     public function get($option=array())
     {
@@ -55,9 +54,9 @@ namespace letId\assets
           } elseif (ctype_upper($k[1]{0})) {
             // NOTE: Uppercase
             return $k[1];
-          } elseif ($resolveContent = avail::content($k[1])->resolve()) {
+          } elseif (avail::content($k[1])->has()) {
             // NOTE: Content has
-            return $resolveContent;
+            return avail::content($k[1])->get();
           }
         }, $this->requestId($this->Id)
       );

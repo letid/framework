@@ -57,13 +57,13 @@ namespace letId\assist
                 } elseif ($file=$this->requestChild($k[1])) {
                   return file_get_contents($file);
                 } else {
-                  return avail::content($k[1])->statics();
+                  return avail::content($k[1])->resolve();
                 }
               } else {
                 return avail::language($vk)->get();
               }
-      			} elseif ($resolveContent = avail::content($k[1])->resolve()) {
-              return $resolveContent;
+      			} elseif (avail::content($k[1])->get()) {
+              return avail::content($k[1])->get();
       			} elseif (avail::language($k[1])->has()) {
               return avail::language($k[1])->get();
       			} elseif (ctype_upper($k[1]{0})) {

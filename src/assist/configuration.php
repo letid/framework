@@ -6,7 +6,7 @@ namespace letId\assist
   $configuration->get();
   $configuration->set(Value);
   $configuration->all();
-  
+
   avail::configuration(Id);
   avail::configuration(Id)->get();
   avail::configuration(Id)->set(Value);
@@ -32,7 +32,7 @@ namespace letId\assist
     }
     public function has()
     {
-      return isset(avail::$config[$this->Id]);
+      if (is_scalar($this->Id)) return isset(avail::$config[$this->Id]);
     }
     /**
     * Add
