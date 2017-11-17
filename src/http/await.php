@@ -21,6 +21,7 @@ namespace letId\http
 		private function requestEngine()
 	  {
 			$hostname = dirname($_SERVER['SCRIPT_NAME']);
+<<<<<<< HEAD
 			if (basename($hostname)) {
 				avail::$hostSlA=$hostname.avail::SlA;
 				avail::$hostname = $_SERVER['HTTP_HOST'].$hostname;
@@ -30,6 +31,18 @@ namespace letId\http
 				avail::$hostname = $_SERVER['HTTP_HOST'];
 				$this->uriPath = $_SERVER['REQUEST_URI'];
 			}
+=======
+			avail::$hostname = $_SERVER['HTTP_HOST'].$hostname;
+			$this->uriPath = str_replace($hostname,'',$_SERVER['REQUEST_URI']);
+			avail::$config['ARO'] ='';
+			// avail::$hostname = defined('app_hostname')?constant('app_hostname'):$_SERVER['HTTP_HOST'];
+			// avail::$uriPath = trim(parse_url(defined('app_uriPath')?constant('app_uriPath'):$_SERVER['REQUEST_URI'], PHP_URL_PATH), avail::SlA);
+		}
+		private function requestAfter()
+	  {
+			avail::$hostname = $_SERVER['HTTP_HOST'];
+			$this->uriPath = $_SERVER['REQUEST_URI'];
+>>>>>>> 502e29dc0624238d2574bb830a53e137724ef1ed
 		}
 		public function initiate()
 	  {
