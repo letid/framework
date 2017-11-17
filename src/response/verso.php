@@ -158,7 +158,7 @@ namespace letId\response
 				// NOTE: language has it
 				return avail::language($k);
 			// } elseif (is_array($k)) {
-			// 	// NOTE: language has it
+			// 	// NOTE: language has it???
 			// 	return avail::$user->displayname;
 			} else {
 				// NOTE: when uppercase
@@ -174,9 +174,13 @@ namespace letId\response
 					$attr['target'] = '_blank';
 				}
 			} else {
-				$link = avail::SlA.implode($k['href'],avail::SlA); //avail::$http
+				// $link = avail::SlA.implode(avail::SlA,$k['href']);
+				$link = implode(avail::SlA,$k['href']);
 				if ($this->requestOption['fullURL']) {
-					$link = avail::$http.$link;
+					$link = avail::$http.avail::SlA.$link;
+				} else {
+					$link = avail::$hostSlA.$link;
+
 				}
 				$attr['href'] = $link;
 			}

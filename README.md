@@ -1,9 +1,14 @@
 # letId PHP framework!
 
+[Wiki]: ../../wiki
+[getComposer]: http://getcomposer.org
+[downloadComposer]: http://getcomposer.org/download/
+[packagist]: https://packagist.org
+
 letId is a simple oriented PHP framework and flexible configuration that allow developer to deploy multiply applications simultaneously. Yes, it's PHP Composer based, and using packages are up-to-you! letId has a very minimum requirement and aim to provided as light as possible.
 
 ## Composer
-The preferred way to install letId is through [PHP Composer][getcomposer]. Require `letid/framework` by doing one of the following:
+The preferred way to install letId is through [PHP Composer][downloadComposer]. Require `letid/framework` by doing one of the following:
 
 `php composer.phar require --prefer-dist letid/framework`
 
@@ -16,20 +21,15 @@ or add require section in your composer.json.
 
 ## Usage
 [Wiki][wiki] described detail of...
-- Getting Started
-- Setup
-- Configuration
+- [Getting Started][../../wiki/Getting-started]
+- [Setup][../../wiki/Setup]
+- [Configuration][../../wiki/Configuration]
 - Features
-- Updates
-- Todo
+- [Updates][../../wiki/Updates]
+- [Todo][wiki/Todo]
 
 ## License
 For [MIT License](LICENSE) information.
-
-
-[Wiki]: ../../wiki
-[getcomposer]: http://getcomposer.org/download/
-[packagist]: https://packagist.org
 
 ## Fixed
 In aggregated query without GROUP BY

@@ -1,7 +1,7 @@
 <?php
 namespace letId\http
 {
-  class assign 
+  class assign
   {
     static public $rewriteDirectories=array();
     public function __construct($Id)
@@ -81,7 +81,8 @@ namespace letId\http
     public function rewrite()
     {
       if (avail::$uri) {
-        if ($Id=avail::$uri[0] and isset(self::$rewriteDirectories[$Id])) {
+        if (isset(self::$rewriteDirectories[avail::$uri[0]])) {
+          $Id=avail::$uri[0];
           avail::$responseMethod = self::$rewriteDirectories[$Id];
           avail::$responseType = pathinfo(avail::$uriPath, PATHINFO_EXTENSION);
           return !avail::$responseContext = preg_replace("/$Id/", $this->rewriteEngine($Id).self::$rewriteDirectories[$Id], avail::$uriPath,1);
@@ -103,6 +104,7 @@ namespace letId\http
       if ($this->rewrite()) {
         avail::$responseMethod = avail::$responseType;
         avail::$responseContext[$this->Id]=$Id;
+        return true;
       }
     }
     /*
@@ -113,14 +115,13 @@ namespace letId\http
       avail::$database = new avail::$classExtension['database'];
       avail::$database->connection($Id);
       if (avail::$database->errorConnection()) {
-        self::template('database')->error(array(
+        return self::template('database')->error(array(
           'env'=>avail::$config['ASE'],
           'root'=>avail::$config['ARO'],
           'msg'=>avail::$databaseConnection->connect_error,
           'code'=>avail::$databaseConnection->connect_errno
           // 'src/style.css'=>array()
         ));
-        return true;
       }
     }
   }

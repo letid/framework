@@ -16,18 +16,18 @@ class connection
 	public function connection($d)
 	{
         if (is_array($d)) {
-            if(strpos($d['host'],'/cloudsql/') !== false) {
+            if (strpos($d['host'],'/cloudsql/') !== false) {
                 // NOTE: Google App Engine
                 avail::$databaseConnection = new \mysqli(NULL, $d['username'], $d['password'], $d['database'], NULL, $d['host']);
             } else {
                 avail::$databaseConnection = new \mysqli($d['host'], $d['username'], $d['password'], $d['database']);
             }
-						if ($d['charset']) avail::$databaseConnection->set_charset($d['charset']);
+						if (isset($d['charset'])) avail::$databaseConnection->set_charset($d['charset']);
 						// printf(avail::$databaseConnection->character_set_name());
         }
 	}
 	public function errorConnection()
-    {
+	{
 		return avail::$databaseConnection->connect_errno;
 	}
 	/*

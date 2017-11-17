@@ -141,6 +141,11 @@ namespace letId\lethil
 		*/
 		static $hostname;
 		/**
+		* @var (string) host root
+		* to be used in (href,link), but not yet! Can be remove until this line is modify.
+		*/
+		static $hostSlA = '/';
+		/**
 		* @var (object) directory
 		*/
 		static $dir;

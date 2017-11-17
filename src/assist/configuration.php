@@ -56,6 +56,7 @@ namespace letId\assist
     }
     /**
     * avail::configuration(array())->merge(Optional array());
+    * avail::configuration(array('lang'=>'en','locale'=>'en'))->merge();
     */
     public function merge($Id=array())
     {
