@@ -232,8 +232,8 @@ namespace letId\lethil
 		* NOTE: framework info.
 		*/
 		static $letid = array(
-			'build' => '12.11.17.09.03',
-			'version' => '1.0.9',
+			'build' => '08.12.17.09.03',
+			'version' => '1.2.0',
 			'name' => 'letId',
 			'description' => 'letId PHP Framework'
 		);

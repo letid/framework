@@ -36,7 +36,7 @@ namespace letId\assist
     }
     private function requestEngine($cluster, $v)
     {
-      if ($this->requestContents($cluster)) {
+      if ($this->requestContents($cluster,$v)) {
       	return preg_replace_callback(avail::$config['ATR'],
       		function ($k) use ($v){
             if (isset($k[1])) {
@@ -88,7 +88,9 @@ namespace letId\assist
     // TODO: save loaded file temp. for loop!
     private function requestContents($name)
     {
-      if (isset($this->requestContent[$name])) {
+      if($name != strip_tags($name)) {
+        return $this->template = $name;
+      } elseif (isset($this->requestContent[$name])) {
         return $this->template = $this->requestContent[$name];
       } elseif (file_exists($file = $this->requestTemplate($name))) {
         // $this->requestContent[$name] = file_get_contents($file);

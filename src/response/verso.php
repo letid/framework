@@ -4,6 +4,7 @@ namespace letId\response
 	class verso
 	{
 		protected $requestContent, $requestOption, $requestMenu = array();
+		protected $requestWrap = array();
 		public function __construct($requestOption=array())
 		{
 			$this->requestOption = array_merge(avail::$VersoMenuOption,$requestOption);
@@ -46,28 +47,31 @@ namespace letId\response
 		{
 			if (isset(avail::$VersoMenu[$Id]) && !avail::content($this->requestOption['varName'].$Id)->has()) $this->requestEngine(avail::$VersoMenu[$Id]);
 			// if (isset(avail::$VersoMenu[$Id])) $this->requestEngine(avail::$VersoMenu[$Id]);
-
 			// print_r(avail::$VersoMenu[$Id]);
 		}
 		private function requestEngine($menu)
 		{
 			$this->requestInitiate($menu,$this->requestOption['class'],array());
 			foreach ($this->requestMenu as $k => $v) {
-				// $attr=array('class'=>array($this->requestOption['class'],$k));
-				avail::content($this->requestOption['varName'].$k)->set(avail::html(
+				$value = avail::html(
 					array(
 						$this->requestOption['menu']=>array(
 							'text'=>$v,
-							// 'attr'=>array_merge($this->requestOption['attr'],$attr)
 							'attr'=>array_merge(array('class'=>array($this->requestOption['class'],$k)),$this->requestOption['attr'])
-							// 'attr'=>array(
-							// 	'class'=>array(
-							// 		$this->requestOption['class'],$k
-							// 	)
-							// )
 						)
 					)
-				));
+				);
+				$name = $this->requestOption['varName'].$k;
+				if (isset($this->requestWrap[$k])) {
+					$value = avail::template(
+						array(
+							avail::html($this->requestWrap[$k])->__toString() => array(
+								$name=>$value
+							)
+						)
+					);
+				}
+				avail::content($name)->set($value);
 			}
 		}
 		private function requestInitiate($menuRoute,$menuClass,$Parent)
