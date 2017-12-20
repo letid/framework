@@ -57,6 +57,8 @@ namespace letId\assets
           } elseif (avail::content($k[1])->has()) {
             // NOTE: Content has
             return avail::content($k[1])->get();
+          } elseif (avail::configuration($k[1])->has()) {
+            return avail::configuration($k[1])->get();
           }
         }, $this->requestId($this->Id)
       );

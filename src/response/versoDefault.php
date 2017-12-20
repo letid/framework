@@ -1,18 +1,13 @@
 <?php
 namespace letId\response
 {
-	class verso
+	class versoDefault
 	{
-		protected $requestOption, $requestMenu = array();
-		public function __construct($Id=array())
+		protected $requestContent, $requestOption, $requestMenu = array();
+		protected $requestWrap = array();
+		public function __construct($requestOption=array())
 		{
-			if (is_array($Id)) {
-				$this->requestOption = array_merge(avail::$VersoMenuOption,$Id);
-				$this->requestType=$this->requestOption['type'];
-			} else {
-				$this->requestType = $Id;
-				$this->requestOption = avail::$VersoMenuOption;
-			}
+			$this->requestOption = array_merge(avail::$VersoMenuOption,$requestOption);
 			if (!avail::$VersoMenu) $this->menuEngine();
 		}
 		private function menuEngine()
@@ -24,35 +19,36 @@ namespace letId\response
 				}
 			}
     }
-		static function request($Id=array())
-    {
-      return new self($Id);
-    }
 		/*
 		verso::requestTotal(Id)
 		*/
-		public function requestCount($Id='menu.total')
+		static function requestTotal($Id='menu.total')
 		{
-			// avail::content($Id)->set(count(avail::$Verso));
-			avail::content($Id)->set(count(self::requestContent()));
+			avail::content($Id)->set(count(avail::$Verso));
 		}
-		private function requestContent()
-		{
-			if ($this->requestType) {
-				if (isset(avail::$VersoMenu[$this->requestType])) {
-					return avail::$VersoMenu[$this->requestType];
-				}
-			}
-			return avail::$Verso;
-		}
+		/*
+		verso::menu(option)->??;
+		*/
+		static function menu($Id=array())
+    {
+			return new self($Id);
+    }
 		/**
 		* verso::menu(option)->request();
 		*/
-		public function menu()
+		public function request()
 		{
-			$this->requestEngine(self::requestContent());
+			$this->requestEngine(avail::$Verso);
 		}
-
+		/**
+		* verso::menu(option)->requestOne(name from verso type);
+		*/
+		public function requestOne($Id)
+		{
+			if (isset(avail::$VersoMenu[$Id]) && !avail::content($this->requestOption['varName'].$Id)->has()) $this->requestEngine(avail::$VersoMenu[$Id]);
+			// if (isset(avail::$VersoMenu[$Id])) $this->requestEngine(avail::$VersoMenu[$Id]);
+			// print_r(avail::$VersoMenu[$Id]);
+		}
 		private function requestEngine($menu)
 		{
 			$this->requestInitiate($menu,$this->requestOption['class'],array());

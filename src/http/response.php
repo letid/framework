@@ -79,7 +79,7 @@ namespace letId\http
 		}
 		public function responseTemplate($Id)
 		{
-			header("letId: 1.0.6");
+			if (!headers_sent()) header("letId:".avail::$letid['version']);
 			return avail::template(avail::$responseContext);
 		}
 		public function audio()

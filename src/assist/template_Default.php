@@ -8,7 +8,7 @@ namespace letId\assist
   avail::template(Id)
   avail::template(Id)->response()
   */
-  class template
+  class template_Default
   {
     private $requestContent = array();
     // private $Id=array();
@@ -24,24 +24,12 @@ namespace letId\assist
         return (string)$this->Id;
       }
     }
-    private function requestMapping($name,$v)
-    {
-      return implode(array_map(
-        function ($child) use($name) {
-          return $this->requestEngine($name, $child);
-        }, $v
-      ));
-    }
     private function responseEngine($Id)
     {
       return implode(
         array_map(
           function ($v, $k) {
-            if(count(array_filter(array_keys($v), 'is_numeric')) > 0) {
-              return $this->requestMapping($k,$v);
-            } else {
-              return $this->requestEngine($k, $v);
-            }
+            return $this->requestEngine($k, $v);
           }, $Id, array_keys($Id)
         )
       );
@@ -52,42 +40,47 @@ namespace letId\assist
       	return preg_replace_callback(avail::$config['ATR'],
       		function ($k) use ($v){
             if (isset($k[1])) {
-              $kId = $k[1];
-              if (isset($v[$kId])) {
-                $vId=$v[$kId];
-                if (is_array($vId)) {
-                  if(count(array_filter(array_keys($vId), 'is_string')) > 0) {
-                    if (file_exists($this->requestTemplate($kId))) {
-                      return $this->requestEngine($kId, $vId);
+              $kName = $k[1];
+              if (isset($v[$kName])) {
+                $vk=$v[$kName];
+                if (is_array($vk)) {
+                  if(count(array_filter(array_keys($vk), 'is_string')) > 0) {
+                    if (file_exists($this->requestTemplate($kName))) {
+                      return $this->requestEngine($kName, $vk);
                     } else {
-                      return $this->responseEngine($vId);
+                      return $this->responseEngine($vk);
                     }
-                  } elseif ($vId) {
-                    return $this->requestMapping($k[1],$vId);
-                  } elseif ($file=$this->requestChild($kId)) {
+                  } elseif ($vk) {
+                    return implode(array_map(
+                      function ($child) use ($k) {
+                        // echo $k[1];
+                        return $this->requestEngine($k[1], $child);
+                      }, $vk
+                    ));
+                  } elseif ($file=$this->requestChild($kName)) {
                     return file_get_contents($file);
                   } else {
-                    return avail::content($kId)->resolve();
+                    return avail::content($kName)->resolve();
                   }
                 } else {
-                  return avail::language($vId)->get();
+                  return avail::language($vk)->get();
                 }
-              } elseif (avail::content($kId)->get()) {
-                return avail::content($kId)->get();
-              } elseif (avail::language($kId)->has()) {
-                return avail::language($kId)->get();
-              } elseif (avail::configuration($kId)->has()) {
-                return avail::configuration($kId)->get();
-              } elseif (ctype_upper($kId{0})) {
-                return $kId;
-              } elseif ($file=$this->requestChild($kId)) {
-                // TODO: check filetype(text,image) and process advanced features
-                return file_get_contents($file);
-              } elseif (preg_match('/\s|\r|;|:|#/', $k[0])) {
-                return $k[0];
-              } else {
-                // NOTE: when not match
-              }
+        			} elseif (avail::content($kName)->get()) {
+                return avail::content($kName)->get();
+        			} elseif (avail::language($kName)->has()) {
+                return avail::language($kName)->get();
+        			} elseif (avail::configuration($kName)->has()) {
+                return avail::configuration($kName)->get();
+        			} elseif (ctype_upper($kName{0})) {
+        				return $kName;
+        			} elseif ($file=$this->requestChild($kName)) {
+        				// TODO: check filetype(text,image) and process advanced features
+        				return file_get_contents($file);
+        			} elseif (preg_match('/\s|\r|;|:|#/', $k[0])) {
+        				return $k[0];
+        			} else {
+        				// NOTE: when not match
+        			}
             }
       		}, $this->template
       	);
@@ -115,8 +108,7 @@ namespace letId\assist
     }
     private function requestChild($name)
     {
-      $file = avail::$dir->template.$name;
-      if (file_exists($file)) {
+      if (file_exists($file = avail::$dir->template.$name)) {
         return $file;
       }
     }

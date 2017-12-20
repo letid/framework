@@ -1,7 +1,7 @@
 <?php
 namespace letId\response
 {
-	class verse
+	class verseDefault
 	{
 		private $requestContent, $requestOption;
 		public function __construct($requestOption)
@@ -16,21 +16,21 @@ namespace letId\response
 		/*
 		verse::requestTotal(Id)
 		*/
-		static function requestCount($Id='locale.total')
+		static function requestTotal($Id='locale.total')
 		{
 			avail::content($Id)->set(count(avail::$localeName));
 		}
 		/*
 		verse::menu(option)->??;
 		*/
-		static function request($Id=null)
+		static function menu($Id=null)
 	  {
 	    return new self($Id);
 	  }
 		/*
 		verse::menu(option)->request()
 		*/
-		public function menu()
+		public function request()
 		{
 			avail::content($this->requestOption['varName'].'locale')->set(avail::html(
 				array(

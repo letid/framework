@@ -9,7 +9,8 @@ trait select
 	public function rowsCalc()
 	{
 		return $this->queries('SELECT',function($q,$name){
-			return array('SQL_CALC_FOUND_ROWS'=>$q[$name][0]);
+			// return array('SQL_CALC_FOUND_ROWS'=>$q[$name][0]);
+			return array('SQL_CALC_FOUND_ROWS'=>isset($q[$name])?$q[$name][0]:array());
 		});
 	}
 	public function from()
@@ -64,10 +65,18 @@ trait select
 		if (is_array($args[0])) {
 			$args = $args[0];
 		}
-		if ($int) {
-			array_splice($args, 1, 0, $int);
+		if (count($args) > 1) {
+			if ($int) {
+				array_splice($args, 1, 0, $int);
+			}
+			return array($queries,$oper,$args);
+		} else {
+			return $queries;
 		}
-		return array($queries,$oper,$args);
+		// if ($int) {
+		// 	array_splice($args, 1, 0, $int);
+		// }
+		// return array($queries,$oper,$args);
 	}
 	/*
 	protected function queries($name,$args)
@@ -124,7 +133,7 @@ Database::select(
 	->build()
 	->execute()
 
-	->toArray()
+	->fetchAll()
 	->rowsCount()
 	->rowsTotal();
 */

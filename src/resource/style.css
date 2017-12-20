@@ -8,3 +8,15 @@ body {font-family: Arial, Helvetica, sans-serif; color: #666; font-size: 12px;  
 .wrapper p {text-shadow: #FFF 2px 2px 2px;  padding: 5% 5%; background-color: #fff;}
 .wrapper p strong { color: #901; }
 .wrapper p em { color: #900; font-family: "Courier New", Courier, monospace; font-style: normal;}
+
+ol{
+  padding: 5% 5%; background-color: #fff;
+   font-size: 110%;
+}
+ol li{
+  padding: 1%;
+  border-bottom: 1px dotted #DBD9D9;
+}
+ol li:last-child{
+  border-bottom: 0px;
+}

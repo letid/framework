@@ -47,13 +47,19 @@ namespace letId\http
     */
   	public function extension()
     {
-      foreach (avail::$classExtension as $key => $value) {
-        if (class_exists($this->classPath($key.'Controller'))) {
+      foreach (avail::$classExtension as $Id => $value) {
+        if (class_exists($this->classPath($Id.'Controller'))) {
           if (is_subclass_of($this->IdName,$value)) {
-            avail::$classExtension[$key]=$this->IdName;
+            avail::$classExtension[$Id]=$this->IdName;
           }
         }
+        $this->extensionConnect($Id);
       }
+  	}
+  	private function extensionConnect($Id)
+    {
+      // NOTE: database, authentication
+      if (property_exists(avail::class, $Id)) avail::${$Id} = new avail::$classExtension[$Id];
   	}
     /**
     * NOTE: environment
@@ -61,6 +67,7 @@ namespace letId\http
     */
     static function environment()
   	{
+      /*
   		$ase = parse_ini_file(avail::$dir->root.avail::$config['ASE'].avail::SlP.avail::$Extension['environment'],true);
       if ($ase) {
         avail::configuration($ase)->merge();
@@ -72,6 +79,21 @@ namespace letId\http
             // NOTE: remove database from $config
             avail::configuration('database')->set();
           }
+        }
+      }
+      return true;
+      */
+  		// $ase = parse_ini_file(avail::$dir->root.avail::$config['ASE'].avail::SlP.avail::$Extension['environment'],true);
+      // return avail::configuration($ase)->merge();
+
+      $ase = parse_ini_file(avail::$dir->root.avail::$config['ASE'].avail::SlP.avail::$Extension['environment'],true);
+      if ($ase) {
+        avail::configuration($ase)->merge();
+        if (isset($ase['maintaining'])){
+          return !assign::template('maintaining')->error(array('msg'=>$ase['maintaining']));
+        }
+        if (isset($ase['database']) && is_array($ase['database'])) {
+          avail::configuration('database')->set(array_merge(avail::$database,$ase['database']));
         }
       }
       return true;
@@ -87,6 +109,47 @@ namespace letId\http
         assign::template('route')->error(array('class'=>avail::$config['ASR'],'root'=>avail::$dir->root));
       }
   	}
+    /**
+    * module::load()->language_management_system();
+    */
+    public function language_management_system()
+    {
+      if (isset(avail::$config['uriAdmin.language'])){
+        if (avail::$uri && avail::$uri[0] == avail::$config['uriAdmin.language']) {
+          // print_r(avail::$dir);
+          // print_r(avail::$config);
+          // print_r(avail::$localeList);
+          // print_r(avail::$localeName);
+          // $files1 = scandir(avail::$dir->language);
+          // print_r($files1);
+          // $this->languageList = 'abc';
+          // avail::content('languageList')->set('abc');
+          $languageContent=array(
+            'ol'=>array(
+              'text'=>array_map(function($k,$v) {
+                return array(
+                  'li'=>array(
+                    'text'=>array(
+                      'span'=>$k, ' - ', $v
+                    )
+                  )
+                );
+              }, array_keys(avail::$localeList), array_values(avail::$localeList)),
+              'attr'=>array(
+                'class'=>'note'
+              )
+            )
+          );
+          return !assign::template('language')->error(
+            array(
+              'languageContent'=>avail::html($languageContent)
+            )
+          );
+        }
+      }
+      return true;
+  	}
+
     /**
     * module::load()->map();
     */

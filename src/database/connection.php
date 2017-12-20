@@ -13,22 +13,28 @@ class connection
 		'insert'=>array('on_insert','inserting'),
 		'delete'=>array('on_update','deleting')
 	);
+	public $queries=array();
 	public function connection($d)
 	{
-        if (is_array($d)) {
-            if (strpos($d['host'],'/cloudsql/') !== false) {
-                // NOTE: Google App Engine
-                avail::$databaseConnection = new \mysqli(NULL, $d['username'], $d['password'], $d['database'], NULL, $d['host']);
-            } else {
-                avail::$databaseConnection = new \mysqli($d['host'], $d['username'], $d['password'], $d['database']);
-            }
-						if (isset($d['charset'])) avail::$databaseConnection->set_charset($d['charset']);
-						// printf(avail::$databaseConnection->character_set_name());
-        }
+		$this->mysqli($d);
+	}
+	private function mysqli($d)
+	{
+		mysqli_report(MYSQLI_REPORT_STRICT);
+		try {
+			avail::$databaseConnection = new \mysqli($d['host'], $d['username'], $d['password'], $d['database']);
+			if (isset($d['charset'])) avail::$databaseConnection->set_charset($d['charset']);
+		} catch (\Exception $e ) {
+			avail::content('msg')->set($e->getMessage());
+			avail::content('code')->set($e->getCode());
+			// avail::$databaseConnection  = (object) array('connect_errno' => $e->getCode(), 'connect_error' => $e->getMessage());
+			// avail::$databaseConnection  = (object) array('connect_errno' => $e->getCode(), 'connect_error' => $e->getMessage());
+		}
 	}
 	public function errorConnection()
 	{
-		return avail::$databaseConnection->connect_errno;
+		return !is_object(avail::$databaseConnection);
+		// return avail::$databaseConnection->connect_errno ?? is_string(avail::$databaseConnection);
 	}
 	/*
 	mysqli_close()
@@ -61,9 +67,12 @@ class connection
 	}
 	public function execute()
 	{
-		$this->build();
-		$this->result=avail::$databaseConnection->query($this->query);
+		$this->result=avail::$databaseConnection->query($this->build()->query);
 		$this->is_error();
+		return $this;
+	}
+	public function prepare()
+	{
 		return $this;
 	}
 	protected function terminal()
@@ -86,7 +95,7 @@ class connection
 			} elseif (is_callable($name)) {
 				// $this->queries=call_user_func($name, $this->queries, $args);
 				$this->queries=call_user_func_array($name, array($this->queries, $args));
-			} else {
+			} elseif($args[0]) {
 				$this->queries[$name]=$args;
 			}
 		} else {

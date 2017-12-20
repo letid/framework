@@ -26,6 +26,24 @@ namespace letId\assist
     {
       return $this->{$Id};
     }
+    /**
+    * avail::configuration(tra)->setting(1);
+    */
+    public function own($Id=null)
+    {
+      if (isset($this->{$this->Id})) {
+        $setting = $this->{$this->Id};
+      } elseif (isset(avail::$config[$this->Id])) {
+        $setting = avail::$config[$this->Id];
+      } else {
+        $setting = $this->Id;
+      }
+      if (is_array($setting)){
+        return isset($setting[$Id])?$setting[$Id]:$setting;
+      } else {
+        return $setting;
+      }
+    }
     public function all()
     {
       return avail::$config;

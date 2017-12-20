@@ -140,29 +140,29 @@ namespace letId\http
 		}
 		private function setAuthorization($i,$Auth)
 		{
-			// avail::$classExtension['authorization']
-			// avail::authorization()
+			// avail::$classExtension['authentication']
+			// avail::$authentication
 			if (isset($i[$Auth])) {
 				$y=$i[$Auth];
 				if (is_array($y)) {
 					$isOk = 0;
 					foreach($y as $k => $v) {
 						if (is_numeric($k)) {
-							if (call_user_func_array(array(avail::authorization(), $v),array())) {
+							if (call_user_func_array(array(avail::$authentication, $v),array())) {
 								$isOk ++;
 							}
 						} else {
 							if (is_scalar($v)) {
 								$v = array($v);
 							}
-							if (call_user_func_array(array(avail::authorization(), $k), array($v))) {
+							if (call_user_func_array(array(avail::$authentication, $k), array($v))) {
 								$isOk ++;
 							}
 						}
 					}
 					return count($y) == $isOk;
 				} else {
-					return call_user_func_array(array(avail::authorization(), $y),array());
+					return call_user_func_array(array(avail::$authentication, $y),array());
 				}
 			} else {
 				return true;

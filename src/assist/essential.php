@@ -6,7 +6,8 @@ namespace letId\assist
     protected $Id;
     public function __construct($Id=null)
     {
-      $this->setId($Id);
+      // $this->setId($Id);
+      $this->Id = $Id;
     }
     public function setId($Id=null)
     {

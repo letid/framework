@@ -4,14 +4,14 @@ trait initiate
 {
 	public function setting($state=array())
 	{
-		$this->state			= $state;
-		$this->form 			= $this->requestMethod();
-		$this->submit 			= $this->requestPostset($this->formName);
-		$this->table			= $this->requestState('table');
-		$this->message			= $this->requestState('msg');
+		$this->state		= $state;
+		$this->form 		= $this->requestMethod();
+		$this->submit 	= $this->requestPostset($this->formName);
+		$this->table		= $this->requestState('table');
+		$this->message	= $this->requestState('msg');
 
-		$maskDefault			= $this->requestState('mask');
-		$classDefault 			= $this->requestState('class');
+		$maskDefault		= $this->requestState('mask');
+		$classDefault 	= $this->requestState('class');
 
 		$setting 				= $this->requestState('row'); // rows vals rowrows ssets rows input data key, val, rows vals sets gets post
 		$support				= $this->requestSupport();

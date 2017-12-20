@@ -101,6 +101,11 @@ trait build
             return $this->build_where_operator($args);
         } else {
             return str_replace( array('AND AND AND','AND OR AND','AND AND','AND OR'), array('AND','OR'), $this->build_where_implode($args));
+            // print_r($args);
+            // print_r(array_values($args));
+            // print_r(array_keys($args));
+
+            // return $this->build_where_implode($args);
         }
     }
     private function build_where_implode($args)
@@ -113,7 +118,7 @@ trait build
                     } else {
                         $row = $this->build_where_implode($value);
                         if (count($value) > 1) {
-                            return sprintf('(%s)', $row);
+                            return sprintf('(%s)',$row);
                         } else {
                             return $row;
                         }

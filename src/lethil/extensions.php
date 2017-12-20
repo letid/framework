@@ -18,18 +18,18 @@ namespace letId\lethil
 			return new self::$classExtension['validation']($Id);
 		}
 		/**
-		* NOTE: avail::authorization() is extendable user application
-		*/
-		static function authorization($Id=array())
-		{
-			return new self::$classExtension['authorization']($Id);
-		}
-		/**
 		* NOTE: avail::mail() is extendable user application
 		*/
 		static function mail($Id=array())
 		{
 			return new self::$classExtension['mail']($Id);
 		}
+		/**
+		* NOTE: avail::$authentication is extendable user application
+		*/
+		// static function authentication($Id=array())
+		// {
+		// 	return new self::$classExtension['authentication']($Id);
+		// }
 	}
 }

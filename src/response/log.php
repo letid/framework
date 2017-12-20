@@ -31,28 +31,29 @@ class log
 		{
 			if ($this->table) {
 				if ($this->requestVisitsUpdate($this->rowSelector,array('view'=>array('(view+1)')))->result) {
-					$select = avail::$database->select("'created',SUM(view) AS sum, COUNT(view) AS total")->from($this->table)->execute()->toObject();
+					$select = avail::$database->select('created,SUM(view) AS viewSum, COUNT(view) AS viewTotal')->from($this->table)->execute()->fetchObject();
 					// print_r($select);
-					// $user = avail::$database->select('locale, lang, view, modified, created')->from($this->table)->where($this->rowSelector)->execute()->toObject();
+					// $user = avail::$database->select('locale, lang, view, modified, created')->from($this->table)->where($this->rowSelector)->execute()->fetchObject();
 					// avail::content('visitor.view')->set($user->rows->view);
 					// avail::configuration('locale')->set($user->rows->locale);
 					// avail::configuration('lang')->set($user->rows->lang);
 					// avail::configuration('modified')->set($user->rows->modified);
 					// avail::configuration('created')->set($user->rows->created);
 
-					avail::content('visits.sum')->set(number_format($select->rows->sum+avail::configuration('visitsPrevious')->get(0)));
+					avail::content('visits.sum')->set(number_format($select->rows->viewSum+avail::configuration('visitsPrevious')->get(0)));
 					avail::content('visits.created')->set($select->rows->created);
+					// print_r($select->rows);
 
 					$visitsReset = avail::configuration('visitsReset');
 
-					if (($visitsReset->has() && isset($_GET[$visitsReset->get()])) || $select->rows->total > avail::configuration('visitsLimit')->get(999)) {
+					if (($visitsReset->has() && isset($_GET[$visitsReset->get()])) || $select->rows->viewTotal > avail::configuration('visitsLimit')->get(999)) {
 						// NOTE: visitsReset=1
 						avail::$database->truncate('TABLE')->from($this->table)->execute();
 						// $update = $this->requestVisitsUpdate($this->rowSelector,array('hit'=>$select->rows->hits));
-						$update = $this->requestVisitsUpdate(array_merge($this->rowSelector,array('view'=>$select->rows->sum)));
+						$update = $this->requestVisitsUpdate(array_merge($this->rowSelector,array('view'=>$select->rows->viewSum)));
 						avail::content('visits.total')->set($update->result);
 					} else {
-						avail::content('visits.total')->set($select->rows->total);
+						avail::content('visits.total')->set($select->rows->viewTotal);
 					}
 				}
 			}

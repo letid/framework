@@ -15,7 +15,7 @@ trait database
 	public function signin($Id=null)
   {
 		if ($this->responseTerminal()) {
-			$db = avail::$database->select()->from($this->table)->where($this->formPost)->execute()->toArray()->rowsCount();
+			$db = avail::$database->select()->from($this->table)->where($this->formPost)->execute()->fetchAll()->rowsCount();
 			if ($db->rowsCount) {
 				$row = $db->rows[0];
 				if (isset($row['status'])) {
@@ -35,7 +35,7 @@ trait database
 					}
 					$userCookie = array_intersect_key($row, array_flip(array('userid','password')));
 					avail::session()->delete();
-					avail::cookie()->user()->set($userCookie);
+					avail::$authentication->usersCookie()->set($userCookie);
 					// $this->responseTaskerror($Id,$db,'Ok....');
 					// setcookie("testme",serialize($userCookie),time()+199);
 					// print_r($userCookie);
@@ -57,7 +57,7 @@ trait database
 	public function forgotpassword()
   {
 		if ($this->responseTerminal()) {
-			$db = avail::$database->select('*')->from($this->table)->where($this->formPost)->execute()->rowsId()->toObject();
+			$db = avail::$database->select('*')->from($this->table)->where($this->formPost)->execute()->rowsId()->fetchObject();
 			if ($db->rowsCount) {
 				$taskId = avail::assist('password')->sha1($db->rows->userid);
 				$taskCode = avail::assist()->uniqid();
@@ -94,7 +94,7 @@ trait database
 		if ($this->responseTerminal()) {
 			$db = avail::$database->update($this->formPost)->to($this->table)->where($this->formId)->execute()->rowsAffected();
 			if ($db->rowsAffected) {
-				avail::cookie()->user()->set(array_merge($this->formId,$this->formPost));
+				avail::$authentication->usersCookie()->set(array_merge($this->formId,$this->formPost));
 			}
 			$this->responseTask($db->rowsAffected,$Id,$db,array('Changed!','Unchanged!'));
 		}
@@ -103,7 +103,7 @@ trait database
 	public function resetpassword($Id=null)
   {
 		if ($this->responseTerminal()) {
-			$db = avail::$database->select()->from('tasks')->where('code',$this->formPost['code'])->execute()->rowsCount()->toObject();
+			$db = avail::$database->select()->from('tasks')->where('code',$this->formPost['code'])->execute()->rowsCount()->fetchObject();
 			if ($db->rowsCount) {
 				$update = avail::$database->update(
 					array('password'=>$this->formPost['password'], 'status'=>1)

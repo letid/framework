@@ -32,8 +32,8 @@ abstract class request
 		$support = $this->requestState('val');
 		if ($support) {
 			if (!$this->submit) {
-				return avail::$database->select()->from($this->table)->where($support)->execute()->rowArray()->rows;
-				// return avail::$database->select()->from($this->table)->where($support)->execute()->toArray()->rows[0];
+				$row = avail::$database->select()->from($this->table)->where($support)->execute()->fetchAll()->rows;
+				if ($row) return $row[0];
 			}
 		}
 	}

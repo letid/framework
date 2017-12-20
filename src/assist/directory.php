@@ -5,7 +5,8 @@ namespace letId\assist
   avail::directory(Id)->get();
   avail::directory(Id)->set(Value);
   */
-  abstract class directory {
+  abstract class directory
+  {
     private $Id;
     public function __construct($Id=null)
     {

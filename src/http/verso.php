@@ -45,7 +45,7 @@ namespace letId\http
 			$APF = avail::$config['APF'];
 			$APA = avail::$config['APA'];
 			foreach ($routes as $k => $v) {
-				if ($this->setAuthorization($v,$APA) && isset($v[$APF])) {
+				if ($this->setAuthentication($v,$APA) && isset($v[$APF])) {
 					// NOTE: create href
 					$href = array($v[$APF]);
 					if ($link) $href = array_merge($link,$href);
@@ -57,7 +57,7 @@ namespace letId\http
 							$v[$APE] = false;
 						}
 					}
-					
+
 					// NOTE: get Children
 					$routeChildren = array_intersect_key($v, array_flip(array_filter(array_keys($v), 'is_numeric')));
 					// NOTE: get Parent
@@ -72,7 +72,7 @@ namespace letId\http
 			$APF = avail::$config['APF'];
 			$APA = avail::$config['APA'];
 			foreach ($routes as $k => $v) {
-				if ($this->setAuthorization($v,$APA) && isset($v[$APF])) {
+				if ($this->setAuthentication($v,$APA) && isset($v[$APF])) {
 					// NOTE: create href
 					$href = array($v[$APF]);
 					if ($link) $href = array_merge($link,$href);
@@ -84,7 +84,7 @@ namespace letId\http
 							$v[$APE] = false;
 						}
 					}
-					
+
 					// NOTE: get Children
 					$routeChildren = array_intersect_key($v, array_flip(array_filter(array_keys($v), 'is_numeric')));
 					// NOTE: get Parent
@@ -101,7 +101,7 @@ namespace letId\http
 			/*
 			$routeMenu = array();
 			foreach ($routePage as $k => $v) {
-				if ($this->setAuthorization($v,avail::$config['APA'])) {
+				if ($this->setAuthentication($v,avail::$config['APA'])) {
 					$APE = avail::$config['APE'];
 					$APF = avail::$config['APF'];
 					// NOTE: create href
@@ -121,7 +121,7 @@ namespace letId\http
 			/*
 			array_walk($routePage,function(&$v,$k) use ($href) {
 				// NOTE: is Page, and Authorized
-				if ($this->setAuthorization($v,avail::$config['APA'])) {
+				if ($this->setAuthentication($v,avail::$config['APA'])) {
 					$APE = avail::$config['APE'];
 					$APF = avail::$config['APF'];
 					// NOTE: create href
@@ -229,27 +229,26 @@ namespace letId\http
 				return isset($i[avail::$config['APE']]) || isset($i[avail::$config['APC']]) || isset($i[avail::$config['APM']]);
 			}
 		}
-		private function setAuthorization($i,$Auth)
+		private function setAuthentication($i,$Auth)
 		{
-			// avail::$classExtension['authorization']
-			// avail::authorization()
+			// avail::$classExtension['authentication']
 			if (isset($i[$Auth])) {
 				$y=$i[$Auth];
 				if (is_array($y)) {
 					$isOk = 0;
 					foreach($y as $k => $v) {
 						if (is_numeric($k)) {
-							if (call_user_func_array(array(avail::authorization(), $v),array())) $isOk ++;
+							if (call_user_func_array(array(avail::$authentication, $v),array())) $isOk ++;
 						} else {
 							if (is_scalar($v)) {
 								$v = array($v);
 							}
-							if (call_user_func_array(array(avail::authorization(), $k), array($v))) $isOk ++;
+							if (call_user_func_array(array(avail::$authentication, $k), array($v))) $isOk ++;
 						}
 					}
 					return count($y) == $isOk;
 				} else {
-					return call_user_func_array(array(avail::authorization(), $y),array());
+					return call_user_func_array(array(avail::$authentication, $y),array());
 				}
 			} else {
 				return true;

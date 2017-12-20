@@ -7,8 +7,6 @@ namespace letId\http
 	  {
 			avail::session()->start();
 			// avail::session()->delete();
-			// avail::cookie()->user()->remove();
-			// avail::cookie()->user()->delete();
 			$this->requestEngine();
 			avail::$http = strtolower(substr($_SERVER['SERVER_PROTOCOL'],0,strpos($_SERVER['SERVER_PROTOCOL'],'/'))).avail::SlH.avail::$hostname;
 			avail::$config['http'] = avail::$http;
@@ -62,15 +60,20 @@ namespace letId\http
 						assign::$rewriteDirectories = array_merge($configuration->rewrite,assign::$rewriteDirectories);
 						if ($assign->rewrite()) {
 							// NOTE: get Pages
-							if (module::load('ASR')->route()) {
-								// NOTE: check visits authorization
-								avail::authorization()->subscribe();
-								// NOTE: set generated directories to configuration for application
-								avail::directory($configuration->directory)->set();
-								// NOTE: initiate language (locale)
-								new verse();
-								// NOTE: initiate page
-								new verso();
+							if ($assign->database()) {
+								if (module::load('ASR')->route()) {
+									// NOTE: check visitor authentication
+									avail::$authentication->requestInitiate();
+									// NOTE: set generated directories to configuration for application
+									avail::directory($configuration->directory)->set();
+									// NOTE: initiate language (locale)
+									new verse();
+									// TODO: langauge admin
+									if (module::load('ASR')->language_management_system()) {
+										// NOTE: initiate page
+										new verso();
+									}
+								}
 							}
 						}
 					}
@@ -81,6 +84,9 @@ namespace letId\http
 	  {
 			print call_user_func_array(array(new avail::$classExtension['response'](avail::$responseType),avail::$responseMethod),array(avail::$responseContext));
 			print avail::assist()->error_get_last();
+			// try {
+			// } catch (Exception $e) {
+			// }
 		}
 	}
 }

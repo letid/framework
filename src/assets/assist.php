@@ -71,7 +71,7 @@ namespace letId\assets
     /**
     * NOTE: avail::assist(1)->sha1(2);
     */
-    public function sha1($Id)
+    public function sha1($Id=null)
     {
       return sha1($this->Id.$Id);
     }

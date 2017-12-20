@@ -109,7 +109,6 @@ namespace letId\http
     }
     /*
     avail::$database = new \letId\database\request;
-    */
     static function database($Id)
     {
       avail::$database = new avail::$classExtension['database'];
@@ -123,6 +122,26 @@ namespace letId\http
           // 'src/style.css'=>array()
         ));
       }
+    }
+    */
+    public function database($Id=null)
+    {
+      $db = avail::configuration('database');
+      if ($db->has()){
+        $Id = $db->get();
+        $db->set();
+        avail::$database->connection($Id);
+        if (avail::$database->errorConnection()) {
+          return !self::template('database')->error(array(
+            'env'=>avail::$config['ASE'],
+            'root'=>avail::$config['ARO'],
+            // 'msg'=>avail::$databaseConnection->connect_error,
+            // 'code'=>avail::$databaseConnection->connect_errno
+            // 'src/style.css'=>array()
+          ));
+        }
+      }
+      return true;
     }
   }
 }

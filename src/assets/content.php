@@ -40,9 +40,9 @@ namespace letId\assets
         if ($value) return avail::$contents[$this->Id]=$value;
       }
     }
-    public function get()
+    public function get($value=null)
     {
-      return $this->has()?avail::$contents[$this->Id]:NULL;
+      return $this->has()?avail::$contents[$this->Id]:$value;
     }
     public function resolve()
     {

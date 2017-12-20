@@ -52,6 +52,8 @@ namespace letId\lethil
 			* application route's classname
 			*/
 			'ASR' => 'route',
+			// NOTE: use in template->requestContents
+			'resourceMinify'=>1,
 			// NOTE: use in response->resourceCache
 			'resourceCache'=>0,
 			// NOTE: down from here can be modified in: app\route and environment.ini
@@ -73,7 +75,7 @@ namespace letId\lethil
 			'APH' => 'home',
 			'AHF' => 'class',
 			'AHS' => 'Concluded',
-			// Page's Authorization
+			// Page's Authentication
 			'APA' => 'Auth',
 			// Page's Link
 			'APL' => 'Link',
@@ -121,9 +123,10 @@ namespace letId\lethil
 			'form' => \letId\request\form::class,
 			'log' => \letId\request\log::class,
 
-			'authorization' => \letId\request\authorization::class,
+			'authentication' => \letId\request\authentication::class,
 			'mail' => \letId\request\mail::class,
 			'response' => \letId\request\response::class,
+
 			// TODO (Not in use).
 			'validation' => \letId\request\validation::class
 			// NOTE: no needed
@@ -203,6 +206,7 @@ namespace letId\lethil
 			'resource'=>'resource',
 			'error'=>'error',
 			'maintaining'=>'maintaining',
+			'language'=>'language',
 			'application'=>'application',
 			'database'=>'database',
 			'configuration'=>'configuration',
@@ -240,6 +244,7 @@ namespace letId\lethil
 		/**
 		* NOTE: class availables
 		*/
+		static $authentication;
 		static $database = array('host'=>0,'port'=>0,'username'=>0,'password'=>0,'database'=>0);
 		static $requestMail, $requestValidation, $requestAuthorization, $requestConfiguration;
 		/**
@@ -250,7 +255,7 @@ namespace letId\lethil
 		use extensions;
 		use assets;
 		use requests;
-		public function __construct($Id='')
+		public function __construct($Id=null)
 		{
 			$this->Id = $Id;
 		}

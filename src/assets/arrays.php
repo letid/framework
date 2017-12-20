@@ -28,6 +28,15 @@ namespace letId\assets
       ));
     }
     /**
+    * avail::arrays(array('a',=>1'b'=>2))->key_rename(array('a'=>'apple','b'=>ball));
+    */
+    public function key_rename($name)
+    {
+      return array_combine(array_map(function($k) use ($name) {
+          return isset($name[$k])?$name[$k]:$k;
+      }, array_keys($this->Id)), array_values($this->Id));
+    }
+    /**
     * @var avail::arrays(1/2)->key_exists(needle,haystack);
     * NOTE: not in use
     */
