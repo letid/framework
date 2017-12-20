@@ -67,30 +67,11 @@ namespace letId\http
     */
     static function environment()
   	{
-      /*
-  		$ase = parse_ini_file(avail::$dir->root.avail::$config['ASE'].avail::SlP.avail::$Extension['environment'],true);
-      if ($ase) {
-        avail::configuration($ase)->merge();
-        if (isset($ase['database']) && is_array($ase['database'])) {
-          if (assign::database(array_merge(avail::$database,$ase['database']))) {
-            return false;
-          } else {
-            // avail::configuration($ase)->merge();
-            // NOTE: remove database from $config
-            avail::configuration('database')->set();
-          }
-        }
-      }
-      return true;
-      */
-  		// $ase = parse_ini_file(avail::$dir->root.avail::$config['ASE'].avail::SlP.avail::$Extension['environment'],true);
-      // return avail::configuration($ase)->merge();
-
       $ase = parse_ini_file(avail::$dir->root.avail::$config['ASE'].avail::SlP.avail::$Extension['environment'],true);
       if ($ase) {
         avail::configuration($ase)->merge();
-        if (isset($ase['maintaining'])){
-          return !assign::template('maintaining')->error(array('msg'=>$ase['maintaining']));
+        if (isset($ase['assetMaintaining'])){
+          return !assign::template('maintaining')->error(array('msg'=>$ase['assetMaintaining']));
         }
         if (isset($ase['database']) && is_array($ase['database'])) {
           avail::configuration('database')->set(array_merge(avail::$database,$ase['database']));
