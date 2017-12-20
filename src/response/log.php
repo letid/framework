@@ -21,7 +21,7 @@ namespace letId\response
 	*/
 class log
 	{
-		protected $table;
+		// protected $table;
 		public function __construct($table=null)
 		{
 			if ($table) $this->table = $table;
@@ -42,7 +42,6 @@ class log
 
 					avail::content('visits.sum')->set(number_format($select->rows->viewSum+avail::configuration('visitsPrevious')->get(0)));
 					avail::content('visits.created')->set($select->rows->created);
-					// print_r($select->rows);
 
 					$visitsReset = avail::configuration('visitsReset');
 
@@ -58,7 +57,7 @@ class log
 				}
 			}
 		}
-		private function requestVisitsUpdate($insert,$update=array())
+		protected function requestVisitsUpdate($insert,$update=array())
 		{
 			$column = array_filter(array(
 				'locale'=>avail::session('locale')->version()->has(), 'lang'=>avail::session('lang')->version()->has()
