@@ -67,19 +67,21 @@ namespace letId\request
     {
       return !avail::$user;
     }
-    // public function confirm_user()
+    public function user_roleConfirm($role)
+  	{
+      if ($this->user()){
+        return avail::$user->role >= $role;
+      }
+  	}
+    // public function user_confirm()
   	// {
     //   return avail::$user;
   	// }
-    // public function confirm_guest()
+    // public function guest_confirm()
   	// {
     //   return !avail::$user;
   	// }
-    // public function confirm_age()
-  	// {
-    //   if ($v >= 10) return true;
-  	// }
-    // public function confirm_email()
+    // public function user_age()
   	// {
     //   if ($v >= 10) return true;
   	// }
