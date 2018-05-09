@@ -13,7 +13,7 @@ namespace letId\request
       */
     }
     /**
-    * avail::$authentication->describe();
+    * avail::$authentication->requestInitiate();
     * use in request\http
     */
     public function requestInitiate()
@@ -37,7 +37,7 @@ namespace letId\request
         }
       }
     }
-    protected function usersCookieRemove()
+    public function usersCookieRemove()
     {
       // TODO: Not all session should be removed
       // avail::session()->delete();
